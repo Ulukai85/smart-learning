@@ -40,6 +40,7 @@ yarn-error.log*
 pnpm-lock.yaml
 package-lock.json
 .angular/cache/
+.angular/
 dist/
 out-tsc/
 coverage/
