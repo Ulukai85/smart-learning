@@ -1,3 +1,7 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SmartLearning.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services
+    .AddIdentityApiEndpoints<IdentityUser>()
+    .AddEntityFrameworkStores<AppDbContext>();
+
+var connectionString = builder.Configuration.GetConnectionString("DevDB") ?? string.Empty;
+builder.Services.AddDbContext<AppDbContext>(options => 
+    options.UseMySQL(connectionString));
+    
 
 var app = builder.Build();
 
@@ -23,5 +36,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app
+    .MapGroup("/auth")
+    .MapIdentityApi<IdentityUser>();
 
 app.Run();
