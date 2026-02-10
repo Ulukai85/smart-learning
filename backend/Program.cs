@@ -11,13 +11,12 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services
-    .AddIdentityApiEndpoints<IdentityUser>()
+    .AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<AppDbContext>();
 
 var connectionString = builder.Configuration.GetConnectionString("DevDB") ?? string.Empty;
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseMySQL(connectionString));
-    
 
 var app = builder.Build();
 
@@ -38,7 +37,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app
-    .MapGroup("/auth")
-    .MapIdentityApi<IdentityUser>();
+    .MapGroup("api/Auth")
+    .MapIdentityApi<AppUser>();
 
 app.Run();
