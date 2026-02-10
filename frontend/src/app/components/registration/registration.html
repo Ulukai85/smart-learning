@@ -1,0 +1,50 @@
+<h1>Registration</h1>
+<div class="w-full">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col w-full gap-2">
+    <input pInputText placeholder="Username" formControlName="userName" />
+    @if (hasDisplayableError('userName') && form.controls['userName'].hasError('required')) {
+      <p-message severity="error" size="small" variant="simple">Please choose a Username</p-message>
+    }
+    <input pInputText placeholder="Email" formControlName="email" />
+    @if (hasDisplayableError('email')) {
+      @if (form.controls['email'].hasError('required')) {
+        <p-message severity="error" size="small" variant="simple"
+          >Please enter your email address</p-message
+        >
+      }
+      @if (form.controls['email'].hasError('email')) {
+        <p-message severity="error" size="small" variant="simple"
+          >Please enter a valid email address</p-message
+        >
+      }
+    }
+    <input pInputText placeholder="Password" formControlName="password" />
+    @if (hasDisplayableError('password')) {
+      @switch (form.controls['password'].errors | firstKey) {
+        @case ('required') {
+          <p-message severity="error" size="small" variant="simple"
+            >Please enter your password</p-message
+          >
+        }
+        @case ('minlength') {
+          <p-message severity="error" size="small" variant="simple"
+            >Please enter at least 6 characters</p-message
+          >
+        }
+        @case ('pattern') {
+          <p-message severity="error" size="small" variant="simple"
+            >Must contain lowercase, uppercase, special char and number</p-message
+          >
+        }
+      }
+    }
+    <input pInputText placeholder="Confirm Password" formControlName="confirmPassword" />
+    @if (
+      hasDisplayableError('confirmPassword') &&
+      form.controls['confirmPassword'].hasError('passwordMismatch')
+    ) {
+      <p-message severity="error" size="small" variant="simple">Passwords do not match</p-message>
+    }
+    <button pButton type="submit" label="Register"></button>
+  </form>
+</div>

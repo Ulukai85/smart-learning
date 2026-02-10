@@ -1,13 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
+import { User } from './components/user/user';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ButtonModule],
+  imports: [RouterOutlet, User],
   templateUrl: './app.html',
   styles: ``,
 })
-export class App {
-  protected readonly title = signal('smart-learning');
-}
+export class App {}
