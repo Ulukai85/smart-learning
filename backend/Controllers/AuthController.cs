@@ -1,15 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SmartLearning.DTOs;
 using SmartLearning.Models;
 
 namespace SmartLearning.Controllers;
-
-public class UserRegistrationModel
-{
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public string UserName { get; set; }
-}
 
 [ApiController]
 [Route("api/[controller]")]
@@ -17,15 +11,14 @@ public class AuthController : ControllerBase
 {
     [HttpPost("signup")]
     public async Task<IActionResult> SignUp(
-        UserManager<AppUser> userManager, [FromBody] UserRegistrationModel model)
+        UserManager<AppUser> userManager, [FromBody] UserRegistrationDto dto)
     {
         var user = new AppUser()
         {
-            Email = model.Email,
-            UserName = model.UserName,
-
+            Email = dto.Email,
+            Handle = dto.Handle,
         };
-        var result = await userManager.CreateAsync(user, model.Password);
+        var result = await userManager.CreateAsync(user, dto.Password);
 
         if (result.Succeeded)
         {

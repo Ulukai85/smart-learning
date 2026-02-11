@@ -7,5 +7,5 @@ public class AppUser : IdentityUser
 {
     [PersonalData]
     [Column(TypeName = "varchar(256)")]
-    public int Xp { get; set; }
+    public string Handle { get; set; } = null!;
 }

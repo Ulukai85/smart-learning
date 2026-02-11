@@ -1,8 +1,8 @@
 <h1>Registration</h1>
 <div class="w-full">
   <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col w-full gap-2">
-    <input pInputText placeholder="Username" formControlName="userName" />
-    @if (hasDisplayableError('userName') && form.controls['userName'].hasError('required')) {
+    <input pInputText placeholder="Username" formControlName="handle" />
+    @if (hasDisplayableError('handle') && form.controls['handle'].hasError('required')) {
       <p-message severity="error" size="small" variant="simple">Please choose a Username</p-message>
     }
     <input pInputText placeholder="Email" formControlName="email" />

@@ -13,12 +13,8 @@ import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
 import { FirstKeyPipe } from '../../pipes/first-key-pipe';
 import { Auth } from '../../services/auth';
-
-export interface CreateUserDto {
-  userName: string;
-  email: string;
-  password: string;
-}
+import { Toast } from '../../services/toast';
+import { CreateUserDto } from '../../models/user.model';
 
 @Component({
   selector: 'app-registration',
@@ -33,10 +29,11 @@ export class Registration {
   constructor(
     private fb: FormBuilder,
     private auth: Auth,
+    private toast: Toast
   ) {
     this.form = this.fb.group(
       {
-        userName: ['', Validators.required],
+        handle: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         password: [
           '',
@@ -70,6 +67,8 @@ export class Registration {
 
   submit() {
     this.isSubmitted = true;
+    this.toast.showToast('bla', 'bla', 'bla');
+    
     if (this.form.valid) {
       this.auth.createUser(this.form.value as CreateUserDto).subscribe({
         next: (result) => {
