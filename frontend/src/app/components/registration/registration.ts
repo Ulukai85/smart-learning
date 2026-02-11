@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -15,22 +15,31 @@ import { FirstKeyPipe } from '../../pipes/first-key-pipe';
 import { Auth } from '../../services/auth';
 import { Toast } from '../../services/toast';
 import { CreateUserDto } from '../../models/user.model';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
-  imports: [ReactiveFormsModule, InputTextModule, ButtonModule, MessageModule, FirstKeyPipe, PasswordModule],
+  imports: [
+    ReactiveFormsModule,
+    InputTextModule,
+    ButtonModule,
+    MessageModule,
+    FirstKeyPipe,
+    PasswordModule,
+    RouterLink,
+  ],
   templateUrl: './registration.html',
   styles: ``,
 })
 export class Registration {
-  form: FormGroup;
   isSubmitted = false;
+  form: FormGroup;
 
-  constructor(
-    private fb: FormBuilder,
-    private auth: Auth,
-    private toast: Toast
-  ) {
+  private fb = inject(FormBuilder);
+  private auth = inject(Auth);
+  private toast = inject(Toast);
+
+  constructor() {
     this.form = this.fb.group(
       {
         handle: ['', Validators.required],
@@ -67,19 +76,19 @@ export class Registration {
 
   submit() {
     this.isSubmitted = true;
-    this.toast.showToast('bla', 'bla', 'bla');
-    
+
     if (this.form.valid) {
-      this.auth.createUser(this.form.value as CreateUserDto).subscribe({
+      this.auth.signup(this.form.value as CreateUserDto).subscribe({
         next: (result) => {
           console.log(result);
+          this.toast.success('Success', 'Registration successful!');
           this.form.reset();
           this.isSubmitted = false;
         },
         error: (err) => {
           if (err.error.errors) {
             err.error.errors.forEach((x: any) => {
-              console.log('code:', x.code);
+              this.toast.error('Error', x.code);
             });
             console.log('Error:', err);
           }

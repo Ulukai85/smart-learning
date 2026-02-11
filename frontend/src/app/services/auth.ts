@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { CreateUserDto } from '../components/registration/registration';
+import { CreateUserDto, LoginUserDto } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,11 @@ export class Auth {
 
   baseUrl = 'http://localhost:5260/api';
 
-  createUser(dto: CreateUserDto) {
+  signup(dto: CreateUserDto) {
     return this.http.post(this.baseUrl + '/Auth/signup', dto);
+  }
+
+  signin(dto: LoginUserDto) {
+    return this.http.post(this.baseUrl + '/Auth/signin', dto);
   }
 }

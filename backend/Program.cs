@@ -1,5 +1,8 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SmartLearning.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +20,22 @@ builder.Services
 var connectionString = builder.Configuration.GetConnectionString("DevDB") ?? string.Empty;
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseMySQL(connectionString));
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = 
+        options.DefaultChallengeScheme = 
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken = false;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:JWTSecret").Value!)),
+    };
+});
 
 var app = builder.Build();
 
@@ -36,6 +55,8 @@ app.UseCors(options =>
     options.WithOrigins("http://localhost:4200")
         .AllowAnyMethod()
         .AllowAnyHeader());
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

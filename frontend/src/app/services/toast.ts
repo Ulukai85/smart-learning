@@ -7,14 +7,33 @@ import { MessageService } from 'primeng/api';
 export class Toast {
   private msgService = inject(MessageService);
 
-  showToast(summary:string, detail:string, severity:string): void {
-    console.log('msg service opened')
+  TOAST_KEY = 'global';
+
+  success(summary: string, detail: string): void {
+    this.showToast(summary, detail, 'success');
+  }
+
+  info(summary: string, detail: string): void {
+    this.showToast(summary, detail, 'info');
+  }
+
+  warn(summary: string, detail: string): void {
+    this.showToast(summary, detail, 'warn');
+  }
+
+  error(summary: string, detail: string): void {
+    this.showToast(summary, detail, 'error');
+  }
+
+  private showToast(summary: string, detail: string, severity: string): void {
+    console.log('msg service opened');
     this.msgService.add({
-      key: 'global', 
-      severity: severity, 
+      key: this.TOAST_KEY,
+      severity: severity,
       summary: summary,
       detail: detail,
-      life: 2000,
-      sticky: true });
+      life: 3000,
+      sticky: false,
+    });
   }
 }
