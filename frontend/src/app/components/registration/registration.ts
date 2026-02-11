@@ -10,6 +10,7 @@ import {
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
+import { PasswordModule } from 'primeng/password';
 import { FirstKeyPipe } from '../../pipes/first-key-pipe';
 import { Auth } from '../../services/auth';
 
@@ -21,7 +22,7 @@ export interface CreateUserDto {
 
 @Component({
   selector: 'app-registration',
-  imports: [ReactiveFormsModule, InputTextModule, ButtonModule, MessageModule, FirstKeyPipe],
+  imports: [ReactiveFormsModule, InputTextModule, ButtonModule, MessageModule, FirstKeyPipe, PasswordModule],
   templateUrl: './registration.html',
   styles: ``,
 })

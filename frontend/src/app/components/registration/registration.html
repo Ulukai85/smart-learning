@@ -18,7 +18,7 @@
         >
       }
     }
-    <input pInputText placeholder="Password" formControlName="password" />
+    <p-password placeholder="Password" formControlName="password" [feedback]="false" [toggleMask]="true"/>
     @if (hasDisplayableError('password')) {
       @switch (form.controls['password'].errors | firstKey) {
         @case ('required') {
@@ -38,7 +38,7 @@
         }
       }
     }
-    <input pInputText placeholder="Confirm Password" formControlName="confirmPassword" />
+    <p-password placeholder="Confirm Password" formControlName="confirmPassword" [feedback]="false" [toggleMask]="true"/>
     @if (
       hasDisplayableError('confirmPassword') &&
       form.controls['confirmPassword'].hasError('passwordMismatch')
