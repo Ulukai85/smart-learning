@@ -12,10 +12,7 @@ public static class EndpointExplorerExtensions
     {
         if (!app.Environment.IsDevelopment()) return app;
         app.MapOpenApi();
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/openapi/v1.json", "api");
-        });
+        app.UseSwaggerUI(options => { options.SwaggerEndpoint("/openapi/v1.json", "api"); });
         return app;
     }
 }

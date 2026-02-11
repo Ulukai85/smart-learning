@@ -13,7 +13,7 @@ public static class IdentityExtensions
         services
             .AddIdentityApiEndpoints<AppUser>()
             .AddEntityFrameworkStores<AppDbContext>();
-        
+
         return services;
     }
 
@@ -27,14 +27,14 @@ public static class IdentityExtensions
             options.Password.RequireUppercase = true;
             options.User.RequireUniqueEmail = true;
         });
-        
+
         return services;
     }
-    
-    public static IServiceCollection AddIdentityAuth(this IServiceCollection services,  IConfiguration config)
+
+    public static IServiceCollection AddIdentityAuth(this IServiceCollection services, IConfiguration config)
     {
         var jwtSecret = config.GetSection("AppSettings:JWTSecret").Value;
-        
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -49,10 +49,10 @@ public static class IdentityExtensions
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret!))
             };
         });
-        
+
         return services;
     }
-    
+
     public static WebApplication AddIdentityAuthMiddleware(this WebApplication app)
     {
         app.UseAuthentication();
