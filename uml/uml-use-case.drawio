@@ -1,0 +1,128 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0" version="29.3.8">
+  <diagram name="Seite-1" id="Hh0gS43ADw45HQnHWVfc">
+    <mxGraphModel dx="991" dy="535" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-1" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="" vertex="1">
+          <mxGeometry height="590" width="590" x="130" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-2" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Gast" vertex="1">
+          <mxGeometry height="60" width="30" x="50" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-5" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-3" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" target="hlVtsS1WPyhK8H6d_qAP-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-3" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Registrieren" vertex="1">
+          <mxGeometry height="40" width="120" x="210" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="v9TY4WO0_ms_ZLnOiGbB-1" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-6" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;dashed=1;" target="hlVtsS1WPyhK8H6d_qAP-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-6" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Login" vertex="1">
+          <mxGeometry height="40" width="120" x="160" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-7" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Eingeloggter Nutzer" vertex="1">
+          <mxGeometry height="60" width="30" x="50" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-11" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-10" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" target="hlVtsS1WPyhK8H6d_qAP-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-10" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Logout" vertex="1">
+          <mxGeometry height="40" width="120" x="170" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-16" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-12" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="hlVtsS1WPyhK8H6d_qAP-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-12" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Lernkarte erstellen" vertex="1">
+          <mxGeometry height="40" width="120" x="170" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-19" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-13" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="hlVtsS1WPyhK8H6d_qAP-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-13" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Lernkarte bearbeiten" vertex="1">
+          <mxGeometry height="40" width="120" x="320" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-18" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-14" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="hlVtsS1WPyhK8H6d_qAP-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-14" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Lernkarte löschen" vertex="1">
+          <mxGeometry height="40" width="120" x="320" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-22" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-15" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="hlVtsS1WPyhK8H6d_qAP-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-15" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Stapel freigeben" vertex="1">
+          <mxGeometry height="40" width="120" x="380" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-25" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-23" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="hlVtsS1WPyhK8H6d_qAP-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-23" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;div&gt;Öffentliche Stapel&lt;/div&gt;&lt;div&gt;anzeigen&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="140" x="420" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-27" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-24" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=open;endFill=0;dashed=1;" target="hlVtsS1WPyhK8H6d_qAP-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-28" connectable="0" parent="hlVtsS1WPyhK8H6d_qAP-27" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="&amp;lt;&amp;lt;extends&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.0531" as="geometry">
+            <mxPoint x="53" y="-3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-24" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;div&gt;Stapel&lt;/div&gt;&lt;div&gt;hinzufügen&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="140" x="550" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-29" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-26" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;dashed=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-26" parent="1" style="shape=note2;boundedLbl=1;whiteSpace=wrap;html=1;size=25;verticalAlign=top;align=center;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="&lt;div&gt;Condition: Stapel ist&lt;/div&gt;&lt;div&gt;öffentlich&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="460" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-31" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-30" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="hlVtsS1WPyhK8H6d_qAP-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-35" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-30" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=open;endFill=0;dashed=1;" target="hlVtsS1WPyhK8H6d_qAP-34" value="&amp;lt;&amp;lt;includes&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" x="0.1429" y="-20" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-30" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Lernsession starten" vertex="1">
+          <mxGeometry height="40" width="140" x="330" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-33" edge="1" parent="1" source="hlVtsS1WPyhK8H6d_qAP-32" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="hlVtsS1WPyhK8H6d_qAP-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-32" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;div&gt;Statistiken&lt;/div&gt;&lt;div&gt;anzeigen&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="140" x="520" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="hlVtsS1WPyhK8H6d_qAP-34" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Lernkarte bewerten" vertex="1">
+          <mxGeometry height="40" width="140" x="540" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="v9TY4WO0_ms_ZLnOiGbB-2" connectable="0" parent="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="&amp;lt;&amp;lt;extends&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry x="540" y="180" as="geometry">
+            <mxPoint x="-249" y="-53" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v9TY4WO0_ms_ZLnOiGbB-4" edge="1" parent="1" source="v9TY4WO0_ms_ZLnOiGbB-3" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="240" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v9TY4WO0_ms_ZLnOiGbB-3" parent="1" style="shape=note2;boundedLbl=1;whiteSpace=wrap;html=1;size=25;verticalAlign=top;align=center;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="&lt;div&gt;Condition: Gast is registriert&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="340" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="v9TY4WO0_ms_ZLnOiGbB-8" edge="1" parent="1" source="v9TY4WO0_ms_ZLnOiGbB-7" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="hlVtsS1WPyhK8H6d_qAP-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="v9TY4WO0_ms_ZLnOiGbB-7" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Lernstrategie festlegen" vertex="1">
+          <mxGeometry height="40" width="120" x="480" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="v9TY4WO0_ms_ZLnOiGbB-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Smart Learning App&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="210" x="130" y="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
