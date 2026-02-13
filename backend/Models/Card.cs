@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SmartLearning.DTOs;
 
 namespace SmartLearning.Models;
 
@@ -22,5 +23,15 @@ public class Card
 
     public ICollection<UserCardProgress> UserCardProgresses { get; set; } 
         = new List<UserCardProgress>();
-    
+
+    public CardDto MapToDto()
+    {
+        return new CardDto
+        {
+            Id = Id,
+            DeckId = DeckId,
+            Front = Front,
+            Back = Back,
+        };
+    }
 }
