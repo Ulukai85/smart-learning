@@ -1,43 +1,24 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using SmartLearning.Extensions;
 using SmartLearning.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 
 builder.Services
-    .AddIdentityApiEndpoints<AppUser>()
-    .AddEntityFrameworkStores<AppDbContext>();
-
-var connectionString = builder.Configuration.GetConnectionString("DevDB") ?? string.Empty;
-builder.Services.AddDbContext<AppDbContext>(options => 
-    options.UseMySQL(connectionString));
+    .InjectServices()
+    .AddEndpointExplorer()
+    .InjectDbContext(builder.Configuration)
+    .AddIdentityHandlersAndStores()
+    .ConfigureIdentityOptions()
+    .AddIdentityAuth(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/openapi/v1.json", "api");
-    });
-}
-
+app.ConfigureEndpointExplorer();
+app.ConfigureCors(builder.Configuration);
 app.UseHttpsRedirection();
-
-app.UseCors(options =>
-    options.WithOrigins("http://localhost:4200")
-        .AllowAnyMethod()
-        .AllowAnyHeader());
-
-app.UseAuthorization();
+app.AddIdentityAuthMiddleware();
 
 app.MapControllers();
 

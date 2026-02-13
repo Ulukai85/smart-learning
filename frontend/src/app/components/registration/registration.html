@@ -1,50 +1,77 @@
-<h1>Registration</h1>
-<div class="w-full">
-  <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col w-full gap-2">
-    <input pInputText placeholder="Username" formControlName="handle" />
-    @if (hasDisplayableError('handle') && form.controls['handle'].hasError('required')) {
-      <p-message severity="error" size="small" variant="simple">Please choose a Username</p-message>
-    }
-    <input pInputText placeholder="Email" formControlName="email" />
-    @if (hasDisplayableError('email')) {
-      @if (form.controls['email'].hasError('required')) {
-        <p-message severity="error" size="small" variant="simple"
-          >Please enter your email address</p-message
-        >
-      }
-      @if (form.controls['email'].hasError('email')) {
-        <p-message severity="error" size="small" variant="simple"
-          >Please enter a valid email address</p-message
-        >
-      }
-    }
-    <p-password placeholder="Password" formControlName="password" [feedback]="false" [toggleMask]="true"/>
-    @if (hasDisplayableError('password')) {
-      @switch (form.controls['password'].errors | firstKey) {
-        @case ('required') {
+<div class="auth-container">
+  <h1>Registration</h1>
+  <div class="flex gap-2">
+    <span>Already have an account?</span><a routerLink="/login">Login</a>
+  </div>
+  <div class="w-full">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col w-full gap-5">
+      <div>
+        <input pInputText placeholder="Username" formControlName="handle" class="w-full" />
+        @if (hasDisplayableError('handle') && form.controls['handle'].hasError('required')) {
           <p-message severity="error" size="small" variant="simple"
-            >Please enter your password</p-message
+            >Please choose a Username</p-message
           >
         }
-        @case ('minlength') {
+      </div>
+      <div>
+        <input pInputText placeholder="Email" formControlName="email" class="w-full" />
+        @if (hasDisplayableError('email')) {
+          @if (form.controls['email'].hasError('required')) {
+            <p-message severity="error" size="small" variant="simple"
+              >Please enter your email address</p-message
+            >
+          }
+          @if (form.controls['email'].hasError('email')) {
+            <p-message severity="error" size="small" variant="simple"
+              >Please enter a valid email address</p-message
+            >
+          }
+        }
+      </div>
+      <div>
+        <p-password
+          placeholder="Password"
+          formControlName="password"
+          [feedback]="false"
+          [toggleMask]="true"
+        />
+        @if (hasDisplayableError('password')) {
+          @switch (form.controls['password'].errors | firstKey) {
+            @case ('required') {
+              <p-message severity="error" size="small" variant="simple"
+                >Please enter your password</p-message
+              >
+            }
+            @case ('minlength') {
+              <p-message severity="error" size="small" variant="simple"
+                >Please enter at least 6 characters</p-message
+              >
+            }
+            @case ('pattern') {
+              <p-message severity="error" size="small" variant="simple"
+                >Must contain lowercase, uppercase, special char and number</p-message
+              >
+            }
+          }
+        }
+      </div>
+      <div>
+        <p-password
+          placeholder="Confirm Password"
+          formControlName="confirmPassword"
+          [feedback]="false"
+          [toggleMask]="true"
+        />
+        @if (
+          hasDisplayableError('confirmPassword') &&
+          form.controls['confirmPassword'].hasError('passwordMismatch')
+        ) {
           <p-message severity="error" size="small" variant="simple"
-            >Please enter at least 6 characters</p-message
+            >Passwords do not match</p-message
           >
         }
-        @case ('pattern') {
-          <p-message severity="error" size="small" variant="simple"
-            >Must contain lowercase, uppercase, special char and number</p-message
-          >
-        }
-      }
-    }
-    <p-password placeholder="Confirm Password" formControlName="confirmPassword" [feedback]="false" [toggleMask]="true"/>
-    @if (
-      hasDisplayableError('confirmPassword') &&
-      form.controls['confirmPassword'].hasError('passwordMismatch')
-    ) {
-      <p-message severity="error" size="small" variant="simple">Passwords do not match</p-message>
-    }
-    <button pButton type="submit" label="Register"></button>
-  </form>
+      </div>
+      <p-button type="submit" label="Register" />
+    </form>
+  </div>
 </div>

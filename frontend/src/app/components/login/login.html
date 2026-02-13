@@ -1,0 +1,30 @@
+<div class="auth-container">
+  <h1>Login</h1>
+  <div class="flex gap-2">
+    <span>Don't have an account?</span><a routerLink="/register">Register</a>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+    <div>
+      <input pInputText placeholder="Email" formControlName="email" class="w-full" />
+      @if (hasDisplayableError('email') && form.controls['email'].hasError('required')) {
+        <p-message severity="error" size="small" variant="simple"
+          >Please enter your email address</p-message
+        >
+      }
+    </div>
+    <div>
+      <p-password
+        placeholder="Password"
+        formControlName="password"
+        [feedback]="false"
+        [toggleMask]="true"
+      />
+      @if (hasDisplayableError('password') && form.controls['password'].hasError('required')) {
+        <p-message severity="error" size="small" variant="simple"
+          >Please enter your password</p-message
+        >
+      }
+    </div>
+    <p-button type="submit" label="Login" />
+  </form>
+</div>

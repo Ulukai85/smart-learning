@@ -2,3 +2,24 @@
 
 @import 'tailwindcss';
 @import 'tailwindcss-primeui';
+
+h1 {
+  font-size: xx-large;
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid var(--color-primary);
+  border-radius: 1rem;
+  padding: 1rem;
+  width: 100%;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
