@@ -7,14 +7,14 @@ public class UserCardProgress
 {
     public Guid Id { get; set; }
     
-    [MaxLength(256)]
+    [MaxLength(255)]
     public string UserId { get; set; } = null!;
     public AppUser User { get; set; } = null!;
 
     public Guid CardId { get; set; }
     public Card Card { get; set; } = null!;
 
-    [MaxLength(256)]
+    [MaxLength(255)]
     [Required]
     public string StrategyType { get; set; } = null!;
     

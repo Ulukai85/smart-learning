@@ -6,7 +6,7 @@ namespace SmartLearning.Models;
 public class AppUser : IdentityUser
 {
     [PersonalData]
-    [Column(TypeName = "varchar(256)")]
+    [Column(TypeName = "varchar(255)")]
     public string Handle { get; set; } = null!;
     
     public DateTime CreatedAt { get; set; }

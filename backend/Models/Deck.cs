@@ -10,7 +10,7 @@ public class Deck
     public AppUser OwnerUser { get; set; } = null!;
 
     [Required]
-    [MaxLength(256)]
+    [MaxLength(255)]
     public string Name { get; set; } = null!;
     
     [MaxLength(2000)]

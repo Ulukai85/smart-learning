@@ -12,6 +12,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
         modelBuilder.Entity<Deck>(entity =>
         {
             entity.HasKey(x => x.Id);
@@ -49,5 +51,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .HasForeignKey(x => x.CardId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+        
+        
     }
 }
