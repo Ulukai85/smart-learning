@@ -8,4 +8,9 @@ public class AppUser : IdentityUser
     [PersonalData]
     [Column(TypeName = "varchar(256)")]
     public string Handle { get; set; } = null!;
+    
+    public DateTime CreatedAt { get; set; }
+
+    public ICollection<UserCardProgress> UserCardProgresses { get; set; }
+        = new List<UserCardProgress>();
 }
