@@ -1,18 +1,9 @@
-import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [ButtonModule],
+  imports: [],
   templateUrl: './dashboard.html',
   styles: ``,
 })
-export class Dashboard {
-  private router = inject(Router);
-
-  logout() {
-    localStorage.removeItem('token');
-    this.router.navigateByUrl('/login');
-  }
-}
+export class Dashboard {}
