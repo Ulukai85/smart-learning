@@ -7,6 +7,8 @@ public static class ServiceExtensions
     public static IServiceCollection InjectServices(this IServiceCollection services)
     {
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IDeckService, DeckService>();
+        services.AddScoped<ICardService, CardService>();
         
         return services;
     }

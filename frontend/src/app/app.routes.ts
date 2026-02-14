@@ -3,6 +3,9 @@ import { User } from './components/user/user';
 import { Registration } from './components/registration/registration';
 import { Login } from './components/login/login';
 import { Dashboard } from './components/dashboard/dashboard';
+import { Layout } from './components/layout/layout';
+import { CardDesigner } from './components/card-designer/card-designer';
+import { CardExplorer } from './components/card-explorer/card-explorer';
 
 export const routes: Routes = [
   {
@@ -14,7 +17,21 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'dashboard',
-    component: Dashboard,
+    path: '',
+    component: Layout,
+    children: [
+      {
+        path: 'dashboard',
+        component: Dashboard,
+      },
+      {
+        path: 'card',
+        component: CardDesigner,
+      },
+      {
+        path: 'cards',
+        component: CardExplorer,
+      },
+    ],
   },
 ];

@@ -1,0 +1,77 @@
+<div class="auth-container">
+  <h1>Create Card</h1>
+
+  <form [formGroup]="cardForm" (ngSubmit)="submitCard()" class="auth-form w-full">
+    <div class="flex">
+      <div class="w-full">
+        <p-floatlabel variant="on">
+          <p-select
+            formControlName="deckId"
+            [options]="decks()"
+            itemid="deckId"
+            optionLabel="name"
+            optionValue="id"
+            class="w-full"
+          />
+          <label for="deckId">Deck</label>
+        </p-floatlabel>
+        @if (hasDisplayableError('deckId') && cardForm.controls['deckId'].hasError('required')) {
+          <p-message severity="error" size="small" variant="simple"
+            >Please choose or create a deck</p-message
+          >
+        }
+      </div>
+      <p-button (click)="op.toggle($event)" label="Add deck" />
+      <p-popover #op>
+        <form [formGroup]="deckForm" (ngSubmit)="submitDeck()">
+          <div class="flex flex-col">
+            <p-floatlabel variant="on">
+              <input pInputText itemid="name" formControlName="name" class="w-full" />
+              <label for="name">Name</label>
+            </p-floatlabel>
+            <p-floatlabel variant="on">
+              <textarea
+                pTextarea
+                itemid="description"
+                formControlName="description"
+                class="w-full"
+                [autoResize]="true"
+              ></textarea>
+              <label for="description">Description</label>
+            </p-floatlabel>
+            <button pButton type="submit">Create Deck</button>
+          </div>
+        </form>
+      </p-popover>
+    </div>
+    <div>
+      <p-floatlabel variant="on">
+        <textarea
+          pTextarea
+          itemid="front"
+          formControlName="front"
+          class="w-full"
+          [autoResize]="true"
+        ></textarea>
+        <label for="front">Front</label>
+      </p-floatlabel>
+      @if (hasDisplayableError('front') && cardForm.controls['front'].hasError('required')) {
+        <p-message severity="error" size="small" variant="simple"
+          >Please enter the front text (question)</p-message
+        >
+      }
+    </div>
+    <div>
+      <p-floatlabel variant="on">
+        <textarea pTextarea formControlName="back" class="w-full" [autoResize]="true"></textarea>
+        <label for="back">Back</label>
+      </p-floatlabel>
+      @if (hasDisplayableError('back') && cardForm.controls['back'].hasError('required')) {
+        <p-message severity="error" size="small" variant="simple"
+          >Please enter the back text (answer)</p-message
+        >
+      }
+    </div>
+    <button pButton type="submit">Create Card</button>
+  </form>
+</div>

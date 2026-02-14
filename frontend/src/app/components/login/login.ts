@@ -5,9 +5,9 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
-import { Toast } from '../../services/toast';
+import { ToastService } from '../../services/toast-service';
 import { LoginUserDto } from '../../models/user.model';
-import { Auth } from '../../services/auth';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-login',
@@ -27,9 +27,9 @@ export class Login {
   form: FormGroup;
 
   private fb = inject(FormBuilder);
-  private auth = inject(Auth);
+  private authService = inject(AuthService);
   private router = inject(Router);
-  private toast = inject(Toast);
+  private toast = inject(ToastService);
 
   constructor() {
     this.form = this.fb.group({
@@ -41,11 +41,13 @@ export class Login {
   submit() {
     this.isSubmitted = true;
     if (this.form.valid) {
-      this.auth.signin(this.form.value as LoginUserDto).subscribe({
+      this.authService.signin(this.form.value as LoginUserDto).subscribe({
         next: (result: any) => {
-          localStorage.setItem('token', result.token);
+          this.authService.saveToken(result.token);
           this.toast.success('Welcome', 'Login successful!');
           this.router.navigateByUrl('/dashboard');
+          this.form.reset();
+          this.isSubmitted = false;
         },
         error: (err) => {
           if (err.status == 400) {

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SmartLearning.DTOs;
 
 namespace SmartLearning.Models;
 
@@ -6,6 +7,7 @@ public class Deck
 {
     public Guid Id { get; set; }
     
+    [MaxLength(255)]
     public string OwnerUserId { get; set; } = null!;
     public AppUser OwnerUser { get; set; } = null!;
 
@@ -25,4 +27,15 @@ public class Deck
     public DateTime UpdatedAt { get; set; }
 
     public ICollection<Card> Cards { get; set; } = new List<Card>();
+
+    public DeckDto MapToDto()
+    {
+        return new DeckDto
+        {
+            Id = Id,
+            Description = Description,
+            Name = Name,
+            OwnerUserId = OwnerUserId
+        };
+    } 
 }

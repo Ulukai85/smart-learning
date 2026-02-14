@@ -4,7 +4,7 @@ import { MessageService } from 'primeng/api';
 @Injectable({
   providedIn: 'root',
 })
-export class Toast {
+export class ToastService {
   private msgService = inject(MessageService);
 
   TOAST_KEY = 'global';
@@ -26,7 +26,6 @@ export class Toast {
   }
 
   private showToast(summary: string, detail: string, severity: string): void {
-    console.log('msg service opened');
     this.msgService.add({
       key: this.TOAST_KEY,
       severity: severity,

@@ -12,8 +12,8 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
 import { FirstKeyPipe } from '../../pipes/first-key-pipe';
-import { Auth } from '../../services/auth';
-import { Toast } from '../../services/toast';
+import { AuthService } from '../../services/auth-service';
+import { ToastService } from '../../services/toast-service';
 import { CreateUserDto } from '../../models/user.model';
 import { RouterLink } from '@angular/router';
 
@@ -36,8 +36,8 @@ export class Registration {
   form: FormGroup;
 
   private fb = inject(FormBuilder);
-  private auth = inject(Auth);
-  private toast = inject(Toast);
+  private authService = inject(AuthService);
+  private toast = inject(ToastService);
 
   constructor() {
     this.form = this.fb.group(
@@ -78,7 +78,7 @@ export class Registration {
     this.isSubmitted = true;
 
     if (this.form.valid) {
-      this.auth.signup(this.form.value as CreateUserDto).subscribe({
+      this.authService.signup(this.form.value as CreateUserDto).subscribe({
         next: (result) => {
           console.log(result);
           this.toast.success('Success', 'Registration successful!');

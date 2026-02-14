@@ -7,3 +7,10 @@ public class CardDto
     public string Front { get; set; } = null!;
     public string Back { get; set; } = null!;
 }
+
+public class CreateCardDto
+{
+    public Guid DeckId { get; set; }
+    public string Front { get; set; } = null!;
+    public string Back { get; set; } = null!;
+}
