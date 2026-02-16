@@ -5,7 +5,7 @@ namespace SmartLearning.Repositories;
 
 public interface ICardRepository
 {
-    Task CreateCardAsync(Card card);
+    Task<Card> CreateCardAsync(Card card);
     Task<ICollection<Card>> GetAllCardsAsync();
     Task<Card?> GetCardByIdAsync(Guid id);
     Task SaveChangesAsync();
@@ -14,10 +14,12 @@ public interface ICardRepository
 
 public class CardRepository(AppDbContext dbContext) : ICardRepository 
 {
-    public async Task CreateCardAsync(Card card)
+    public async Task<Card> CreateCardAsync(Card card)
     {
         await dbContext.Cards.AddAsync(card);
         await SaveChangesAsync();
+        
+        return card;
     }
 
     public async Task<ICollection<Card>> GetAllCardsAsync()

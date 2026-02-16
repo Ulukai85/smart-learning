@@ -6,7 +6,7 @@ namespace SmartLearning.Services;
 
 public interface ICardService
 {
-    Task CreateCardAsync(UpsertCardDto dto);
+    Task<Card> CreateCardAsync(UpsertCardDto dto);
     Task<ICollection<CardDto>> GetAllCardsAsync();
     Task UpdateCardAsync(Guid id, UpsertCardDto dto);
     Task DeleteCardAsync(Guid id);
@@ -14,7 +14,7 @@ public interface ICardService
 
 public class CardService(ICardRepository cardRepo): ICardService
 {
-    public async Task CreateCardAsync(UpsertCardDto dto)
+    public async Task<Card> CreateCardAsync(UpsertCardDto dto)
     {
         var card = new Card
         {
@@ -26,7 +26,7 @@ public class CardService(ICardRepository cardRepo): ICardService
             UpdatedAt = DateTime.UtcNow
         };
         
-        await cardRepo.CreateCardAsync(card);
+        return await cardRepo.CreateCardAsync(card);
     }
 
     public async Task<ICollection<CardDto>> GetAllCardsAsync()

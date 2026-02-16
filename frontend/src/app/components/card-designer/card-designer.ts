@@ -45,7 +45,7 @@ export type UpsertMode = 'create' | 'edit';
 export class CardDesigner implements OnChanges {
   selectedCard = model<CardDto | null>(null);
   mode: Signal<UpsertMode> = computed(() => (this.selectedCard() === null ? 'create' : 'edit'));
-  decks = model.required<DeckDto[]>();
+  decks = model<DeckDto[]>();
   @ViewChild('op') op!: Popover;
   @Output() upsertSuccess = new EventEmitter<UpsertMode>();
 
@@ -74,8 +74,8 @@ export class CardDesigner implements OnChanges {
 
   get currentDeck(): DeckDto | null {
     const deckId = this.cardForm.get('deckId');
-    if (!deckId) return null;
-    return this.decks().find((deck) => deck.id === deckId.value) ?? null;
+    if (!deckId || this.decks()) return null;
+    return this.decks()?.find((deck) => deck.id === deckId.value) ?? null;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
