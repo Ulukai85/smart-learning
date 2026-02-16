@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using SmartLearning.DTOs;
 using SmartLearning.Models;
+using SmartLearning.Repositories;
 
 namespace SmartLearning.Services;
 
@@ -11,7 +11,7 @@ public interface IDeckService
     Task UpdateDeckAsync(Guid id, UpsertDeckDto dto);
 }
 
-public class DeckService(AppDbContext dbContext): IDeckService
+public class DeckService(IDeckRepository deckRepo): IDeckService
 {
     public async Task<DeckDto> CreateDeckAsync(UpsertDeckDto dto,  string userId)
     {
@@ -25,28 +25,27 @@ public class DeckService(AppDbContext dbContext): IDeckService
             UpdatedAt = DateTime.UtcNow
         };
         
-        await dbContext.Decks.AddAsync(deck);
-        await dbContext.SaveChangesAsync();
+        await deckRepo.CreateDeckAsync(deck);
         
         return deck.MapToDto();
     }
 
     public async Task<ICollection<DeckDto>> GetAllDecksAsync()
     {
-        var decks = await dbContext.Decks.ToListAsync();
+        var decks = await deckRepo.GetAllDecksAsync();
         
         return decks.Select(d => d.MapToDto()).ToList();
     }
     
     public async Task UpdateDeckAsync(Guid id, UpsertDeckDto dto)
     {
-        var deck = await dbContext.Decks.FindAsync(id) ?? throw new KeyNotFoundException("Deck not found");
+        var deck = await deckRepo.GetDeckByIdAsync(id) ?? throw new KeyNotFoundException("Deck not found");
         
         deck.Name = dto.Name;
         deck.Description = dto.Description;
         
         deck.UpdatedAt = DateTime.UtcNow;
-        
-        await dbContext.SaveChangesAsync();
+
+        await deckRepo.SaveChangesAsync();
     }
 }
