@@ -10,11 +10,12 @@ namespace SmartLearning.Controllers;
 public class CardController(ICardService cardService) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> CreateCard([FromBody] CreateCardDto dto)
+    public async Task<IActionResult> CreateCard([FromBody] UpsertCardDto dto)
     {
         try
         {
-            return Ok(await cardService.CreateCardAsync(dto));
+            await cardService.CreateCardAsync(dto);
+            return Ok();
         } 
         catch (Exception ex)
         {
@@ -26,6 +27,20 @@ public class CardController(ICardService cardService) : ControllerBase
     public async Task<IActionResult> GetAllCards()
     {
         return Ok(await cardService.GetAllCardsAsync());
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateCard([FromRoute] Guid id, [FromBody] UpsertCardDto dto)
+    {
+        try
+        {
+            await cardService.UpdateCardAsync(id, dto);
+            return Ok();
+        }
+        catch  (Exception ex)
+        {
+            return BadRequest( new { message = ex.Message });
+        }
     }
 }
 

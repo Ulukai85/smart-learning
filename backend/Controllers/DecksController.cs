@@ -12,7 +12,7 @@ namespace SmartLearning.Controllers;
 public class DeckController(IDeckService deckService) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> CreateDeck ([FromBody] CreateDeckDto dto)
+    public async Task<IActionResult> CreateDeck ([FromBody] UpsertDeckDto dto)
     {
         try
         {
@@ -29,6 +29,20 @@ public class DeckController(IDeckService deckService) : ControllerBase
     public async Task<IActionResult> GetAllDecks()
     {
         return Ok(await deckService.GetAllDecksAsync());
+    }
+    
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateDeck([FromRoute] Guid id, [FromBody] UpsertDeckDto dto)
+    {
+        try
+        {
+            await deckService.UpdateDeckAsync(id, dto);
+            return Ok();
+        }
+        catch  (Exception ex)
+        {
+            return BadRequest( new { message = ex.Message });
+        }
     }
 }
 
