@@ -9,6 +9,7 @@ public interface ICardService
     Task CreateCardAsync(UpsertCardDto dto);
     Task<ICollection<CardDto>> GetAllCardsAsync();
     Task UpdateCardAsync(Guid id, UpsertCardDto dto);
+    Task DeleteCardAsync(Guid id);
 }
 
 public class CardService(AppDbContext dbContext): ICardService
@@ -48,6 +49,13 @@ public class CardService(AppDbContext dbContext): ICardService
         
         card.UpdatedAt = DateTime.UtcNow;
         
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteCardAsync(Guid id)
+    {
+        var card = await dbContext.Cards.FindAsync(id) ?? throw new KeyNotFoundException("Card not found");
+        dbContext.Cards.Remove(card);
         await dbContext.SaveChangesAsync();
     }
 }

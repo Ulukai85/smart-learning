@@ -23,4 +23,8 @@ export class CardService {
   public updateCard(id: string, dto: UpsertCardDto): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, dto);
   }
+
+  public deleteCard(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

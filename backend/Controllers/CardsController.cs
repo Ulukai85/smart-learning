@@ -1,10 +1,12 @@
 using System.Security.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartLearning.DTOs;
 using SmartLearning.Services;
 
 namespace SmartLearning.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class CardsController(ICardService cardService) : ControllerBase
@@ -22,7 +24,7 @@ public class CardsController(ICardService cardService) : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
-
+    
     [HttpGet]
     public async Task<IActionResult> GetAllCards()
     {
@@ -38,6 +40,19 @@ public class CardsController(ICardService cardService) : ControllerBase
             return Ok();
         }
         catch  (Exception ex)
+        {
+            return BadRequest( new { message = ex.Message });
+        }
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteCard([FromRoute] Guid id)
+    {
+        try
+        {
+            await cardService.DeleteCardAsync(id);
+            return Ok();
+        } catch (Exception ex)
         {
             return BadRequest( new { message = ex.Message });
         }
