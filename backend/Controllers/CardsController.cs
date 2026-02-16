@@ -7,7 +7,7 @@ namespace SmartLearning.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CardController(ICardService cardService) : ControllerBase
+public class CardsController(ICardService cardService) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateCard([FromBody] UpsertCardDto dto)

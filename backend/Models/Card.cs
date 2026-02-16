@@ -30,6 +30,7 @@ public class Card
         {
             Id = Id,
             DeckId = DeckId,
+            DeckName = Deck.Name,
             Front = Front,
             Back = Back,
         };

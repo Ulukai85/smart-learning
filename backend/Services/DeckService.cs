@@ -6,13 +6,14 @@ namespace SmartLearning.Services;
 
 public interface IDeckService
 {
-    Task<DeckDto> CreateDeckAsync(CreateDeckDto dto, string userId);
+    Task<DeckDto> CreateDeckAsync(UpsertDeckDto dto, string userId);
     Task<ICollection<DeckDto>> GetAllDecksAsync();
+    Task UpdateDeckAsync(Guid id, UpsertDeckDto dto);
 }
 
 public class DeckService(AppDbContext dbContext): IDeckService
 {
-    public async Task<DeckDto> CreateDeckAsync(CreateDeckDto dto,  string userId)
+    public async Task<DeckDto> CreateDeckAsync(UpsertDeckDto dto,  string userId)
     {
         var deck = new Deck
         {
@@ -35,5 +36,17 @@ public class DeckService(AppDbContext dbContext): IDeckService
         var decks = await dbContext.Decks.ToListAsync();
         
         return decks.Select(d => d.MapToDto()).ToList();
+    }
+    
+    public async Task UpdateDeckAsync(Guid id, UpsertDeckDto dto)
+    {
+        var deck = await dbContext.Decks.FindAsync(id) ?? throw new KeyNotFoundException("Deck not found");
+        
+        deck.Name = dto.Name;
+        deck.Description = dto.Description;
+        
+        deck.UpdatedAt = DateTime.UtcNow;
+        
+        await dbContext.SaveChangesAsync();
     }
 }

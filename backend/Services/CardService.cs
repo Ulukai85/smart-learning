@@ -6,13 +6,14 @@ namespace SmartLearning.Services;
 
 public interface ICardService
 {
-    Task<CardDto> CreateCardAsync(CreateCardDto dto);
+    Task CreateCardAsync(UpsertCardDto dto);
     Task<ICollection<CardDto>> GetAllCardsAsync();
+    Task UpdateCardAsync(Guid id, UpsertCardDto dto);
 }
 
 public class CardService(AppDbContext dbContext): ICardService
 {
-    public async Task<CardDto> CreateCardAsync(CreateCardDto dto)
+    public async Task CreateCardAsync(UpsertCardDto dto)
     {
         var card = new Card
         {
@@ -26,14 +27,27 @@ public class CardService(AppDbContext dbContext): ICardService
         
         await dbContext.Cards.AddAsync(card);
         await dbContext.SaveChangesAsync();
-        
-        return card.MapToDto();
     }
 
     public async Task<ICollection<CardDto>> GetAllCardsAsync()
     {
-        var cards = await dbContext.Cards.ToListAsync();
+        var cards = await dbContext.Cards
+            .Include(d => d.Deck)
+            .ToListAsync();
         
         return cards.Select(d => d.MapToDto()).ToList();
+    }
+
+    public async Task UpdateCardAsync(Guid id, UpsertCardDto dto)
+    {
+        var card = await dbContext.Cards.FindAsync(id) ?? throw new KeyNotFoundException("Card not found");
+        
+        card.DeckId = dto.DeckId;
+        card.Front = dto.Front;
+        card.Back = dto.Back;
+        
+        card.UpdatedAt = DateTime.UtcNow;
+        
+        await dbContext.SaveChangesAsync();
     }
 }

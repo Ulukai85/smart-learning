@@ -1,77 +1,116 @@
-<div class="auth-container">
-  <h1>Create Card</h1>
-
-  <form [formGroup]="cardForm" (ngSubmit)="submitCard()" class="auth-form w-full">
-    <div class="flex">
-      <div class="w-full">
+<div class="w-full">
+  <form [formGroup]="cardForm" (ngSubmit)="submitCardForm()" class="space-y-6">
+    <!-- Deck row -->
+    <div class="flex flex-col gap-3 md:flex-row md:items-end md:gap-2">
+      <!-- Select -->
+      <div class="flex-1 min-w-0">
         <p-floatlabel variant="on">
           <p-select
             formControlName="deckId"
             [options]="decks()"
-            itemid="deckId"
+            inputId="deckId"
             optionLabel="name"
             optionValue="id"
             class="w-full"
           />
           <label for="deckId">Deck</label>
         </p-floatlabel>
+
         @if (hasDisplayableError('deckId') && cardForm.controls['deckId'].hasError('required')) {
-          <p-message severity="error" size="small" variant="simple"
-            >Please choose or create a deck</p-message
-          >
+          <p-message severity="error" size="small" variant="simple">
+            Please choose or create a deck
+          </p-message>
         }
       </div>
-      <p-button (click)="op.toggle($event)" label="Add deck" />
+
+      <!-- Buttons -->
+      <div class="flex gap-2">
+        <p-button type="button" (click)="onAddDeck($event)" icon="pi pi-plus-circle" />
+        <p-button
+          type="button"
+          (click)="onEditDeck($event)"
+          icon="pi pi-pencil"
+          [disabled]="!currentDeck"
+        />
+      </div>
+
+      <!-- Popover -->
       <p-popover #op>
-        <form [formGroup]="deckForm" (ngSubmit)="submitDeck()">
-          <div class="flex flex-col">
+        <form [formGroup]="deckForm" (ngSubmit)="submitDeckForm()" class="w-80">
+          <div class="flex flex-col gap-4">
             <p-floatlabel variant="on">
-              <input pInputText itemid="name" formControlName="name" class="w-full" />
+              <input pInputText inputId="name" formControlName="name" class="w-full" />
               <label for="name">Name</label>
             </p-floatlabel>
+
             <p-floatlabel variant="on">
               <textarea
                 pTextarea
-                itemid="description"
+                inputId="description"
                 formControlName="description"
                 class="w-full"
                 [autoResize]="true"
               ></textarea>
               <label for="description">Description</label>
             </p-floatlabel>
-            <button pButton type="submit">Create Deck</button>
+
+            <div class="flex justify-end">
+              <p-button
+                type="submit"
+                icon="pi pi-save"
+                [label]="isEditDeck ? 'Update Deck' : 'Create Deck'"
+              />
+            </div>
           </div>
         </form>
       </p-popover>
     </div>
-    <div>
+
+    <!-- Front -->
+    <div class="space-y-2">
       <p-floatlabel variant="on">
         <textarea
           pTextarea
-          itemid="front"
+          inputId="front"
           formControlName="front"
           class="w-full"
           [autoResize]="true"
+          rows="4"
         ></textarea>
         <label for="front">Front</label>
       </p-floatlabel>
+
       @if (hasDisplayableError('front') && cardForm.controls['front'].hasError('required')) {
-        <p-message severity="error" size="small" variant="simple"
-          >Please enter the front text (question)</p-message
-        >
+        <p-message severity="error" size="small" variant="simple">
+          Please enter the front text (question)
+        </p-message>
       }
     </div>
-    <div>
+
+    <!-- Back -->
+    <div class="space-y-2">
       <p-floatlabel variant="on">
-        <textarea pTextarea formControlName="back" class="w-full" [autoResize]="true"></textarea>
+        <textarea
+          pTextarea
+          inputId="back"
+          formControlName="back"
+          class="w-full"
+          [autoResize]="true"
+          rows="4"
+        ></textarea>
         <label for="back">Back</label>
       </p-floatlabel>
+
       @if (hasDisplayableError('back') && cardForm.controls['back'].hasError('required')) {
-        <p-message severity="error" size="small" variant="simple"
-          >Please enter the back text (answer)</p-message
-        >
+        <p-message severity="error" size="small" variant="simple">
+          Please enter the back text (answer)
+        </p-message>
       }
     </div>
-    <button pButton type="submit">Create Card</button>
+
+    <!-- Actions -->
+    <div class="flex justify-end pt-2">
+      <p-button type="submit" icon="pi pi-save" label="Save" />
+    </div>
   </form>
 </div>

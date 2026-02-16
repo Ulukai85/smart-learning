@@ -5,7 +5,7 @@ export interface DeckDto {
   description: string;
 }
 
-export interface CreateDeckDto {
+export interface UpsertDeckDto {
   name: string;
   description: string;
 }

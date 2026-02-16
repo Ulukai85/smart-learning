@@ -8,7 +8,7 @@ public class DeckDto
     public string Description { get; set; } = string.Empty;
 }
 
-public class CreateDeckDto
+public class UpsertDeckDto
 {
     public required string Name {get; set;}
     public string Description {get; set;} = string.Empty;

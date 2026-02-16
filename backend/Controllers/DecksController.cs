@@ -9,7 +9,7 @@ namespace SmartLearning.Controllers;
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class DeckController(IDeckService deckService) : ControllerBase
+public class DecksController(IDeckService deckService) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateDeck ([FromBody] UpsertDeckDto dto)
