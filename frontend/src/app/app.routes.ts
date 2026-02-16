@@ -4,10 +4,11 @@ import { Registration } from './components/registration/registration';
 import { Login } from './components/login/login';
 import { Dashboard } from './components/dashboard/dashboard';
 import { Layout } from './components/layout/layout';
-import { CardDesigner } from './components/card-designer/card-designer';
 import { CardExplorer } from './components/card-explorer/card-explorer';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
     path: '',
     component: User,
@@ -19,19 +20,20 @@ export const routes: Routes = [
   {
     path: '',
     component: Layout,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     children: [
       {
         path: 'dashboard',
         component: Dashboard,
       },
       {
-        path: 'card',
-        component: CardDesigner,
-      },
-      {
         path: 'cards',
         component: CardExplorer,
       },
+      { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
     ],
   },
+
+  { path: '**', redirectTo: 'login' },
 ];

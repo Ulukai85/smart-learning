@@ -33,7 +33,7 @@ public static class IdentityExtensions
 
     public static IServiceCollection AddIdentityAuth(this IServiceCollection services, IConfiguration config)
     {
-        var jwtSecret = config.GetSection("AppSettings:JWTSecret").Value;
+        var jwtSettings = config.GetSection("AppSettings:Jwt").Get<JwtSettings>();
 
         services.AddAuthentication(options =>
         {
@@ -46,7 +46,7 @@ public static class IdentityExtensions
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret!)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings!.Key)),
                 ValidateIssuer = false,
                 ValidateAudience = false,
             };

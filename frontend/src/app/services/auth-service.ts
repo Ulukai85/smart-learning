@@ -8,9 +8,10 @@ import { TOKEN_KEY } from '../constants';
   providedIn: 'root',
 })
 export class AuthService {
-  http = inject(HttpClient);
+  private http = inject(HttpClient);
 
-  apiUrl = environment.baseUrl + '/Auth';
+  private apiUrl = environment.baseUrl + '/Auth';
+  private sessionExpiredHandled = false;
 
   signup(dto: CreateUserDto) {
     return this.http.post(this.apiUrl + '/signup', dto);
@@ -21,7 +22,7 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    return this.getToken != null;
+    return this.getToken() != null;
   }
 
   saveToken(token: string) {
@@ -34,5 +35,18 @@ export class AuthService {
 
   deleteToken() {
     localStorage.removeItem(TOKEN_KEY);
+  }
+
+  handleSessionExpired(): boolean {
+    if (this.sessionExpiredHandled) return false;
+
+    this.sessionExpiredHandled = true;
+    this.deleteToken();
+    return true;
+  }
+
+  onLoginSuccess(token: string) {
+    this.sessionExpiredHandled = false;
+    this.saveToken(token);
   }
 }

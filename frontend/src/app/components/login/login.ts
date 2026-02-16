@@ -43,7 +43,7 @@ export class Login {
     if (this.form.valid) {
       this.authService.signin(this.form.value as LoginUserDto).subscribe({
         next: (result: any) => {
-          this.authService.saveToken(result.token);
+          this.authService.onLoginSuccess(result.token);
           this.toast.success('Welcome', 'Login successful!');
           this.router.navigateByUrl('/dashboard');
           this.form.reset();

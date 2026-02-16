@@ -5,6 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("AppSettings:Jwt"));
+
 builder.Services
     .InjectServices()
     .AddEndpointExplorer()
