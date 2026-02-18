@@ -29,6 +29,11 @@ export class Navbar implements OnInit {
         icon: 'pi pi-list',
         routerLink: ['/cards'],
       },
+      {
+        label: 'Decks',
+        icon: 'pi pi-share',
+        routerLink: ['/decks'],
+      },
     ];
   }
 

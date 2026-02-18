@@ -6,6 +6,7 @@ import { Dashboard } from './components/dashboard/dashboard';
 import { Layout } from './components/layout/layout';
 import { CardExplorer } from './components/card-explorer/card-explorer';
 import { authGuard } from './guards/auth-guard';
+import { Decks } from './components/decks/decks';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -30,6 +31,10 @@ export const routes: Routes = [
       {
         path: 'cards',
         component: CardExplorer,
+      },
+      {
+        path: 'decks',
+        component: Decks,
       },
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
     ],

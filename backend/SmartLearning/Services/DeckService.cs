@@ -9,6 +9,8 @@ public interface IDeckService
     Task<DeckDto> CreateDeckAsync(UpsertDeckDto dto, string userId);
     Task<ICollection<DeckDto>> GetAllDecksAsync();
     Task UpdateDeckAsync(Guid id, UpsertDeckDto dto);
+    Task<ICollection<DeckSummaryDto>> GetDeckSummariesByUserIdAsync(string userId);
+
 }
 
 public class DeckService(IDeckRepository deckRepo): IDeckService
@@ -47,5 +49,11 @@ public class DeckService(IDeckRepository deckRepo): IDeckService
         deck.UpdatedAt = DateTime.UtcNow;
 
         await deckRepo.SaveChangesAsync();
+    }
+
+    public async Task<ICollection<DeckSummaryDto>> GetDeckSummariesByUserIdAsync(string userId)
+    {
+        var decks = await deckRepo.GetDeckSummariesByUserIdAsync(userId);
+        return decks;
     }
 }

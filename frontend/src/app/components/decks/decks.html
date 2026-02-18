@@ -1,0 +1,19 @@
+<p-table [value]="deckSummaries()" dataKey="id">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Name</th>
+      <th>Total Cards</th>
+      <th>New Cards</th>
+      <th>Due Cards</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-deck>
+    <tr>
+      <td>{{ deck.name }}</td>
+      <td>{{ deck.totalCards }}</td>
+      <td>{{ deck.newCards }}</td>
+      <td>{{ deck.dueCards }}</td>
+    </tr>
+  </ng-template>
+</p-table>

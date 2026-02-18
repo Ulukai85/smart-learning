@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SmartLearning.DTOs;
 using SmartLearning.Models;
 
 namespace SmartLearning.Repositories;
@@ -10,6 +11,7 @@ public interface IDeckRepository
     Task<Deck?> GetDeckByIdAsync(Guid id);
     Task SaveChangesAsync();
     Task DeleteDeckAsync(Deck deck);
+    Task<ICollection<DeckSummaryDto>> GetDeckSummariesByUserIdAsync(string userId);
 }
 
 public class DeckRepository(AppDbContext dbContext) : IDeckRepository
@@ -40,5 +42,27 @@ public class DeckRepository(AppDbContext dbContext) : IDeckRepository
     {
         dbContext.Decks.Remove(deck);
         await SaveChangesAsync();
+    }
+
+    public async Task<ICollection<DeckSummaryDto>> GetDeckSummariesByUserIdAsync(string userId)
+    {
+        var now = DateTime.UtcNow;
+        return await dbContext.Decks
+            .Select(deck => new DeckSummaryDto
+            {
+                Id = deck.Id,
+                Name = deck.Name,
+                TotalCards = deck.Cards.Count,
+                NewCards = deck.Cards
+                    .Count(card => !dbContext.UserCardProgresses
+                        .Any(progress => progress.CardId == card.Id
+                                         && progress.UserId == userId)),
+                DueCards = deck.Cards
+                    .Count(card => dbContext.UserCardProgresses
+                        .Any(progress => progress.UserId == userId
+                                         && progress.CardId == card.Id
+                                         && progress.NextReviewAt <= now))
+            })
+            .ToListAsync();
     }
 }
