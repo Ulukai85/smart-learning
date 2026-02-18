@@ -9,6 +9,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Deck> Decks  { get; set; }
     public DbSet<Card> Cards { get; set; }
     public DbSet<UserCardProgress> UserCardProgresses { get; set; }
+    public DbSet<XpTransaction> XpTransactions { get; set; }
+    public DbSet<ReviewLog> ReviewLog { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -51,7 +53,31 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .HasForeignKey(x => x.CardId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
-        
-        
+
+        modelBuilder.Entity<XpTransaction>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.HasOne(x => x.User)
+                .WithMany(u => u.XpTransactions)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+        });
+
+        modelBuilder.Entity<ReviewLog>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.HasOne(x => x.User)
+                .WithMany(u => u.ReviewLogs)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(x => x.Card)
+                .WithMany(c =>  c.ReviewLogs) 
+                .HasForeignKey(x => x.CardId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 }

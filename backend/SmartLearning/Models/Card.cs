@@ -23,6 +23,9 @@ public class Card
 
     public ICollection<UserCardProgress> UserCardProgresses { get; set; } 
         = new List<UserCardProgress>();
+    
+    public ICollection<ReviewLog> ReviewLogs { get; set; }
+        = new List<ReviewLog>();
 
     public CardDto MapToDto()
     {
