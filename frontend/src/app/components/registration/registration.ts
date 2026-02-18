@@ -15,7 +15,7 @@ import { FirstKeyPipe } from '../../pipes/first-key-pipe';
 import { AuthService } from '../../services/auth-service';
 import { ToastService } from '../../services/toast-service';
 import { CreateUserDto } from '../../models/user.model';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
@@ -38,6 +38,7 @@ export class Registration {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private toast = inject(ToastService);
+  private router = inject(Router)
 
   constructor() {
     this.form = this.fb.group(
@@ -84,6 +85,7 @@ export class Registration {
           this.toast.success('Success', 'Registration successful!');
           this.form.reset();
           this.isSubmitted = false;
+          this.router.navigateByUrl('/login')
         },
         error: (err) => {
           if (err.error.errors) {
