@@ -11,3 +11,12 @@ export interface UpsertCardDto {
   front: string;
   back: string;
 }
+
+export interface CardToReviewDto {
+  id: string,
+  front: string;
+  back: string;
+  nextReviewAt: string;
+  strategyType: string;
+  strategyData: string;
+}
