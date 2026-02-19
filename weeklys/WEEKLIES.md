@@ -38,8 +38,9 @@
 ### Backend
 
 - CRUD-Operationen für Cards und Decks
-- Weitere Models für CardProgress, ReviewLogs und XPTransactions mit Migration
-- Testbibliothek Xunit mit ersten Tests
+- Logik zum Abfragen der aktuell zu lernenden Karten (neue und fällige)
+- Testbibliothek Xunit einrichten, probeweise Unit- und Komponententest
+- Einrichten von Collection in Postman zum API-Testen
 
 ### Frontend
 
@@ -47,8 +48,15 @@
 - Layout mit Routing und Navbar
 - Filter- und sortierbare Ansichten für Karten und Decks
 - Konfigurieren der Testbibliothek
+- Erstellen einer Komponenten zur Starten von Lernsession
+
+### Datenbank
+
+- Weitere Models für CardProgress, ReviewLogs und XPTransactions
+- **Migration** der Models in DB
+- Erstellen von **Indizes** für effizientere Queries (UserCardProgress, Card) mit FluentAPI
 
 ### TODO NEXT
 
-- Komponente für Lernen von Karten
 - Logik für Kartenreview
+- Tests für bisherige Logik

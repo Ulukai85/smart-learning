@@ -1,9 +1,9 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { TableModule, TableRowSelectEvent } from 'primeng/table';
-import { DeckService } from '../../services/deck-service';
-import { DeckSummaryDto } from '../../models/deck.model';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { DeckSummaryDto } from '../../models/deck.model';
+import { DeckService } from '../../services/deck-service';
 
 @Component({
   selector: 'app-decks',
