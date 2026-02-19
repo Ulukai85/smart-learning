@@ -1,8 +1,8 @@
 <p>card-review works!</p>
-@if (current) {
-    <div>
-        <p>current.front</p>
-    </div>
+@if (current()) {
+  <div>
+    <p>{{ current().front }}</p>
+  </div>
 } @else {
-    <div>No card!</div>
+  <div>No card!</div>
 }

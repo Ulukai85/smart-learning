@@ -13,10 +13,11 @@ export interface UpsertCardDto {
 }
 
 export interface CardToReviewDto {
-  id: string,
+  id: string;
   front: string;
   back: string;
-  nextReviewAt: string;
+  nextReviewAt?: string;
+  isNew: boolean;
   strategyType: string;
   strategyData: string;
 }

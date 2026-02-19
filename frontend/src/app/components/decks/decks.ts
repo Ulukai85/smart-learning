@@ -1,12 +1,13 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { TableModule } from 'primeng/table';
+import { TableModule, TableRowSelectEvent } from 'primeng/table';
 import { DeckService } from '../../services/deck-service';
 import { DeckSummaryDto } from '../../models/deck.model';
 import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-decks',
-  imports: [TableModule],
+  imports: [TableModule, ButtonModule],
   templateUrl: './decks.html',
   styles: ``,
 })
@@ -15,6 +16,7 @@ export class Decks implements OnInit {
   private router = inject(Router);
 
   deckSummaries = signal<DeckSummaryDto[]>([]);
+  selectedDeck: DeckSummaryDto | null = null;
 
   ngOnInit(): void {
     this.loadDeckSummary();
@@ -27,6 +29,14 @@ export class Decks implements OnInit {
   }
 
   reviewDeck(deckId: string): void {
+    console.log('deck id in decks comp:', deckId);
     this.router.navigate(['/review/deck', deckId]);
+  }
+
+  onRowSelect() {
+    const selectedId = this.selectedDeck?.id;
+    if (selectedId != null) {
+      this.reviewDeck(selectedId);
+    }
   }
 }

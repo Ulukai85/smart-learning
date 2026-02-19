@@ -1,4 +1,10 @@
-<p-table [value]="deckSummaries()" dataKey="id">
+<p-table
+  [value]="deckSummaries()"
+  dataKey="id"
+  selectionMode="single"
+  [(selection)]="selectedDeck"
+  (onRowSelect)="onRowSelect()"
+>
   <ng-template pTemplate="header">
     <tr>
       <th>Name</th>
@@ -9,7 +15,7 @@
   </ng-template>
 
   <ng-template pTemplate="body" let-deck>
-    <tr>
+    <tr [pSelectableRow]="deck">
       <td>{{ deck.name }}</td>
       <td>{{ deck.totalCards }}</td>
       <td>{{ deck.newCards }}</td>

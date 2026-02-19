@@ -39,8 +39,8 @@ export const routes: Routes = [
       },
       {
         path: 'review/deck/:deckId',
-        component: CardReview
-      }
+        component: CardReview,
+      },
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
     ],
   },

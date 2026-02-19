@@ -11,11 +11,9 @@ export class ReviewService {
   http = inject(HttpClient);
 
   apiUrl = environment.baseUrl + '/Review';
-  
-  getCardBatch(deckId: string,newCards: number = 10, dueCards: number = 20): Observable<CardToReviewDto[]> {
-    const params = new HttpParams()
-    .set('new', newCards)
-    .set('due', dueCards);
-    return this.http.get<CardToReviewDto[]>(`${this.apiUrl}/deck/${deckId}`, {params})
+
+  fetchCardBatch(deckId: string, dueLimit = 20, newLimit = 10): Observable<CardToReviewDto[]> {
+    const params = new HttpParams().set('newLimit', newLimit).set('dueLimit', dueLimit);
+    return this.http.get<CardToReviewDto[]>(`${this.apiUrl}/deck/${deckId}`, { params });
   }
 }

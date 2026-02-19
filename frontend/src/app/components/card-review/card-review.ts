@@ -1,30 +1,38 @@
-import { Component, computed, inject, input, OnInit, signal, Signal } from '@angular/core';
-import { ReviewService } from '../../services/review-service';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CardToReviewDto } from '../../models/card.model';
+import { ReviewService } from '../../services/review-service';
 
 @Component({
   selector: 'app-card-review',
-  imports: [ReviewService],
+  imports: [],
   templateUrl: './card-review.html',
   styles: ``,
 })
 export class CardReview implements OnInit {
-  private reviewService = inject(ReviewService)
+  private reviewService = inject(ReviewService);
+  private activatedRoute = inject(ActivatedRoute);
 
-  queue = signal<CardToReviewDto[]>([])
+  deckId = signal('');
+
+  queue = signal<CardToReviewDto[]>([]);
   current = computed(() => this.queue()[0] ?? null);
 
   ngOnInit(): void {
-    this.getCardBatch()
+    const deckId = this.activatedRoute.snapshot.paramMap.get('deckId');
+    if (!deckId) return;
+    this.deckId.set(deckId);
+    this.fetchCardBatch();
   }
 
   getNextCard() {
-    this.queue.update(queue => queue.slice(1));
+    this.queue.update((queue) => queue.slice(1));
   }
 
-  getCardBatch() {
-    this.reviewService.getCardBatch().subscribe({
-      next: cards => this.queue.set(cards)
-    })
+  fetchCardBatch() {
+    console.log('deckid when fetching:', this.deckId());
+    this.reviewService.fetchCardBatch(this.deckId()).subscribe({
+      next: (cards) => this.queue.set(cards),
+    });
   }
 }
