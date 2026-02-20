@@ -16,4 +16,6 @@ export class ReviewService {
     const params = new HttpParams().set('newLimit', newLimit).set('dueLimit', dueLimit);
     return this.http.get<CardToReviewDto[]>(`${this.apiUrl}/deck/${deckId}`, { params });
   }
+
+  saveCardReview() {}
 }

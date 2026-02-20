@@ -2,16 +2,20 @@
   @if (current() as current) {
   <Card>
     <p>{{ current.front }}</p>
-    <p>{{ current.back }}
-    </p>
-    <div>
-      <p-button (click)="onReview(0)" label="Wrong"></p-button>
-      <p-button (click)="onReview(1)" label="Hard"></p-button>
-      <p-button (click)="onReview(2)" label="Easy"></p-button>
-    </div>
+    @if (showSolution()) {
+    <p>{{ current.back }}</p>
+    }
+  </Card>
+  <div>
+    @if (showSolution()) {
+    <p-button (click)="onReview(0)" label="Wrong"></p-button>
+    <p-button (click)="onReview(1)" label="Hard"></p-button>
+    <p-button (click)="onReview(2)" label="Easy"></p-button>
+    } @else {
+    <p-button (click)="onShowAnswer()" label="Show Answer"></p-button>
+    }
   </div>
-} @else {
-  <div>No card!</div>
-}
+  } @else {
+  <Card>No card!</Card>
+  }
 </div>
-

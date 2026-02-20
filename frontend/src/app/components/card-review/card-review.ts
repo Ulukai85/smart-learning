@@ -19,7 +19,7 @@ export class CardReview implements OnInit {
 
   queue = signal<CardToReviewDto[]>([]);
   current = computed(() => this.queue()[0] ?? null);
-  showFront = signal('')
+  showSolution = signal<boolean>(false)
 
   ngOnInit(): void {
     const deckId = this.activatedRoute.snapshot.paramMap.get('deckId');
@@ -39,8 +39,13 @@ export class CardReview implements OnInit {
     });
   }
 
+  onShowAnswer() {
+    this.showSolution.set(true)
+  }
+
   onReview(grade: number) {
     console.log('grade:', grade)
     this.getNextCard()
+    this.showSolution.set(false)
   }
 }
