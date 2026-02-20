@@ -1,8 +1,17 @@
-<p>card-review works!</p>
-@if (current()) {
-  <div>
-    <p>{{ current().front }}</p>
+<div>
+  @if (current() as current) {
+  <Card>
+    <p>{{ current.front }}</p>
+    <p>{{ current.back }}
+    </p>
+    <div>
+      <p-button (click)="onReview(0)" label="Wrong"></p-button>
+      <p-button (click)="onReview(1)" label="Hard"></p-button>
+      <p-button (click)="onReview(2)" label="Easy"></p-button>
+    </div>
   </div>
 } @else {
   <div>No card!</div>
 }
+</div>
+

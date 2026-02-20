@@ -2,7 +2,7 @@
 
 ## Flashcards mit Spaced Repetition und Gamification
 
-## Woche 1 (09.02. - 13.02.2026)
+## Woche 0 (09.02. - 13.02.2026)
 
 ### Dokumentation
 
@@ -29,9 +29,9 @@
 
 - Erstellen von Docker-Compose-File für MySQL-Datenbank
 
-## Woche 2 (16.02. - 20.02.2026)
+## Woche 1 (16.02. - 20.02.2026)
 
-## Dokumentation
+### Dokumentation
 
 - ERM-Diagramm (teilweise)
 
@@ -48,7 +48,7 @@
 - Layout mit Routing und Navbar
 - Filter- und sortierbare Ansichten für Karten und Decks
 - Konfigurieren der Testbibliothek
-- Erstellen einer Komponenten zur Starten von Lernsession
+- Erstellen einer Komponente zur Starten von Lernsessions
 
 ### Datenbank
 
@@ -58,5 +58,5 @@
 
 ### TODO NEXT
 
-- Logik für Kartenreview
-- Tests für bisherige Logik
+- Logik für Kartenreview und Lernsession
+- Unit-Tests für bisherige Logik erstellen
