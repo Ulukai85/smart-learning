@@ -9,7 +9,6 @@ namespace SmartLearning.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class ReviewController(
-    IDeckService deckService,
     IReviewService reviewService) : ControllerBase
 {
     [HttpGet("deck/{deckId:guid}")]
@@ -24,8 +23,8 @@ public class ReviewController(
 
         try
         {
-            var batch = await reviewService.GetCardsToReviewAsync(deckId, userId, dueLimit, newLimit);
-            return Ok(batch);
+            var deckToReview = await reviewService.GetDeckToReviewAsync(deckId, userId, dueLimit, newLimit);
+            return Ok(deckToReview);
         }
         catch  (Exception ex)
         {

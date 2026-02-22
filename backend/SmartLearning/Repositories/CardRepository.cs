@@ -11,6 +11,16 @@ public interface ICardRepository
     Task<Card?> GetCardByIdAsync(Guid id);
     Task SaveChangesAsync();
     Task DeleteCardAsync(Card card);
+
+    Task<int> CountDueCardsAsync(
+        Guid deckId,
+        string userId,
+        DateTime nowUtc);
+
+    Task<int> CountNewCardsAsync(
+        Guid deckId,
+        string userId);
+    
     Task<ICollection<CardToReviewDto>> GetDueCardsAsync(
         Guid deckId,
         string userId,
@@ -58,17 +68,23 @@ public class CardRepository(AppDbContext dbContext) : ICardRepository
         await SaveChangesAsync();
     }
 
+    public async Task<int> CountDueCardsAsync(
+        Guid deckId,
+        string userId,
+        DateTime nowUtc)
+    {
+        return await DueQuery(deckId, userId, nowUtc).CountAsync();
+    }
+    
     public async Task<ICollection<CardToReviewDto>> GetDueCardsAsync(
         Guid deckId,
         string userId,
         int limit,
         DateTime nowUtc)
     {
-        return await dbContext.UserCardProgresses
-            .Where(p => p.UserId == userId 
-                        && p.Card.DeckId == deckId
-                        && p.NextReviewAt <= nowUtc)
+        return await DueQuery(deckId, userId, nowUtc)
             .OrderBy(p => p.NextReviewAt)
+            .Take(limit)
             .Select(p => new CardToReviewDto
             {
                 Id = p.Card.Id,
@@ -77,10 +93,24 @@ public class CardRepository(AppDbContext dbContext) : ICardRepository
                 NextReviewAt = p.NextReviewAt,
                 IsNew = false
             })
-            .Take(limit)
+           
             .ToListAsync();
     }
-
+    
+    public async Task<int> CountNewCardsAsync(
+        Guid deckId,
+        string userId)
+    {
+        return await dbContext.Cards
+            .Where(c =>
+                c.DeckId == deckId &&
+                !dbContext.UserCardProgresses
+                    .Any(p =>
+                        p.UserId == userId && 
+                        p.CardId == c.Id))
+            .CountAsync();
+    }
+    
     public async Task<ICollection<CardToReviewDto>> GetNewCardsAsync(
         Guid deckId,
         string userId,
@@ -88,10 +118,13 @@ public class CardRepository(AppDbContext dbContext) : ICardRepository
     )
     {
         return await dbContext.Cards
-            .Where(c => c.DeckId == deckId)
-            .Where(c => !dbContext.UserCardProgresses
-                .Any(p => p.UserId == userId && p.CardId == c.Id))
+            .Where(c => c.DeckId == deckId &&
+                        !dbContext.UserCardProgresses
+                            .Any(p => 
+                                p.UserId == userId && 
+                                p.CardId == c.Id))
             .OrderBy(c => c.CreatedAt)
+            .Take(limit)
             .Select(c => new CardToReviewDto
             {
                 Id = c.Id,
@@ -100,7 +133,18 @@ public class CardRepository(AppDbContext dbContext) : ICardRepository
                 NextReviewAt = null,
                 IsNew = true
             })
-            .Take(limit)
             .ToListAsync();
+    }
+    
+    private IQueryable<UserCardProgress> DueQuery(
+        Guid deckId,
+        string userId,
+        DateTime nowUtc)
+    {
+        return dbContext.UserCardProgresses
+            .Where(p =>
+                p.UserId == userId &&
+                p.Card.DeckId == deckId &&
+                p.NextReviewAt <= nowUtc);
     }
 }

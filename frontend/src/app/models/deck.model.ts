@@ -1,3 +1,5 @@
+import { CardToReviewDto } from './card.model';
+
 export interface DeckDto {
   id: string;
   ownerUserId: string;
@@ -16,4 +18,12 @@ export interface DeckSummaryDto {
   totalCards: number;
   newCards: number;
   dueCards: number;
+}
+
+export interface DeckToReviewDto {
+  id: string;
+  name: string;
+  newCards: number;
+  dueCards: number;
+  cards: CardToReviewDto[];
 }

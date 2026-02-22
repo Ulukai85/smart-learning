@@ -1,9 +1,9 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CardToReviewDto } from '../../models/card.model';
-import { ReviewService } from '../../services/review-service';
-import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { DeckToReviewDto } from '../../models/deck.model';
+import { ReviewService } from '../../services/review-service';
 
 @Component({
   selector: 'app-card-review',
@@ -13,39 +13,46 @@ import { ButtonModule } from 'primeng/button';
 })
 export class CardReview implements OnInit {
   private reviewService = inject(ReviewService);
-  private activatedRoute = inject(ActivatedRoute);
+  private route = inject(ActivatedRoute);
 
-  deckId = signal('');
+  deckToReview = signal<DeckToReviewDto | null>(null);
 
-  queue = signal<CardToReviewDto[]>([]);
-  current = computed(() => this.queue()[0] ?? null);
-  showSolution = signal<boolean>(false)
+  current = computed(() => this.deckToReview()?.cards[0] ?? null);
+  showSolution = signal<boolean>(false);
 
   ngOnInit(): void {
-    const deckId = this.activatedRoute.snapshot.paramMap.get('deckId');
-    if (!deckId) return;
-    this.deckId.set(deckId);
-    this.fetchCardBatch();
+    this.route.paramMap.subscribe((params) => {
+      const deckId = params.get('deckId');
+      if (!deckId) return;
+
+      this.fetchDeckToReview(deckId);
+    });
   }
 
   getNextCard() {
-    this.queue.update((queue) => queue.slice(1));
+    this.deckToReview.update((data) => {
+      if (!data) return data;
+
+      return {
+        ...data,
+        cards: data.cards.slice(1),
+      };
+    });
   }
 
-  fetchCardBatch() {
-    console.log('deckid when fetching:', this.deckId());
-    this.reviewService.fetchCardBatch(this.deckId()).subscribe({
-      next: (cards) => this.queue.set(cards),
+  fetchDeckToReview(deckId: string) {
+    this.reviewService.fetchDeckToReview(deckId).subscribe({
+      next: (data) => this.deckToReview.set(data),
     });
   }
 
   onShowAnswer() {
-    this.showSolution.set(true)
+    this.showSolution.set(true);
   }
 
   onReview(grade: number) {
-    console.log('grade:', grade)
-    this.getNextCard()
-    this.showSolution.set(false)
+    console.log('grade:', grade);
+    this.getNextCard();
+    this.showSolution.set(false);
   }
 }

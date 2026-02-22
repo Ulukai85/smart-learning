@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { CardToReviewDto } from '../models/card.model';
+import { DeckToReviewDto } from '../models/deck.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +12,9 @@ export class ReviewService {
 
   apiUrl = environment.baseUrl + '/Review';
 
-  fetchCardBatch(deckId: string, dueLimit = 20, newLimit = 10): Observable<CardToReviewDto[]> {
+  fetchDeckToReview(deckId: string, dueLimit = 20, newLimit = 10): Observable<DeckToReviewDto> {
     const params = new HttpParams().set('newLimit', newLimit).set('dueLimit', dueLimit);
-    return this.http.get<CardToReviewDto[]>(`${this.apiUrl}/deck/${deckId}`, { params });
+    return this.http.get<DeckToReviewDto>(`${this.apiUrl}/deck/${deckId}`, { params });
   }
 
   saveCardReview() {}

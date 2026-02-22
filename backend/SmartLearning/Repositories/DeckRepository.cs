@@ -48,6 +48,7 @@ public class DeckRepository(AppDbContext dbContext) : IDeckRepository
     {
         var now = DateTime.UtcNow;
         return await dbContext.Decks
+            .Where(deck => deck.OwnerUserId == userId)
             .Select(deck => new DeckSummaryDto
             {
                 Id = deck.Id,

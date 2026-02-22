@@ -5,19 +5,22 @@ namespace SmartLearning.Services;
 
 public interface IReviewService
 {
-    Task<ICollection<CardToReviewDto>> GetCardsToReviewAsync(
+    Task<DeckToReviewDto> GetDeckToReviewAsync(
         Guid deckId,
         string userId,
         int dueLimit,
         int newLimit);
 }
 
-public class ReviewService(ICardRepository cardRepo) : IReviewService
+public class ReviewService(
+    ICardRepository cardRepo,
+    IDeckRepository deckRepo
+    ) : IReviewService
 {
-    private static readonly int DueLimit = 50;
-    private static readonly int NewLimit = 20;
+    private const int DueLimit = 50;
+    private const int NewLimit = 20;
     
-    public async Task<ICollection<CardToReviewDto>> GetCardsToReviewAsync(
+    public async Task<DeckToReviewDto> GetDeckToReviewAsync(
         Guid deckId,
         string userId,
         int dueLimit,
@@ -26,19 +29,31 @@ public class ReviewService(ICardRepository cardRepo) : IReviewService
         dueLimit = Math.Clamp(dueLimit, 0, DueLimit);
         newLimit = Math.Clamp(newLimit, 0, NewLimit);
         
+        var deck = await deckRepo.GetDeckByIdAsync(deckId);
+        
+        if (deck is null || deck.OwnerUserId != userId)
+            throw new UnauthorizedAccessException("Deck not accessible");
+        
         var nowUtc = DateTime.UtcNow;
         
-        var dueCards = await cardRepo.GetDueCardsAsync(deckId, userId, dueLimit, nowUtc);
-
-        if (newLimit == 0) return dueCards;
+        var dueCount = await cardRepo.CountDueCardsAsync(deckId, userId, nowUtc);
+        var newCount = await cardRepo.CountNewCardsAsync(deckId, userId);
         
+        var dueCards = await cardRepo.GetDueCardsAsync(deckId, userId, dueLimit, nowUtc);
         var newCards = await cardRepo.GetNewCardsAsync(deckId, userId, newLimit);
 
-        var result = new List<CardToReviewDto>();
-        result.AddRange(dueCards);
-        result.AddRange(newCards);
+        var cards = new List<CardToReviewDto>();
+        cards.AddRange(dueCards);
+        cards.AddRange(newCards);
         
-        return result;
+        return new DeckToReviewDto
+        {
+            Id = deckId,
+            Name = deck.Name,
+            DueCards = dueCount,
+            NewCards = newCount,
+            Cards = cards
+        };
     }
 
 }

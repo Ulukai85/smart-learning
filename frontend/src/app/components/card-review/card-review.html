@@ -1,21 +1,24 @@
 <div>
-  @if (current() as current) {
-  <Card>
-    <p>{{ current.front }}</p>
-    @if (showSolution()) {
-    <p>{{ current.back }}</p>
-    }
-  </Card>
-  <div>
-    @if (showSolution()) {
-    <p-button (click)="onReview(0)" label="Wrong"></p-button>
-    <p-button (click)="onReview(1)" label="Hard"></p-button>
-    <p-button (click)="onReview(2)" label="Easy"></p-button>
-    } @else {
-    <p-button (click)="onShowAnswer()" label="Show Answer"></p-button>
-    }
-  </div>
+  <h1>{{ deckToReview()?.name }}</h1>
+  @if (current(); as current) {
+    <p-card>
+      <p>{{ current.front }}</p>
+    </p-card>
+    <p-card>
+      @if (showSolution()) {
+        <p>{{ current.back }}</p>
+      }
+    </p-card>
+    <div>
+      @if (showSolution()) {
+        <p-button (click)="onReview(0)" label="Wrong"></p-button>
+        <p-button (click)="onReview(1)" label="Hard"></p-button>
+        <p-button (click)="onReview(2)" label="Easy"></p-button>
+      } @else {
+        <p-button (click)="onShowAnswer()" label="Show Answer"></p-button>
+      }
+    </div>
   } @else {
-  <Card>No card!</Card>
+    <p-card>No card!</p-card>
   }
 </div>
