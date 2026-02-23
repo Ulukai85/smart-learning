@@ -18,12 +18,13 @@ public interface IReviewService
 public class ReviewService(
     ICardRepository cardRepo,
     IDeckRepository deckRepo,
-    ITransactionRepository transactionRepo,
-    IReviewRepository reviewRepo
+    IReviewRepository reviewRepo,
+    AppDbContext dbContext
     ) : IReviewService
 {
     private const int DueLimit = 50;
     private const int NewLimit = 20;
+    private const string DefaultStrategyType = "Anki";
     
     public async Task<DeckToReviewDto> GetDeckToReviewAsync(
         Guid deckId,
@@ -73,22 +74,15 @@ public class ReviewService(
             {
                 UserId = userId,
                 CardId = dto.CardId,
-                StrategyType = dto.StrategyType,
+                StrategyType = dto.StrategyType ?? DefaultStrategyType,
                 LastReviewedAt = utcNow,
-                NextReviewAt = utcNow.AddDays(1),
                 CreatedAt = utcNow,
-                UpdatedAt = utcNow
             };
 
-            progress = await reviewRepo.CreateUserCardProgress(progress);
-        } else
-        {
-            progress.LastReviewedAt = utcNow;
-            progress.NextReviewAt = utcNow.AddDays(1);
-            progress.UpdatedAt = utcNow;
-
-            await reviewRepo.SaveChangesAsync();
+            dbContext.UserCardProgresses.Add(progress);
         }
+        
+        UpdateSpacedRepetition(progress, dto.Grade, utcNow);
         
         var transaction = new XpTransaction
         {
@@ -98,21 +92,34 @@ public class ReviewService(
             CreatedAt = utcNow
         };
 
-        var savedTransaction = await transactionRepo.SaveXpTransaction(transaction);
+        dbContext.XpTransactions.Add(transaction);
 
         var log = new ReviewLog
         {
             UserId = userId,
             CardId = dto.CardId,
-            StrategyType = dto.StrategyType,
+            StrategyType = dto.StrategyType ?? DefaultStrategyType,
             Grade = dto.Grade,
             ReviewedAt = utcNow
         };
 
-        var reviewLog = await reviewRepo.SaveReviewLog(log);
+        dbContext.ReviewLog.Add(log);
 
-        return savedTransaction.MapToDto();
+        await dbContext.SaveChangesAsync();
+        
+        return transaction.MapToDto();
     }
-    
 
+    private void UpdateSpacedRepetition(UserCardProgress progress, int grade, DateTime utcNow)
+    {
+        progress.NextReviewAt = grade switch
+        {
+            0 => utcNow.AddDays(4),
+            1 => utcNow.AddDays(2),
+            _ => utcNow.AddMinutes(5)
+        };
+
+        progress.LastReviewedAt = utcNow;
+        progress.UpdatedAt = utcNow;
+    }
 }

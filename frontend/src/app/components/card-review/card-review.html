@@ -6,28 +6,31 @@
   } @else {
     <div class="flex">
       <h2>{{ deckToReview()?.name }}</h2>
-      <p>New: {{ deckToReview()?.newCards}}</p>
+      <p>New: {{ deckToReview()?.newCards }}</p>
       <p>Review: {{ deckToReview()?.dueCards }}</p>
     </div>
-  @if (current(); as current) {
-    <p-card>
-      <p>{{ current.front }}</p>
-    </p-card>
-    
-      @if (showSolution()) {<p-card>
-        <p>{{ current.back }}</p></p-card>
-      }
-    
-    <div class="flex gap-2">
+    @if (current(); as current) {
+      <p-card>
+        <p>{{ current.front }}</p>
+      </p-card>
+
       @if (showSolution()) {
-        <p-button (click)="onReview(0)" label="Wrong"></p-button>
-        <p-button (click)="onReview(1)" label="Hard"></p-button>
-        <p-button (click)="onReview(2)" label="Easy"></p-button>
-      } @else {
-        <p-button (click)="onShowAnswer()" label="Show Answer"></p-button>
+        <p-card>
+          <p>{{ current.back }}</p></p-card
+        >
       }
-    </div>
-  } @else {
-    <p-card>No card!</p-card>
-  }}
+
+      <div class="flex gap-2">
+        @if (showSolution()) {
+          <p-button (click)="onReview(0, current)" label="Wrong"></p-button>
+          <p-button (click)="onReview(1, current)" label="Hard"></p-button>
+          <p-button (click)="onReview(2, current)" label="Easy"></p-button>
+        } @else {
+          <p-button (click)="onShowAnswer()" label="Show Answer"></p-button>
+        }
+      </div>
+    } @else {
+      <p-card>No card!</p-card>
+    }
+  }
 </div>

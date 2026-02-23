@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { DeckToReviewDto } from '../models/deck.model';
-import { CreateReviewTransactionDto, XpTransactionDto } from '../models/XpTransaction.model';
+import { CreateReviewTransactionDto, XpTransactionDto } from '../models/xpTransaction.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +19,6 @@ export class ReviewService {
   }
 
   saveCardReview(dto: CreateReviewTransactionDto): Observable<XpTransactionDto> {
-    return this.http.post<XpTransactionDto>(`${this.apiUrl}`, dto)
+    return this.http.post<XpTransactionDto>(`${this.apiUrl}`, dto);
   }
 }

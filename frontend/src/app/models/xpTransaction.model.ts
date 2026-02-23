@@ -1,11 +1,11 @@
 export interface CreateReviewTransactionDto {
-    cardId: string,
-    grade: number,
-    strategyType: string
+  cardId: string;
+  grade: number;
+  strategyType?: string;
 }
 
 export interface XpTransactionDto {
-    id: string,
-    amount: number,
-    reason: string
+  id: string;
+  amount: number;
+  reason: string;
 }

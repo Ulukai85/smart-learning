@@ -3,9 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DeckToReviewDto } from '../../models/deck.model';
-import { CreateReviewTransactionDto } from '../../models/XpTransaction.model';
+import { CreateReviewTransactionDto } from '../../models/xpTransaction.model';
 import { ReviewService } from '../../services/review-service';
 import { SkeletonModule } from 'primeng/skeleton';
+import { CardToReviewDto } from '../../models/card.model';
 
 @Component({
   selector: 'app-card-review',
@@ -47,7 +48,7 @@ export class CardReview implements OnInit {
       next: (data) => {
         this.deckToReview.set(data);
       },
-      error: (err) => console.log('Error:', err)
+      error: (err) => console.log('Error:', err),
     });
   }
 
@@ -55,15 +56,18 @@ export class CardReview implements OnInit {
     this.showSolution.set(true);
   }
 
-  onReview(grade: number) {
-    console.log('grade:', grade);
+  onReview(grade: number, card: CardToReviewDto) {
     this.getNextCard();
-    const dto: CreateReviewTransactionDto = new {
-      cardId: 
-    }
-
-    }
-    this.reviewService.saveCardReview
+    const dto: CreateReviewTransactionDto = {
+      cardId: card.id,
+      grade: grade,
+      strategyType: card.strategyType,
+    };
+    this.reviewService.saveCardReview(dto).subscribe({
+      next: (data) => {
+        console.log('received dto:', data);
+      },
+    });
     this.showSolution.set(false);
   }
 }

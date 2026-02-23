@@ -12,15 +12,15 @@ public class ReviewServiceTests
     private readonly Mock<ICardRepository> cardRepo = new();
     private readonly Mock<IDeckRepository> deckRepo = new();
     private readonly Mock<IReviewRepository> reviewRepo = new();
-    private readonly Mock<ITransactionRepository> transactionRepo = new();
+    private readonly Mock<AppDbContext> dbContext = new();
 
     private ReviewService CreateReviewService()
     {
         return new ReviewService(
             cardRepo.Object,
             deckRepo.Object,
-            transactionRepo.Object,
-            reviewRepo.Object);  
+            reviewRepo.Object,
+            dbContext.Object);
     } 
 
     [Fact]

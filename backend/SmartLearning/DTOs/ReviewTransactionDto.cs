@@ -4,7 +4,7 @@ public class CreateReviewTransactionDto
 {
     public Guid CardId { get; set; }
     public int Grade { get; set; }
-    public string StrategyType { get; set; }
+    public string? StrategyType { get; set; }
 }
 
 public class XpTransactionDto
