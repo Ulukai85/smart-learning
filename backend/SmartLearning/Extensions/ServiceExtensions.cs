@@ -14,6 +14,8 @@ public static class ServiceExtensions
 
         services.AddScoped<ICardRepository, CardRepository>();
         services.AddScoped<IDeckRepository, DeckRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
+        services.AddScoped<ITransactionRepository, TransactionRepository>();
         
         return services;
     }

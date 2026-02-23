@@ -68,13 +68,13 @@ export class CardDesigner implements OnChanges {
 
     this.deckForm = this.fb.group({
       name: ['', Validators.required],
-      description: ['', Validators.required],
+      description: [''],
     });
   }
 
   get currentDeck(): DeckDto | null {
     const deckId = this.cardForm.get('deckId');
-    if (!deckId || this.decks()) return null;
+    if (!deckId || !this.decks()) return null;
     return this.decks()?.find((deck) => deck.id === deckId.value) ?? null;
   }
 
@@ -203,8 +203,8 @@ export class CardDesigner implements OnChanges {
     }
   }
 
-  hasDisplayableError(controlName: string): boolean {
-    const control = this.cardForm.get(controlName);
+  hasDisplayableError(form: FormGroup, controlName: string): boolean {
+    const control = form.get(controlName);
     return !!control?.invalid && this.isSubmitted;
   }
 }

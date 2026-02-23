@@ -11,8 +11,17 @@ public class ReviewServiceTests
 {
     private readonly Mock<ICardRepository> cardRepo = new();
     private readonly Mock<IDeckRepository> deckRepo = new();
-    
-    private ReviewService CreateReviewService()  => new ReviewService(cardRepo.Object, deckRepo.Object);
+    private readonly Mock<IReviewRepository> reviewRepo = new();
+    private readonly Mock<ITransactionRepository> transactionRepo = new();
+
+    private ReviewService CreateReviewService()
+    {
+        return new ReviewService(
+            cardRepo.Object,
+            deckRepo.Object,
+            transactionRepo.Object,
+            reviewRepo.Object);  
+    } 
 
     [Fact]
     public async Task GetDeckToReviewAsync_ShouldThrow_WhenDeckNotOwnedByUser()

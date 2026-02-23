@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SmartLearning.DTOs;
 
 namespace SmartLearning.Models;
 
@@ -7,7 +8,7 @@ public class XpTransaction
     public Guid Id { get; set; }
     
     [MaxLength(256)]
-    public string UserId { get; set; }
+    public required string UserId { get; set; }
     public AppUser User { get; set; } = null!;
     
     public int Amount { get; set; }
@@ -15,4 +16,15 @@ public class XpTransaction
     [MaxLength(255)]
     public string Reason { get; set; }
     public DateTime CreatedAt { get; set; }
+
+
+    public XpTransactionDto MapToDto()
+    {
+        return new XpTransactionDto
+        {
+            Id = Id,
+            Amount = Amount,
+            Reason = Reason
+        };
+    } 
 }

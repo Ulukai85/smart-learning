@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SmartLearning.DTOs;
 using SmartLearning.Services;
 
 namespace SmartLearning.Controllers;
@@ -28,6 +29,23 @@ public class ReviewController(
         }
         catch  (Exception ex)
         {
+            return BadRequest(new {message = ex.Message});
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ReviewCard([FromBody] CreateReviewTransactionDto dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null) return Unauthorized();
+        
+        try
+        {
+            var transaction = await reviewService.HandleReviewTransactionAsync(userId, dto);
+            return Ok(transaction);
+        }
+        catch (Exception ex) {
             return BadRequest(new {message = ex.Message});
         }
     }

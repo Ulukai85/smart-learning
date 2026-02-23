@@ -3,11 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DeckToReviewDto } from '../../models/deck.model';
+import { CreateReviewTransactionDto } from '../../models/XpTransaction.model';
 import { ReviewService } from '../../services/review-service';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-card-review',
-  imports: [CardModule, ButtonModule],
+  imports: [CardModule, ButtonModule, SkeletonModule],
   templateUrl: './card-review.html',
   styles: ``,
 })
@@ -42,7 +44,10 @@ export class CardReview implements OnInit {
 
   fetchDeckToReview(deckId: string) {
     this.reviewService.fetchDeckToReview(deckId).subscribe({
-      next: (data) => this.deckToReview.set(data),
+      next: (data) => {
+        this.deckToReview.set(data);
+      },
+      error: (err) => console.log('Error:', err)
     });
   }
 
@@ -53,6 +58,12 @@ export class CardReview implements OnInit {
   onReview(grade: number) {
     console.log('grade:', grade);
     this.getNextCard();
+    const dto: CreateReviewTransactionDto = new {
+      cardId: 
+    }
+
+    }
+    this.reviewService.saveCardReview
     this.showSolution.set(false);
   }
 }

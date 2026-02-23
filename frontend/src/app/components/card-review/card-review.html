@@ -1,15 +1,24 @@
-<div>
-  <h1>{{ deckToReview()?.name }}</h1>
+<div class="flex flex-col gap-2">
+  @if (deckToReview() === null) {
+    <p-skeleton height="2rem" />
+    <p-skeleton height="6rem" class="mb-2" />
+    <p-skeleton width="6rem" height="3rem" class="mb-2" />
+  } @else {
+    <div class="flex">
+      <h2>{{ deckToReview()?.name }}</h2>
+      <p>New: {{ deckToReview()?.newCards}}</p>
+      <p>Review: {{ deckToReview()?.dueCards }}</p>
+    </div>
   @if (current(); as current) {
     <p-card>
       <p>{{ current.front }}</p>
     </p-card>
-    <p-card>
-      @if (showSolution()) {
-        <p>{{ current.back }}</p>
+    
+      @if (showSolution()) {<p-card>
+        <p>{{ current.back }}</p></p-card>
       }
-    </p-card>
-    <div>
+    
+    <div class="flex gap-2">
       @if (showSolution()) {
         <p-button (click)="onReview(0)" label="Wrong"></p-button>
         <p-button (click)="onReview(1)" label="Hard"></p-button>
@@ -20,5 +29,5 @@
     </div>
   } @else {
     <p-card>No card!</p-card>
-  }
+  }}
 </div>

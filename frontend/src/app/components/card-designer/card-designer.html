@@ -16,7 +16,7 @@
           <label for="deckId">Deck</label>
         </p-floatlabel>
 
-        @if (hasDisplayableError('deckId') && cardForm.controls['deckId'].hasError('required')) {
+        @if (hasDisplayableError(cardForm, 'deckId') && cardForm.controls['deckId'].hasError('required')) {
           <p-message severity="error" size="small" variant="simple">
             Please choose or create a deck
           </p-message>
@@ -42,6 +42,11 @@
               <input pInputText inputId="name" formControlName="name" class="w-full" />
               <label for="name">Name</label>
             </p-floatlabel>
+            @if (hasDisplayableError(deckForm, 'name') && deckForm.controls['name'].hasError('required')) {
+          <p-message severity="error" size="small" variant="simple">
+            Please input a name
+          </p-message>
+        }
 
             <p-floatlabel variant="on">
               <textarea
@@ -80,7 +85,7 @@
         <label for="front">Front</label>
       </p-floatlabel>
 
-      @if (hasDisplayableError('front') && cardForm.controls['front'].hasError('required')) {
+      @if (hasDisplayableError(cardForm, 'front') && cardForm.controls['front'].hasError('required')) {
         <p-message severity="error" size="small" variant="simple">
           Please enter the front text (question)
         </p-message>
@@ -101,7 +106,7 @@
         <label for="back">Back</label>
       </p-floatlabel>
 
-      @if (hasDisplayableError('back') && cardForm.controls['back'].hasError('required')) {
+      @if (hasDisplayableError(cardForm, 'back') && cardForm.controls['back'].hasError('required')) {
         <p-message severity="error" size="small" variant="simple">
           Please enter the back text (answer)
         </p-message>

@@ -1,4 +1,5 @@
 using SmartLearning.DTOs;
+using SmartLearning.Models;
 using SmartLearning.Repositories;
 
 namespace SmartLearning.Services;
@@ -10,11 +11,15 @@ public interface IReviewService
         string userId,
         int dueLimit,
         int newLimit);
+
+    Task<XpTransactionDto> HandleReviewTransactionAsync(string userId, CreateReviewTransactionDto dto);
 }
 
 public class ReviewService(
     ICardRepository cardRepo,
-    IDeckRepository deckRepo
+    IDeckRepository deckRepo,
+    ITransactionRepository transactionRepo,
+    IReviewRepository reviewRepo
     ) : IReviewService
 {
     private const int DueLimit = 50;
@@ -55,5 +60,59 @@ public class ReviewService(
             Cards = cards
         };
     }
+
+    public async Task<XpTransactionDto> HandleReviewTransactionAsync(string userId, CreateReviewTransactionDto dto)
+    {
+        var utcNow = DateTime.UtcNow;
+        
+        var progress = await reviewRepo.GetUserCardProgress(userId, dto.CardId);
+
+        if (progress is null)
+        {
+            progress = new UserCardProgress
+            {
+                UserId = userId,
+                CardId = dto.CardId,
+                StrategyType = dto.StrategyType,
+                LastReviewedAt = utcNow,
+                NextReviewAt = utcNow.AddDays(1),
+                CreatedAt = utcNow,
+                UpdatedAt = utcNow
+            };
+
+            progress = await reviewRepo.CreateUserCardProgress(progress);
+        } else
+        {
+            progress.LastReviewedAt = utcNow;
+            progress.NextReviewAt = utcNow.AddDays(1);
+            progress.UpdatedAt = utcNow;
+
+            await reviewRepo.SaveChangesAsync();
+        }
+        
+        var transaction = new XpTransaction
+        {
+            UserId = userId,
+            Amount = 5,
+            Reason = "CardReview",
+            CreatedAt = utcNow
+        };
+
+        var savedTransaction = await transactionRepo.SaveXpTransaction(transaction);
+
+        var log = new ReviewLog
+        {
+            UserId = userId,
+            CardId = dto.CardId,
+            StrategyType = dto.StrategyType,
+            Grade = dto.Grade,
+            ReviewedAt = utcNow
+        };
+
+        var reviewLog = await reviewRepo.SaveReviewLog(log);
+
+        return savedTransaction.MapToDto();
+    }
+    
 
 }
