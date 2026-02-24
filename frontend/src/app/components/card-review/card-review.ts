@@ -62,12 +62,38 @@ export class CardReview implements OnInit {
       cardId: card.id,
       grade: grade,
       strategyType: card.strategyType,
+      strategyData: card.strategyData,
+      isNew: card.isNew
     };
     this.reviewService.saveCardReview(dto).subscribe({
-      next: (data) => {
-        console.log('received dto:', data);
+      next: (result) => {
+        console.log('received resultdto:', result);
+        this.deckToReview.update((data) => {
+          if (!data) return data;
+
+          const cardInReview = data.cards[0];
+          cardInReview.isNew = false;
+          cardInReview.nextReviewAt = result.nextReviewAt;
+          let updatedCards = data.cards.slice(1);
+                    
+          if (result.reinsertCard) {
+            updatedCards = [...updatedCards, cardInReview]
+          }
+
+          const newCards = dto.isNew ? data.newCards - 1 : data.newCards
+
+          const dueCards = dto.isNew && result.reinsertCard ? data.dueCards + 1 : !result.reinsertCard ? data.dueCards - 1 : data.dueCards
+
+          return {
+            ...data,
+            cards: updatedCards,
+            dueCards: dueCards, 
+            newCards: newCards,
+          };
+        });
+        this.showSolution.set(false);
       },
+      error: (err) => console.log('Error:', err)
     });
-    this.showSolution.set(false);
   }
 }

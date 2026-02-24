@@ -5,6 +5,8 @@ public class CreateReviewTransactionDto
     public Guid CardId { get; set; }
     public int Grade { get; set; }
     public string? StrategyType { get; set; }
+    public string? StrategyData { get; set; }
+    public bool IsNew { get; set; }
 }
 
 public class XpTransactionDto
@@ -14,3 +16,11 @@ public class XpTransactionDto
     public string Reason { get; set; }
 }
 
+public class ReviewResultDto
+{
+    public Guid ReviewedCardId { get; set; }
+    public bool ReinsertCard { get; set; }
+    public int XpAmount { get; set; }
+    public string? Reason { get; set; }
+    public DateTime? NextReviewAt { get; set; }
+}

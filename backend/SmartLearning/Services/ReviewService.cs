@@ -12,7 +12,7 @@ public interface IReviewService
         int dueLimit,
         int newLimit);
 
-    Task<XpTransactionDto> HandleReviewTransactionAsync(string userId, CreateReviewTransactionDto dto);
+    Task<ReviewResultDto> HandleReviewTransactionAsync(string userId, CreateReviewTransactionDto dto);
 }
 
 public class ReviewService(
@@ -62,7 +62,7 @@ public class ReviewService(
         };
     }
 
-    public async Task<XpTransactionDto> HandleReviewTransactionAsync(string userId, CreateReviewTransactionDto dto)
+    public async Task<ReviewResultDto> HandleReviewTransactionAsync(string userId, CreateReviewTransactionDto dto)
     {
         var utcNow = DateTime.UtcNow;
         
@@ -82,7 +82,7 @@ public class ReviewService(
             dbContext.UserCardProgresses.Add(progress);
         }
         
-        UpdateSpacedRepetition(progress, dto.Grade, utcNow);
+        var reinsertCard = UpdateSpacedRepetition(progress, dto.Grade, utcNow);
         
         var transaction = new XpTransaction
         {
@@ -106,11 +106,20 @@ public class ReviewService(
         dbContext.ReviewLog.Add(log);
 
         await dbContext.SaveChangesAsync();
+
+        var result = new ReviewResultDto
+        {
+            ReviewedCardId = dto.CardId,
+            ReinsertCard = reinsertCard,
+            XpAmount = transaction.Amount,
+            Reason = transaction.Reason,
+            NextReviewAt = progress.NextReviewAt
+        };
         
-        return transaction.MapToDto();
+        return result;
     }
 
-    private void UpdateSpacedRepetition(UserCardProgress progress, int grade, DateTime utcNow)
+    private bool UpdateSpacedRepetition(UserCardProgress progress, int grade, DateTime utcNow)
     {
         progress.NextReviewAt = grade switch
         {
@@ -121,5 +130,9 @@ public class ReviewService(
 
         progress.LastReviewedAt = utcNow;
         progress.UpdatedAt = utcNow;
+
+        var reinsertCard = grade > 1;
+
+        return reinsertCard;
     }
 }
