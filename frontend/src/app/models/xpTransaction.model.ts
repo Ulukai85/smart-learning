@@ -3,7 +3,6 @@ export interface CreateReviewTransactionDto {
   grade: number;
   strategyType?: string;
   strategyData: string;
-  isNew: boolean;
 }
 
 export interface XpTransactionDto {
@@ -13,9 +12,12 @@ export interface XpTransactionDto {
 }
 
 export interface ReviewResultDto {
-  reviewedCardId: string,
-  reinsertCard: boolean,
-  xpAmount: number,
-  reason: string,
-  nextReviewAt: string
+  reviewedCardId: string;
+  reinsertCard: boolean;
+  wasNew: boolean;
+  xpAmount: number;
+  xpReason: string;
+  nextReviewAt: string;
+  updatedDueCount: number;
+  updatedNewCount: number;
 }

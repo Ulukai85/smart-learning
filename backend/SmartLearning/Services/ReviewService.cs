@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SmartLearning.DTOs;
 using SmartLearning.Models;
 using SmartLearning.Repositories;
@@ -66,7 +67,28 @@ public class ReviewService(
     {
         var utcNow = DateTime.UtcNow;
         
-        var progress = await reviewRepo.GetUserCardProgress(userId, dto.CardId);
+        var card = await dbContext.Cards
+            .Where(c => c.Id == dto.CardId)
+            .Select(c => new
+            {
+                c.Id,
+                c.DeckId,
+                c.Deck.OwnerUserId,
+            })
+            .FirstOrDefaultAsync();
+        
+        if (card is null)
+            throw new KeyNotFoundException("Card not found");
+        
+        if (card.OwnerUserId != userId)
+            throw new UnauthorizedAccessException("Card not accessible");
+        
+        var deckId = card.DeckId;
+        
+        var progress = await dbContext.UserCardProgresses
+            .FirstOrDefaultAsync(p => p.CardId == card.Id && p.UserId == userId);
+
+        var wasNew = progress == null;
 
         if (progress is null)
         {
@@ -83,16 +105,18 @@ public class ReviewService(
         }
         
         var reinsertCard = UpdateSpacedRepetition(progress, dto.Grade, utcNow);
+
+        var xpAmount = 5;
         
-        var transaction = new XpTransaction
+        var xpTransaction = new XpTransaction
         {
             UserId = userId,
-            Amount = 5,
+            Amount = xpAmount,
             Reason = "CardReview",
             CreatedAt = utcNow
         };
 
-        dbContext.XpTransactions.Add(transaction);
+        dbContext.XpTransactions.Add(xpTransaction);
 
         var log = new ReviewLog
         {
@@ -106,13 +130,19 @@ public class ReviewService(
         dbContext.ReviewLog.Add(log);
 
         await dbContext.SaveChangesAsync();
+        
+        var dueCount = await cardRepo.CountDueCardsAsync(deckId, userId, utcNow);
+        var newCount = await cardRepo.CountNewCardsAsync(deckId, userId);
 
         var result = new ReviewResultDto
         {
             ReviewedCardId = dto.CardId,
             ReinsertCard = reinsertCard,
-            XpAmount = transaction.Amount,
-            Reason = transaction.Reason,
+            WasNew = wasNew,
+            XpAmount = xpTransaction.Amount,
+            XpReason = xpTransaction.Reason,
+            UpdatedDueCount = dueCount,
+            UpdatedNewCount = newCount,
             NextReviewAt = progress.NextReviewAt
         };
         
@@ -123,15 +153,15 @@ public class ReviewService(
     {
         progress.NextReviewAt = grade switch
         {
-            0 => utcNow.AddDays(4),
+            0 => utcNow,
             1 => utcNow.AddDays(2),
-            _ => utcNow.AddMinutes(5)
+            _ => utcNow.AddDays(4)
         };
 
         progress.LastReviewedAt = utcNow;
         progress.UpdatedAt = utcNow;
 
-        var reinsertCard = grade > 1;
+        var reinsertCard = grade == 0;
 
         return reinsertCard;
     }

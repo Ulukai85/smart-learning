@@ -42,8 +42,8 @@ public class ReviewController(
         
         try
         {
-            var transaction = await reviewService.HandleReviewTransactionAsync(userId, dto);
-            return Ok(transaction);
+            var reviewResult = await reviewService.HandleReviewTransactionAsync(userId, dto);
+            return Ok(reviewResult);
         }
         catch (Exception ex) {
             return BadRequest(new {message = ex.Message});

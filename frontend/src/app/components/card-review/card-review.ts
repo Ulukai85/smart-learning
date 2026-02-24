@@ -3,14 +3,15 @@ import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DeckToReviewDto } from '../../models/deck.model';
-import { CreateReviewTransactionDto } from '../../models/xpTransaction.model';
+import { CreateReviewTransactionDto, ReviewResultDto } from '../../models/xpTransaction.model';
 import { ReviewService } from '../../services/review-service';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CardToReviewDto } from '../../models/card.model';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
 @Component({
   selector: 'app-card-review',
-  imports: [CardModule, ButtonModule, SkeletonModule],
+  imports: [CardModule, ButtonModule, SkeletonModule, OverlayBadgeModule],
   templateUrl: './card-review.html',
   styles: ``,
 })
@@ -32,17 +33,6 @@ export class CardReview implements OnInit {
     });
   }
 
-  getNextCard() {
-    this.deckToReview.update((data) => {
-      if (!data) return data;
-
-      return {
-        ...data,
-        cards: data.cards.slice(1),
-      };
-    });
-  }
-
   fetchDeckToReview(deckId: string) {
     this.reviewService.fetchDeckToReview(deckId).subscribe({
       next: (data) => {
@@ -57,43 +47,45 @@ export class CardReview implements OnInit {
   }
 
   onReview(grade: number, card: CardToReviewDto) {
-    this.getNextCard();
-    const dto: CreateReviewTransactionDto = {
+    const cardReview: CreateReviewTransactionDto = {
       cardId: card.id,
       grade: grade,
       strategyType: card.strategyType,
       strategyData: card.strategyData,
-      isNew: card.isNew
     };
-    this.reviewService.saveCardReview(dto).subscribe({
+    this.reviewService.saveCardReview(cardReview).subscribe({
       next: (result) => {
-        console.log('received resultdto:', result);
-        this.deckToReview.update((data) => {
-          if (!data) return data;
-
-          const cardInReview = data.cards[0];
-          cardInReview.isNew = false;
-          cardInReview.nextReviewAt = result.nextReviewAt;
-          let updatedCards = data.cards.slice(1);
-                    
-          if (result.reinsertCard) {
-            updatedCards = [...updatedCards, cardInReview]
-          }
-
-          const newCards = dto.isNew ? data.newCards - 1 : data.newCards
-
-          const dueCards = dto.isNew && result.reinsertCard ? data.dueCards + 1 : !result.reinsertCard ? data.dueCards - 1 : data.dueCards
-
-          return {
-            ...data,
-            cards: updatedCards,
-            dueCards: dueCards, 
-            newCards: newCards,
-          };
-        });
+        this.applyReviewResult(result);
         this.showSolution.set(false);
+        console.log('result:', result);
       },
-      error: (err) => console.log('Error:', err)
+      error: (err) => console.log('Error:', err),
+    });
+  }
+
+  applyReviewResult(result: ReviewResultDto) {
+    this.deckToReview.update((data) => {
+      if (!data) return data;
+
+      const [currentCard, ...rest] = data.cards;
+
+      const cards = result.reinsertCard
+        ? [
+            ...rest,
+            {
+              ...currentCard,
+              isNew: false,
+              nextReviewAt: result.nextReviewAt,
+            },
+          ]
+        : rest;
+
+      return {
+        ...data,
+        cards,
+        dueCards: result.updatedDueCount,
+        newCards: result.updatedNewCount,
+      };
     });
   }
 }
