@@ -12,7 +12,10 @@ public class ReviewServiceTests
     private readonly Mock<ICardRepository> cardRepo = new();
     private readonly Mock<IDeckRepository> deckRepo = new();
     private readonly Mock<IReviewRepository> reviewRepo = new();
-    private readonly Mock<AppDbContext> dbContext = new();
+    private readonly Mock<ITransactionRepository> transactionRepo = new();
+    private readonly Mock<IProgressRepository> progressRepo = new();
+    private readonly Mock<ISpacedRepetition> spacedRepetition = new();
+    private readonly Mock<ITimeProvider> timeProvider = new();
 
     private ReviewService CreateReviewService()
     {
@@ -20,8 +23,11 @@ public class ReviewServiceTests
             cardRepo.Object,
             deckRepo.Object,
             reviewRepo.Object,
-            dbContext.Object);
-    } 
+            transactionRepo.Object,
+            progressRepo.Object,
+            spacedRepetition.Object,
+            timeProvider.Object);
+    }
 
     [Fact]
     public async Task GetDeckToReviewAsync_ShouldThrow_WhenDeckNotOwnedByUser()
@@ -86,5 +92,60 @@ public class ReviewServiceTests
         cardRepo.Verify(r =>
                 r.GetNewCardsAsync(deckId, userId, 20),
                 Times.Once);
+    }
+    
+    [Fact]
+    public async Task HandleReviewTransactionAsync_Should_CreateProgressAndReturnResult()
+    {
+        // Arrange
+        var userId = "user1";
+        var cardId = Guid.NewGuid();
+        var now = new DateTime(2025, 1, 1);
+
+        var card = new Card
+        {
+            Id = cardId,
+            DeckId = Guid.NewGuid(),
+            Deck = new Deck { OwnerUserId = userId }
+        };
+
+        var dto = new CreateReviewTransactionDto
+        {
+            CardId = cardId,
+            Grade = 2
+        };
+        
+        cardRepo.Setup(r => r.GetCardByIdAsync(cardId))
+            .ReturnsAsync(card);
+        cardRepo.Setup(r => r.CountDueCardsAsync(It.IsAny<Guid>(), userId, now))
+            .ReturnsAsync(5);
+        cardRepo.Setup(r => r.CountNewCardsAsync(It.IsAny<Guid>(), userId))
+            .ReturnsAsync(3);
+
+        progressRepo.Setup(r => r.GetProgressAsync(userId, cardId))
+            .ReturnsAsync((UserCardProgress?)null);
+        
+        timeProvider.Setup(t => t.UtcNow).Returns(now);
+        
+        spacedRepetition.Setup(s => s.CalculateNextReview(dto.Grade, now))
+            .Returns(now.AddDays(4));
+        spacedRepetition.Setup(s => s.ShouldReinsert(dto.Grade))
+            .Returns(false);
+        
+        var reviewService = CreateReviewService();
+
+        // Act
+        var result = await reviewService.HandleReviewTransactionAsync(userId, dto);
+
+        // Assert
+        result.WasNew.Should().BeTrue();
+        result.ReinsertCard.Should().BeFalse();
+        result.NextReviewAt.Should().Be(now.AddDays(4));
+        result.XpAmount.Should().Be(5);
+
+        progressRepo.Verify(r => r.AddProgressAsync(It.IsAny<UserCardProgress>()), Times.Once);
+        transactionRepo.Verify(r => r.AddXpTransactionAsync(It.IsAny<XpTransaction>()), Times.Once);
+        reviewRepo.Verify(r => r.AddReviewLogAsync(It.IsAny<ReviewLog>()), Times.Once);
+        reviewRepo.Verify(r => r.SaveChangesAsync(), Times.Once);
     }
 }

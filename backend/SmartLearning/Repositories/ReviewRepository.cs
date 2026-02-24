@@ -5,17 +5,19 @@ namespace SmartLearning.Repositories;
 
 public interface IReviewRepository 
 {
-    Task<UserCardProgress?> GetUserCardProgress(string userId, Guid cardId);
+    Task AddReviewLogAsync(ReviewLog log);
+    Task SaveChangesAsync();
 }
 
 public class ReviewRepository(AppDbContext dbContext) : IReviewRepository
 {
-    public async Task<UserCardProgress?> GetUserCardProgress(string userId, Guid cardId)
+    public async Task AddReviewLogAsync(ReviewLog log)
+    {    
+        await dbContext.ReviewLog.AddAsync(log);
+    }
+
+    public async Task SaveChangesAsync()
     {
-        var progress = await dbContext.UserCardProgresses
-            .Where(p => p.UserId == userId && p.CardId == cardId)
-            .FirstOrDefaultAsync();
-        
-        return progress;
+        await dbContext.SaveChangesAsync();
     }
 }

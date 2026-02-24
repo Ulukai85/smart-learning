@@ -20,7 +20,10 @@ public class ReviewService(
     ICardRepository cardRepo,
     IDeckRepository deckRepo,
     IReviewRepository reviewRepo,
-    AppDbContext dbContext
+    ITransactionRepository transactionRepo,
+    IProgressRepository progressRepo,
+    ISpacedRepetition spacedRepetition,
+    ITimeProvider timeProvider
     ) : IReviewService
 {
     private const int DueLimit = 50;
@@ -42,12 +45,10 @@ public class ReviewService(
         if (deck is null || deck.OwnerUserId != userId)
             throw new UnauthorizedAccessException("Deck not accessible");
         
-        var utcNow = DateTime.UtcNow;
-        
-        var dueCount = await cardRepo.CountDueCardsAsync(deckId, userId, utcNow);
+        var dueCount = await cardRepo.CountDueCardsAsync(deckId, userId, timeProvider.UtcNow);
         var newCount = await cardRepo.CountNewCardsAsync(deckId, userId);
         
-        var dueCards = await cardRepo.GetDueCardsAsync(deckId, userId, dueLimit, utcNow);
+        var dueCards = await cardRepo.GetDueCardsAsync(deckId, userId, dueLimit, timeProvider.UtcNow);
         var newCards = await cardRepo.GetNewCardsAsync(deckId, userId, newLimit);
 
         var cards = new List<CardToReviewDto>();
@@ -66,30 +67,29 @@ public class ReviewService(
 
     public async Task<ReviewResultDto> HandleReviewTransactionAsync(string userId, CreateReviewTransactionDto dto)
     {
-        var utcNow = DateTime.UtcNow;
-        
         var card = await LoadAndValidateCardAsync(userId, dto.CardId);
         
-        var progress = await reviewRepo.GetUserCardProgress(userId, card.Id);
+        var progress = await progressRepo.GetProgressAsync(userId, card.Id);
         var wasNew = progress == null;
-        progress ??= CreateProgress(userId, dto, utcNow);
-        dbContext.UserCardProgresses.Add(progress);
+        progress ??= BuildProgress(userId, dto, timeProvider.UtcNow);
+        UpdateProgressDates(progress, dto.Grade, timeProvider.UtcNow);
+        await progressRepo.AddProgressAsync(progress);
         
-        var xpTransaction =  CreateXpTransaction(userId, utcNow);
-        dbContext.XpTransactions.Add(xpTransaction);
+        var xpTransaction =  BuildXpTransaction(userId, timeProvider.UtcNow);
+        await transactionRepo.AddXpTransactionAsync(xpTransaction);
         
-        var reviewLog = CreateReviewLog(userId, dto, utcNow);
-        dbContext.ReviewLog.Add(reviewLog);
+        var reviewLog = BuildReviewLog(userId, dto, timeProvider.UtcNow);
+        await reviewRepo.AddReviewLogAsync(reviewLog);
 
-        await dbContext.SaveChangesAsync();
+        await reviewRepo.SaveChangesAsync();
         
-        var dueCount = await cardRepo.CountDueCardsAsync(card.DeckId, userId, utcNow);
+        var dueCount = await cardRepo.CountDueCardsAsync(card.DeckId, userId, timeProvider.UtcNow);
         var newCount = await cardRepo.CountNewCardsAsync(card.DeckId, userId);
 
         var result = new ReviewResultDto
         {
             ReviewedCardId = dto.CardId,
-            ReinsertCard = UpdateSpacedRepetition(progress, dto.Grade, utcNow),
+            ReinsertCard = spacedRepetition.ShouldReinsert(dto.Grade),
             WasNew = wasNew,
             XpAmount = xpTransaction.Amount,
             XpReason = xpTransaction.Reason,
@@ -103,9 +103,7 @@ public class ReviewService(
 
     private async Task<Card> LoadAndValidateCardAsync(string userId, Guid cardId)
     {
-        var card = await dbContext.Cards
-            .Include(c => c.Deck)
-            .FirstOrDefaultAsync(c => c.Id == cardId);
+        var card = await cardRepo.GetCardByIdAsync(cardId);
         
         if (card is null)
             throw new KeyNotFoundException("Card not found");
@@ -116,7 +114,7 @@ public class ReviewService(
         return card;
     }
 
-    private UserCardProgress CreateProgress(
+    private UserCardProgress BuildProgress(
         string userId, 
         CreateReviewTransactionDto dto,
         DateTime utcNow)
@@ -131,7 +129,7 @@ public class ReviewService(
         };
     }
 
-    private XpTransaction CreateXpTransaction(string userId, DateTime utcNow)
+    private XpTransaction BuildXpTransaction(string userId, DateTime utcNow)
     {
         return new XpTransaction
         {
@@ -142,7 +140,7 @@ public class ReviewService(
         };
     }
 
-    private ReviewLog CreateReviewLog(string userId, CreateReviewTransactionDto dto, DateTime utcNow)
+    private ReviewLog BuildReviewLog(string userId, CreateReviewTransactionDto dto, DateTime utcNow)
     {
         return new ReviewLog
         {
@@ -153,22 +151,11 @@ public class ReviewService(
             ReviewedAt = utcNow
         };
     }
-    
 
-    private bool UpdateSpacedRepetition(UserCardProgress progress, int grade, DateTime utcNow)
+    private void UpdateProgressDates(UserCardProgress progress, int grade, DateTime utcNow)
     {
-        progress.NextReviewAt = grade switch
-        {
-            0 => utcNow,
-            1 => utcNow.AddDays(2),
-            _ => utcNow.AddDays(4)
-        };
-
+        progress.NextReviewAt = spacedRepetition.CalculateNextReview(grade, utcNow);
         progress.LastReviewedAt = utcNow;
         progress.UpdatedAt = utcNow;
-
-        var reinsertCard = grade == 0;
-
-        return reinsertCard;
     }
 }

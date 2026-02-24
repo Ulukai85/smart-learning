@@ -11,11 +11,15 @@ public static class ServiceExtensions
         services.AddScoped<IDeckService, DeckService>();
         services.AddScoped<ICardService, CardService>();
         services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<ISpacedRepetition, SpacedRepetition>();
 
         services.AddScoped<ICardRepository, CardRepository>();
         services.AddScoped<IDeckRepository, DeckRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
+        services.AddScoped<IProgressRepository, ProgressRepository>();
+        
+        services.AddSingleton<ITimeProvider, SystemTimeProvider>();
         
         return services;
     }

@@ -54,7 +54,9 @@ public class CardRepository(AppDbContext dbContext) : ICardRepository
 
     public async Task<Card?> GetCardByIdAsync(Guid id)
     {
-        return await dbContext.Cards.FindAsync(id);
+        return await dbContext.Cards
+            .Include(c => c.Deck)
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
     
     public async Task SaveChangesAsync()
