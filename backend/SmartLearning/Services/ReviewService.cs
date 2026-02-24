@@ -26,6 +26,7 @@ public class ReviewService(
     private const int DueLimit = 50;
     private const int NewLimit = 20;
     private const string DefaultStrategyType = "Anki";
+    private const int DefaultXpAmount = 5;
     
     public async Task<DeckToReviewDto> GetDeckToReviewAsync(
         Guid deckId,
@@ -41,12 +42,12 @@ public class ReviewService(
         if (deck is null || deck.OwnerUserId != userId)
             throw new UnauthorizedAccessException("Deck not accessible");
         
-        var nowUtc = DateTime.UtcNow;
+        var utcNow = DateTime.UtcNow;
         
-        var dueCount = await cardRepo.CountDueCardsAsync(deckId, userId, nowUtc);
+        var dueCount = await cardRepo.CountDueCardsAsync(deckId, userId, utcNow);
         var newCount = await cardRepo.CountNewCardsAsync(deckId, userId);
         
-        var dueCards = await cardRepo.GetDueCardsAsync(deckId, userId, dueLimit, nowUtc);
+        var dueCards = await cardRepo.GetDueCardsAsync(deckId, userId, dueLimit, utcNow);
         var newCards = await cardRepo.GetNewCardsAsync(deckId, userId, newLimit);
 
         var cards = new List<CardToReviewDto>();
@@ -67,77 +68,28 @@ public class ReviewService(
     {
         var utcNow = DateTime.UtcNow;
         
-        var card = await dbContext.Cards
-            .Where(c => c.Id == dto.CardId)
-            .Select(c => new
-            {
-                c.Id,
-                c.DeckId,
-                c.Deck.OwnerUserId,
-            })
-            .FirstOrDefaultAsync();
+        var card = await LoadAndValidateCardAsync(userId, dto.CardId);
         
-        if (card is null)
-            throw new KeyNotFoundException("Card not found");
-        
-        if (card.OwnerUserId != userId)
-            throw new UnauthorizedAccessException("Card not accessible");
-        
-        var deckId = card.DeckId;
-        
-        var progress = await dbContext.UserCardProgresses
-            .FirstOrDefaultAsync(p => p.CardId == card.Id && p.UserId == userId);
-
+        var progress = await reviewRepo.GetUserCardProgress(userId, card.Id);
         var wasNew = progress == null;
-
-        if (progress is null)
-        {
-            progress = new UserCardProgress
-            {
-                UserId = userId,
-                CardId = dto.CardId,
-                StrategyType = dto.StrategyType ?? DefaultStrategyType,
-                LastReviewedAt = utcNow,
-                CreatedAt = utcNow,
-            };
-
-            dbContext.UserCardProgresses.Add(progress);
-        }
+        progress ??= CreateProgress(userId, dto, utcNow);
+        dbContext.UserCardProgresses.Add(progress);
         
-        var reinsertCard = UpdateSpacedRepetition(progress, dto.Grade, utcNow);
-
-        var xpAmount = 5;
-        
-        var xpTransaction = new XpTransaction
-        {
-            UserId = userId,
-            Amount = xpAmount,
-            Reason = "CardReview",
-            CreatedAt = utcNow
-        };
-
+        var xpTransaction =  CreateXpTransaction(userId, utcNow);
         dbContext.XpTransactions.Add(xpTransaction);
-
-        var log = new ReviewLog
-        {
-            UserId = userId,
-            CardId = dto.CardId,
-            StrategyType = dto.StrategyType ?? DefaultStrategyType,
-            Grade = dto.Grade,
-            ReviewedAt = utcNow
-        };
-
-        dbContext.ReviewLog.Add(log);
+        
+        var reviewLog = CreateReviewLog(userId, dto, utcNow);
+        dbContext.ReviewLog.Add(reviewLog);
 
         await dbContext.SaveChangesAsync();
         
-        var dueCount = await cardRepo.CountDueCardsAsync(deckId, userId, utcNow);
-        var newCount = await cardRepo.CountNewCardsAsync(deckId, userId);
+        var dueCount = await cardRepo.CountDueCardsAsync(card.DeckId, userId, utcNow);
+        var newCount = await cardRepo.CountNewCardsAsync(card.DeckId, userId);
 
         var result = new ReviewResultDto
         {
             ReviewedCardId = dto.CardId,
-            ReinsertCard = reinsertCard,
+            ReinsertCard = UpdateSpacedRepetition(progress, dto.Grade, utcNow),
             WasNew = wasNew,
             XpAmount = xpTransaction.Amount,
             XpReason = xpTransaction.Reason,
@@ -148,6 +100,60 @@ public class ReviewService(
         
         return result;
     }
+
+    private async Task<Card> LoadAndValidateCardAsync(string userId, Guid cardId)
+    {
+        var card = await dbContext.Cards
+            .Include(c => c.Deck)
+            .FirstOrDefaultAsync(c => c.Id == cardId);
+        
+        if (card is null)
+            throw new KeyNotFoundException("Card not found");
+        
+        if (card.Deck.OwnerUserId != userId)
+            throw new UnauthorizedAccessException("Card not accessible");
+        
+        return card;
+    }
+
+    private UserCardProgress CreateProgress(
+        string userId, 
+        CreateReviewTransactionDto dto,
+        DateTime utcNow)
+    {
+        return new UserCardProgress
+        {
+            UserId = userId,
+            CardId = dto.CardId,
+            StrategyType = dto.StrategyType ?? DefaultStrategyType,
+            LastReviewedAt = utcNow,
+            CreatedAt = utcNow,
+        };
+    }
+
+    private XpTransaction CreateXpTransaction(string userId, DateTime utcNow)
+    {
+        return new XpTransaction
+        {
+            UserId = userId,
+            Amount = DefaultXpAmount,
+            Reason = "CardReview",
+            CreatedAt = utcNow
+        };
+    }
+
+    private ReviewLog CreateReviewLog(string userId, CreateReviewTransactionDto dto, DateTime utcNow)
+    {
+        return new ReviewLog
+        {
+            UserId = userId,
+            CardId = dto.CardId,
+            StrategyType = dto.StrategyType ?? DefaultStrategyType,
+            Grade = dto.Grade,
+            ReviewedAt = utcNow
+        };
+    }
+    
 
     private bool UpdateSpacedRepetition(UserCardProgress progress, int grade, DateTime utcNow)
     {
