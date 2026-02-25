@@ -16,6 +16,48 @@ public class ReviewServiceTests
     private readonly Mock<IProgressRepository> progressRepo = new();
     private readonly Mock<ISpacedRepetition> spacedRepetition = new();
     private readonly Mock<ITimeProvider> timeProvider = new();
+    
+    private readonly DateTime fixedNow = new(2025, 1, 1);
+    private readonly string defaultUserId = "user-1";
+    private readonly Guid defaultCardId = Guid.NewGuid();
+    private readonly Guid defaultDeckId = Guid.NewGuid();
+
+    private Card DefaultCard() => new()
+    {
+        Id = defaultCardId,
+        DeckId = defaultDeckId,
+        Deck = new Deck { OwnerUserId = defaultUserId }
+    };
+
+    private CreateReviewTransactionDto DefaultDto(int grade = 2) => new()
+    {
+        CardId = defaultCardId,
+        Grade = grade
+    };
+
+    private void SetupCommonReviewFlow(Card card, UserCardProgress? progress = null)
+    {
+        cardRepo.Setup(r => r.GetCardByIdAsync(card.Id))
+            .ReturnsAsync(card);
+
+        progressRepo.Setup(r => r.GetProgressAsync(defaultUserId, card.Id))
+            .ReturnsAsync(progress);
+
+        timeProvider.Setup(t => t.UtcNow)
+            .Returns(fixedNow);
+
+        spacedRepetition.Setup(s => s.CalculateNextReview(It.IsAny<int>(), fixedNow))
+            .Returns(fixedNow.AddDays(4));
+
+        spacedRepetition.Setup(s => s.ShouldReinsert(It.IsAny<int>()))
+            .Returns(false);
+
+        cardRepo.Setup(r => r.CountDueCardsAsync(It.IsAny<Guid>(), defaultUserId, fixedNow))
+            .ReturnsAsync(5);
+
+        cardRepo.Setup(r => r.CountNewCardsAsync(It.IsAny<Guid>(), defaultUserId))
+            .ReturnsAsync(3);
+    }
 
     private ReviewService CreateReviewService()
     {
@@ -33,14 +75,11 @@ public class ReviewServiceTests
     public async Task GetDeckToReviewAsync_ShouldThrow_WhenDeckNotOwnedByUser()
     {
         // Arrange
-        var deckId = Guid.NewGuid();
-        var userId = "user-1";
-
         deckRepo
-            .Setup(r => r.GetDeckByIdAsync(deckId))
+            .Setup(r => r.GetDeckByIdAsync(defaultDeckId))
             .ReturnsAsync(new Deck
             {
-                Id = deckId,
+                Id = defaultDeckId,
                 Name = "Test Deck",
                 OwnerUserId = "user-2"
             });
@@ -48,7 +87,7 @@ public class ReviewServiceTests
         var reviewService = CreateReviewService();
         
         // Act
-        var act = () => reviewService.GetDeckToReviewAsync(deckId, userId, 10, 10);
+        var act = () => reviewService.GetDeckToReviewAsync(defaultDeckId, defaultUserId, 10, 10);
         
         // Assert
         await act.Should().ThrowAsync<UnauthorizedAccessException>();
@@ -57,40 +96,37 @@ public class ReviewServiceTests
     [Fact]
     public async Task GetDeckToReviewAsync_ShouldClampLimits()
     {
-        var deckId = Guid.NewGuid();
-        var userId = "user-1";
-
         deckRepo
-            .Setup(r => r.GetDeckByIdAsync(deckId))
+            .Setup(r => r.GetDeckByIdAsync(defaultDeckId))
             .ReturnsAsync(new Deck
             {
-                Id = deckId,
+                Id = defaultDeckId,
                 Name = "Deck",
-                OwnerUserId = userId
+                OwnerUserId = defaultUserId
             });
 
-        cardRepo.Setup(r => r.CountDueCardsAsync(It.IsAny<Guid>(), userId, It.IsAny<DateTime>()))
+        cardRepo.Setup(r => r.CountDueCardsAsync(It.IsAny<Guid>(), defaultUserId, It.IsAny<DateTime>()))
             .ReturnsAsync(0);
 
-        cardRepo.Setup(r => r.CountNewCardsAsync(deckId, userId))
+        cardRepo.Setup(r => r.CountNewCardsAsync(defaultDeckId, defaultUserId))
             .ReturnsAsync(0);
 
-        cardRepo.Setup(r => r.GetDueCardsAsync(deckId, userId, 50, It.IsAny<DateTime>()))
+        cardRepo.Setup(r => r.GetDueCardsAsync(defaultDeckId, defaultUserId, 50, It.IsAny<DateTime>()))
             .ReturnsAsync(new List<CardToReviewDto>());
 
-        cardRepo.Setup(r => r.GetNewCardsAsync(deckId, userId, 20))
+        cardRepo.Setup(r => r.GetNewCardsAsync(defaultDeckId, defaultUserId, 20))
             .ReturnsAsync(new List<CardToReviewDto>());
 
         var reviewService = CreateReviewService();
 
-        await reviewService.GetDeckToReviewAsync(deckId, userId, 999, 999);
+        await reviewService.GetDeckToReviewAsync(defaultDeckId, defaultUserId, 999, 999);
 
         cardRepo.Verify(r => 
-                r.GetDueCardsAsync(deckId, userId, 50, It.IsAny<DateTime>()),
+                r.GetDueCardsAsync(defaultDeckId, defaultUserId, 50, It.IsAny<DateTime>()),
                 Times.Once);
 
         cardRepo.Verify(r =>
-                r.GetNewCardsAsync(deckId, userId, 20),
+                r.GetNewCardsAsync(defaultDeckId, defaultUserId, 20),
                 Times.Once);
     }
     
@@ -98,54 +134,54 @@ public class ReviewServiceTests
     public async Task HandleReviewTransactionAsync_Should_CreateProgressAndReturnResult()
     {
         // Arrange
-        var userId = "user1";
-        var cardId = Guid.NewGuid();
-        var now = new DateTime(2025, 1, 1);
-
-        var card = new Card
-        {
-            Id = cardId,
-            DeckId = Guid.NewGuid(),
-            Deck = new Deck { OwnerUserId = userId }
-        };
-
-        var dto = new CreateReviewTransactionDto
-        {
-            CardId = cardId,
-            Grade = 2
-        };
+        var card = DefaultCard();
+        var dto = DefaultDto();
         
-        cardRepo.Setup(r => r.GetCardByIdAsync(cardId))
-            .ReturnsAsync(card);
-        cardRepo.Setup(r => r.CountDueCardsAsync(It.IsAny<Guid>(), userId, now))
-            .ReturnsAsync(5);
-        cardRepo.Setup(r => r.CountNewCardsAsync(It.IsAny<Guid>(), userId))
-            .ReturnsAsync(3);
-
-        progressRepo.Setup(r => r.GetProgressAsync(userId, cardId))
-            .ReturnsAsync((UserCardProgress?)null);
-        
-        timeProvider.Setup(t => t.UtcNow).Returns(now);
-        
-        spacedRepetition.Setup(s => s.CalculateNextReview(dto.Grade, now))
-            .Returns(now.AddDays(4));
-        spacedRepetition.Setup(s => s.ShouldReinsert(dto.Grade))
-            .Returns(false);
+        SetupCommonReviewFlow(card, progress: null);
         
         var reviewService = CreateReviewService();
 
         // Act
-        var result = await reviewService.HandleReviewTransactionAsync(userId, dto);
+        var result = await reviewService.HandleReviewTransactionAsync(defaultUserId, dto);
 
         // Assert
         result.WasNew.Should().BeTrue();
         result.ReinsertCard.Should().BeFalse();
-        result.NextReviewAt.Should().Be(now.AddDays(4));
+        result.NextReviewAt.Should().Be(fixedNow.AddDays(4));
         result.XpAmount.Should().Be(5);
 
         progressRepo.Verify(r => r.AddProgressAsync(It.IsAny<UserCardProgress>()), Times.Once);
         transactionRepo.Verify(r => r.AddXpTransactionAsync(It.IsAny<XpTransaction>()), Times.Once);
         reviewRepo.Verify(r => r.AddReviewLogAsync(It.IsAny<ReviewLog>()), Times.Once);
         reviewRepo.Verify(r => r.SaveChangesAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task HandleReviewTransactionAsync_WhenProgressExists_ShouldNotAddProgress()
+    {
+        // Arrange
+        var existingProgress = new UserCardProgress
+        {
+            UserId = defaultUserId,
+            CardId = defaultCardId,
+            CreatedAt = fixedNow.AddDays(-5)
+        };
+
+        var card = DefaultCard();
+        var dto = DefaultDto();
+        
+        SetupCommonReviewFlow(card, existingProgress);
+        
+        var reviewService = CreateReviewService();
+        
+        // Act
+        var result = await reviewService.HandleReviewTransactionAsync(defaultUserId, dto);
+        
+        // Assert
+        result.WasNew.Should().BeFalse();
+        
+        progressRepo.Verify(r => r.AddProgressAsync(It.IsAny<UserCardProgress>()), Times.Never);
+        reviewRepo.Verify(r => r.SaveChangesAsync(), Times.Once);
+        existingProgress.NextReviewAt.Should().Be(fixedNow.AddDays(4));
     }
 }

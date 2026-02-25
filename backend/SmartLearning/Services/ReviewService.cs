@@ -71,9 +71,14 @@ public class ReviewService(
         
         var progress = await progressRepo.GetProgressAsync(userId, card.Id);
         var wasNew = progress == null;
-        progress ??= BuildProgress(userId, dto, timeProvider.UtcNow);
+
+        if (progress is null)
+        {
+            progress = BuildProgress(userId, dto, timeProvider.UtcNow);
+            await progressRepo.AddProgressAsync(progress);
+        }
+        
         UpdateProgressDates(progress, dto.Grade, timeProvider.UtcNow);
-        await progressRepo.AddProgressAsync(progress);
         
         var xpTransaction =  BuildXpTransaction(userId, timeProvider.UtcNow);
         await transactionRepo.AddXpTransactionAsync(xpTransaction);
