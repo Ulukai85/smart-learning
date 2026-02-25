@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -32,8 +32,10 @@ import { Router, RouterLink } from '@angular/router';
   styles: ``,
 })
 export class Registration {
-  isSubmitted = false;
+  isSubmitted = signal(false);
+  isLoading = signal(false);
   form: FormGroup;
+
 
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
@@ -76,7 +78,8 @@ export class Registration {
   };
 
   submit() {
-    this.isSubmitted = true;
+    this.isSubmitted.set(true);
+    this.isLoading.set(true);
 
     if (this.form.valid) {
       this.authService.signup(this.form.value as CreateUserDto).subscribe({
@@ -84,8 +87,10 @@ export class Registration {
           console.log(result);
           this.toast.success('Success', 'Registration successful!');
           this.form.reset();
-          this.isSubmitted = false;
+          this.isSubmitted.set(false);
+          this.isLoading.set(false);
           this.router.navigateByUrl('/login')
+          
         },
         error: (err) => {
           if (err.error.errors) {
@@ -93,14 +98,17 @@ export class Registration {
               this.toast.error('Error', x.code);
             });
             console.log('Error:', err);
+            this.isLoading.set(false)
           }
         },
       });
+    } else {
+      this.isLoading.set(false)
     }
   }
 
   hasDisplayableError(controlName: string): boolean {
     const control = this.form.get(controlName);
-    return !!control?.invalid && (this.isSubmitted || !!control?.touched || !!control?.dirty);
+    return !!control?.invalid && (this.isSubmitted() || !!control?.touched || !!control?.dirty);
   }
 }

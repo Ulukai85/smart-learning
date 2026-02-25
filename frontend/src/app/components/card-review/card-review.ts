@@ -8,6 +8,7 @@ import { ReviewService } from '../../services/review-service';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CardToReviewDto } from '../../models/card.model';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { ToastService } from '../../services/toast-service';
 
 @Component({
   selector: 'app-card-review',
@@ -18,6 +19,7 @@ import { OverlayBadgeModule } from 'primeng/overlaybadge';
 export class CardReview implements OnInit {
   private reviewService = inject(ReviewService);
   private route = inject(ActivatedRoute);
+  private toast = inject(ToastService);
 
   deckToReview = signal<DeckToReviewDto | null>(null);
 
@@ -57,6 +59,7 @@ export class CardReview implements OnInit {
       next: (result) => {
         this.applyReviewResult(result);
         this.showSolution.set(false);
+        this.toast.success(`${result.xpAmount} XP gained!`, `Reason: ${result.xpReason}`)
         console.log('result:', result);
       },
       error: (err) => console.log('Error:', err),

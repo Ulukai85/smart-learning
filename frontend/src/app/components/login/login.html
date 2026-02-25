@@ -1,7 +1,7 @@
 <div class="auth-container">
   <h1>Login</h1>
   <div class="flex gap-2">
-    <span>Don't have an account?</span><a routerLink="/register">Register</a>
+    <span>Don't have an account?</span><a routerLink="/register" class="underline">Register</a>
   </div>
   <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
     <div>
@@ -25,6 +25,6 @@
         >
       }
     </div>
-    <button pButton icon="pi pi-sign-in" type="submit">Login</button>
+    <p-button icon="pi pi-sign-in" styleClass="w-full" type="submit" [loading]="isLoading()" label="Login"/>
   </form>
 </div>

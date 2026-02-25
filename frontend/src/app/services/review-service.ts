@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { DeckToReviewDto } from '../models/deck.model';
-import { CreateReviewTransactionDto, ReviewResultDto, XpTransactionDto } from '../models/xpTransaction.model';
+import { CreateReviewTransactionDto, ReviewResultDto } from '../models/xpTransaction.model';
 
 @Injectable({
   providedIn: 'root',
