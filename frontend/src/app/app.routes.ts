@@ -6,6 +6,8 @@ import { Dashboard } from './components/dashboard/dashboard';
 import { Layout } from './components/layout/layout';
 import { CardExplorer } from './components/card-explorer/card-explorer';
 import { authGuard } from './guards/auth-guard';
+import { Decks } from './components/decks/decks';
+import { CardReview } from './components/card-review/card-review';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -30,6 +32,14 @@ export const routes: Routes = [
       {
         path: 'cards',
         component: CardExplorer,
+      },
+      {
+        path: 'decks',
+        component: Decks,
+      },
+      {
+        path: 'review/deck/:deckId',
+        component: CardReview,
       },
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
     ],

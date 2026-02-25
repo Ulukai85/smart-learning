@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { UpsertDeckDto, DeckDto } from '../models/deck.model';
+import { UpsertDeckDto, DeckDto, DeckSummaryDto } from '../models/deck.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,5 +22,9 @@ export class DeckService {
 
   public updateDeck(id: string, dto: UpsertDeckDto): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, dto);
+  }
+
+  public getDeckSummary(): Observable<DeckSummaryDto[]> {
+    return this.http.get<DeckSummaryDto[]>(`${this.apiUrl}/summary`);
   }
 }

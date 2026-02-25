@@ -1,4 +1,5 @@
 
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartLearning.DTOs;
@@ -16,7 +17,7 @@ public class DecksController(IDeckService deckService) : ControllerBase
     {
         try
         {
-            var userId = User.Claims.First(c => c.Type == "UserId").Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             return Ok(await deckService.CreateDeckAsync(dto, userId));
         } 
         catch (Exception ex)
@@ -42,6 +43,21 @@ public class DecksController(IDeckService deckService) : ControllerBase
         catch  (Exception ex)
         {
             return BadRequest( new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("summary")]
+    public async Task<IActionResult> GetDeckSummary()
+    {
+        try
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var summaries = await deckService.GetDeckSummariesByUserIdAsync(userId!);
+            return Ok(summaries);
+        } 
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
         }
     }
 }

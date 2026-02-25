@@ -37,6 +37,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .WithMany(d => d.Cards)
                 .HasForeignKey(x => x.DeckId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(c => c.DeckId);
         });
 
         modelBuilder.Entity<UserCardProgress>(entity =>
@@ -52,6 +54,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .WithMany(c =>  c.UserCardProgresses)
                 .HasForeignKey(x => x.CardId)
                 .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasIndex(x => new { x.UserId, x.CardId })
+                .IsUnique();
+
+            entity.HasIndex(x => new { x.UserId, x.NextReviewAt });
         });
 
         modelBuilder.Entity<XpTransaction>(entity =>

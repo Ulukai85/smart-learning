@@ -29,6 +29,8 @@
 
 - Erstellen von Docker-Compose-File für MySQL-Datenbank
 
+---
+
 ## Woche 1 (16.02. - 20.02.2026)
 
 ### Dokumentation
@@ -48,7 +50,7 @@
 - Layout mit Routing und Navbar
 - Filter- und sortierbare Ansichten für Karten und Decks
 - Konfigurieren der Testbibliothek
-- Beginn Komponente zur Starten von Lernsessions
+- Erstellen einer Komponente zur Starten von Lernsessions
 
 ### Datenbank
 
@@ -56,7 +58,30 @@
 - **Migration** der Models in DB
 - Erstellen von **Indizes** für effizientere Queries (UserCardProgress, Card) mit FluentAPI
 
-### TODO NEXT
+---
+
+## Woche 2 (23.02. - 27.02.2026)
+
+### Backend
+
+- Klasse für **SpacedRepetiton** (vorerst einfache Implementierung mit Möglichkeit zur Erweiterung)
+- Service für Abhandeln von Kartenreview mit Resultat (mehrere Entitäten gleichzeitig bearbeitet)
+- **Refaktorisieren** dieses Services in kleinere Methoden und extra Repo, um Erweiterbarkeit und Testbarkeit zu gewährleisten
+- Test für diese neue Methode
+
+### Frontend
+
+- **Logik für Lernsessions**: Auswahl von Kartenstapel und Bewerten der Karten
+- Dynamische Anzeige der aktuell noch zu bearbeitenden Karten
+- Styling mit PrimeIcons, Toast-Nachrichten und weiteren PrimeNG-Components
+- Tests für Review-Prozess
+
+---
+
+## TODO NEXT
+
+- Logik für Kartenreview und Lernsession vorerst abschließen
+- Neues Feature: Decks können veröffentlicht werden; _öffentliche Decks_ können durchsucht und geforkt werden
 
 - Logik für Kartenreview und Lernsession
 - Unit-Tests für bisherige Logik erstellen

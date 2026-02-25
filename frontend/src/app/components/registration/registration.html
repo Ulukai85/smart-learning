@@ -1,7 +1,7 @@
 <div class="auth-container">
   <h1>Registration</h1>
   <div class="flex gap-2">
-    <span>Already have an account?</span><a routerLink="/login">Login</a>
+    <span>Already have an account?</span><a routerLink="/login" class="underline">Login</a>
   </div>
   <div class="w-full">
     <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col w-full gap-5">
@@ -71,7 +71,7 @@
           >
         }
       </div>
-      <button pButton type="submit">Register</button>
+      <p-button icon="pi pi-user-plus" type="submit" label="Register" [loading]="isLoading()" styleClass="w-full" />
     </form>
   </div>
 </div>

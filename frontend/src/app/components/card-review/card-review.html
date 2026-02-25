@@ -1,0 +1,38 @@
+<div class="flex flex-col gap-2">
+  @if (deckToReview() === null) {
+    <p-skeleton height="2rem" />
+    <p-skeleton height="6rem" class="mb-2" />
+    <p-skeleton width="6rem" height="3rem" class="mb-2" />
+  } @else {
+    <div class="flex justify-between">
+      <h1>{{ deckToReview()?.name }}</h1>
+      <div class="flex flex-row gap-4">
+        <p-overlaybadge [value]="deckToReview()?.newCards"> New </p-overlaybadge>
+        <p-overlaybadge [value]="deckToReview()?.dueCards">Review</p-overlaybadge>
+      </div>
+    </div>
+    @if (current(); as current) {
+      <p-card>
+        <p>{{ current.front }}</p>
+      </p-card>
+
+      @if (showSolution()) {
+        <p-card>
+          <p>{{ current.back }}</p></p-card
+        >
+      }
+
+      <div class="flex gap-2">
+        @if (showSolution()) {
+          <p-button (click)="onReview(0, current)" label="Wrong"></p-button>
+          <p-button (click)="onReview(1, current)" label="Hard"></p-button>
+          <p-button (click)="onReview(2, current)" label="Easy"></p-button>
+        } @else {
+          <p-button (click)="onShowAnswer()" label="Show Answer"></p-button>
+        }
+      </div>
+    } @else {
+      <p-card>No card!</p-card>
+    }
+  }
+</div>

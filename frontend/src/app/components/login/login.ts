@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -23,7 +23,8 @@ import { AuthService } from '../../services/auth-service';
   styles: ``,
 })
 export class Login {
-  isSubmitted = false;
+  isSubmitted = signal(false);
+  isLoading = signal(false)
   form: FormGroup;
 
   private fb = inject(FormBuilder);
@@ -39,7 +40,8 @@ export class Login {
   }
 
   submit() {
-    this.isSubmitted = true;
+    this.isSubmitted.set(true);
+    this.isLoading.set(true);
     if (this.form.valid) {
       this.authService.signin(this.form.value as LoginUserDto).subscribe({
         next: (result: any) => {
@@ -47,20 +49,24 @@ export class Login {
           this.toast.success('Welcome', 'Login successful!');
           this.router.navigateByUrl('/dashboard');
           this.form.reset();
-          this.isSubmitted = false;
+          this.isSubmitted.set(false);
+          this.isLoading.set(false);
         },
         error: (err) => {
           if (err.status == 400) {
             this.toast.error('Login fail', 'Incorrect email or password!');
+            this.isLoading.set(false)
           }
           console.log('Error:', err);
         },
       });
+    } else {
+      this.isLoading.set(false)
     }
   }
 
   hasDisplayableError(controlName: string): boolean {
     const control = this.form.get(controlName);
-    return !!control?.invalid && (this.isSubmitted || !!control?.touched || !!control?.dirty);
+    return !!control?.invalid && (this.isSubmitted() || !!control?.touched || !!control?.dirty);
   }
 }

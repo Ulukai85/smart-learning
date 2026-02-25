@@ -53,7 +53,9 @@ public class AuthService : IAuthService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity([
-                new Claim("UserId", user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+                new Claim(ClaimTypes.Name, user.Handle)
             ]),
             Expires = DateTime.UtcNow.AddMinutes(expiresMinutes),
             SigningCredentials = new SigningCredentials(signInKey, SecurityAlgorithms.HmacSha256Signature)
