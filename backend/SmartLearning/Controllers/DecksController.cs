@@ -26,11 +26,26 @@ public class DecksController(IDeckService deckService) : ControllerBase
         }
     }
 
-    [HttpGet]
+    // Debug
+    [HttpGet("all")]
     public async Task<IActionResult> GetAllDecks()
     {
         return Ok(await deckService.GetAllDecksAsync());
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetDecksForUser()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return Ok(await deckService.GetDecksByUserIdAsync(userId!));
+    }
+    
+    [HttpGet("published")]
+    public async Task<IActionResult> GetPublishedDecks()
+    {
+        return Ok(await deckService.GetPublishedDecksAsync());
+    }
+    
     
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateDeck([FromRoute] Guid id, [FromBody] UpsertDeckDto dto)

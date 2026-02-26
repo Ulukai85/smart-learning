@@ -8,6 +8,8 @@ public interface IDeckService
 {
     Task<DeckDto> CreateDeckAsync(UpsertDeckDto dto, string userId);
     Task<ICollection<DeckDto>> GetAllDecksAsync();
+    Task<ICollection<DeckDto>> GetPublishedDecksAsync();
+    Task<ICollection<DeckDto>> GetDecksByUserIdAsync(string userId);
     Task UpdateDeckAsync(Guid id, UpsertDeckDto dto);
     Task<ICollection<DeckSummaryDto>> GetDeckSummariesByUserIdAsync(string userId);
     Task SetIsPublishedAsync(bool isPublished, string userId, Guid deckId);
