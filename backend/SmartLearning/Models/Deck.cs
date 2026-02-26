@@ -35,7 +35,8 @@ public class Deck
             Id = Id,
             Description = Description,
             Name = Name,
-            OwnerUserId = OwnerUserId
+            OwnerUserId = OwnerUserId,
+            TotalCards = Cards.Count
         };
     } 
 }

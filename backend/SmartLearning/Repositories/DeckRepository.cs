@@ -8,6 +8,8 @@ public interface IDeckRepository
 {
     Task CreateDeckAsync(Deck deck);
     Task<ICollection<Deck>> GetAllDecksAsync();
+    Task<ICollection<Deck>> GetDecksByUserIdAsync(string userId);
+    Task<ICollection<Deck>> GetPublishedDecksAsync();
     Task<Deck?> GetDeckByIdAsync(Guid id);
     Task SaveChangesAsync();
     Task DeleteDeckAsync(Deck deck);
@@ -25,6 +27,20 @@ public class DeckRepository(AppDbContext dbContext) : IDeckRepository
     public async Task<ICollection<Deck>> GetAllDecksAsync()
     {
         return await dbContext.Decks
+            .ToListAsync();
+    }
+    
+    public async Task<ICollection<Deck>> GetDecksByUserIdAsync(string userId)
+    {
+        return await dbContext.Decks
+            .Where(d => d.OwnerUserId == userId)
+            .ToListAsync();
+    }
+    
+    public async Task<ICollection<Deck>> GetPublishedDecksAsync()
+    {
+        return await dbContext.Decks
+            .Where(d => d.IsPublished)
             .ToListAsync();
     }
 

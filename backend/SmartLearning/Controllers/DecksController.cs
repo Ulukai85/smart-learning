@@ -60,5 +60,35 @@ public class DecksController(IDeckService deckService) : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
+
+    [HttpPost("{id:guid}/publish")]
+    public async Task<IActionResult> PublishDeck([FromRoute] Guid id)
+    {
+        try
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await deckService.SetIsPublishedAsync(true, userId!, id);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+    
+    [HttpPatch("{id:guid}/unpublish")]
+    public async Task<IActionResult> UnpublishDeck([FromRoute] Guid id)
+    {
+        try
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await deckService.SetIsPublishedAsync(false, userId!, id);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 }
 
