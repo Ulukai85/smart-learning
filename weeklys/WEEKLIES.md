@@ -82,6 +82,3 @@
 
 - Logik für Kartenreview und Lernsession vorerst abschließen
 - Neues Feature: Decks können veröffentlicht werden; _öffentliche Decks_ können durchsucht und geforkt werden
-
-- Logik für Kartenreview und Lernsession
-- Unit-Tests für bisherige Logik erstellen
