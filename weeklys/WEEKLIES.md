@@ -78,6 +78,18 @@
 
 ---
 
+## Woche 3 (02.03. - 06.03.2026)
+
+### Backend
+- Endpunkte, Service- und Repomethoden für Abrufen öffentlicher Decks und togglen von public Status
+- Löschen von Decks (mitsamt Karten)
+
+### Frontend
+- Deckübersicht erweitert mit Toggle-Button für public Status und Button für Löschen
+- Neue Komponente für Ansicht aller öffentlichen Decks
+
+---
+
 ## TODO NEXT
 
 - Logik für Kartenreview und Lernsession vorerst abschließen

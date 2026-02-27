@@ -34,6 +34,11 @@ export class Navbar implements OnInit {
         icon: 'pi pi-lightbulb',
         routerLink: ['/decks'],
       },
+      {
+        label: 'Explore',
+        icon: 'pi pi-search',
+        routerLink: ['/explorer']
+      }
     ];
   }
 

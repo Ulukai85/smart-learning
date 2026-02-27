@@ -4,10 +4,12 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { DeckSummaryDto } from '../../models/deck.model';
 import { DeckService } from '../../services/deck-service';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-decks',
-  imports: [TableModule, ButtonModule],
+  imports: [TableModule, ButtonModule, ToggleSwitchModule, FormsModule],
   templateUrl: './decks.html',
   styles: ``,
 })
@@ -29,7 +31,6 @@ export class Decks implements OnInit {
   }
 
   reviewDeck(deckId: string): void {
-    console.log('deck id in decks comp:', deckId);
     this.router.navigate(['/review/deck', deckId]);
   }
 
@@ -38,5 +39,26 @@ export class Decks implements OnInit {
     if (selectedId != null) {
       this.reviewDeck(selectedId);
     }
+  }
+
+  onTogglePublished(dto: DeckSummaryDto) {
+    console.log('row:', dto)
+    const originalValue = !dto.isPublished;
+
+    this.deckService.toggleIsPublished(dto).subscribe({
+    next: () => {
+      console.log('Success!')
+    },
+    error: () => {
+      console.log('err')
+      this.deckSummaries.update(decks =>
+        decks.map(deck =>
+          deck.id === dto.id
+            ? { ...deck, isPublished: originalValue }
+            : deck
+        )
+      );
+    }
+  });
   }
 }

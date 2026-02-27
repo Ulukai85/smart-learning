@@ -40,7 +40,7 @@ public class DecksController(IDeckService deckService) : ControllerBase
         return Ok(await deckService.GetDecksByUserIdAsync(userId!));
     }
     
-    [HttpGet("published")]
+    [HttpGet("public")]
     public async Task<IActionResult> GetPublishedDecks()
     {
         return Ok(await deckService.GetPublishedDecksAsync());
@@ -76,7 +76,7 @@ public class DecksController(IDeckService deckService) : ControllerBase
         }
     }
 
-    [HttpPost("{id:guid}/publish")]
+    [HttpPatch("{id:guid}/publish")]
     public async Task<IActionResult> PublishDeck([FromRoute] Guid id)
     {
         try

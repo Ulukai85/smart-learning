@@ -12,8 +12,12 @@ export class DeckService {
 
   apiUrl = environment.baseUrl + '/Decks';
 
-  public getAllDecks(): Observable<DeckDto[]> {
+  public getDecksForUser(): Observable<DeckDto[]> {
     return this.http.get<DeckDto[]>(this.apiUrl);
+  }
+
+  public getPublicDecks(): Observable<DeckDto[]> {
+    return this.http.get<DeckDto[]>(this.apiUrl + '/public');
   }
 
   public createDeck(dto: UpsertDeckDto): Observable<DeckDto> {
@@ -26,5 +30,12 @@ export class DeckService {
 
   public getDeckSummary(): Observable<DeckSummaryDto[]> {
     return this.http.get<DeckSummaryDto[]>(`${this.apiUrl}/summary`);
+  }
+
+  public toggleIsPublished(dto: DeckSummaryDto): Observable<void> {
+    if (dto.isPublished) {
+      return this.http.patch<void>(`${this.apiUrl}/${dto.id}/publish`, null);
+    }
+    return this.http.patch<void>(`${this.apiUrl}/${dto.id}/unpublish`, null);
   }
 }

@@ -116,7 +116,7 @@ export class CardDesigner implements OnChanges {
   }
 
   reloadDecks(): Observable<DeckDto[]> {
-    return this.deckService.getAllDecks().pipe(tap((decks) => this.decks.set(decks)));
+    return this.deckService.getDecksForUser().pipe(tap((decks) => this.decks.set(decks)));
   }
 
   createDeck(dto: UpsertDeckDto): void {

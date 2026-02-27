@@ -5,6 +5,7 @@ export interface DeckDto {
   ownerUserId: string;
   name: string;
   description: string;
+  totalCards: number;
 }
 
 export interface UpsertDeckDto {
@@ -16,6 +17,7 @@ export interface DeckSummaryDto {
   id: string;
   name: string;
   totalCards: number;
+  isPublished: boolean;
   newCards: number;
   dueCards: number;
 }

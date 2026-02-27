@@ -49,7 +49,7 @@ export class CardExplorer implements OnInit {
   }
 
   loadDecks(): void {
-    this.deckService.getAllDecks().subscribe({
+    this.deckService.getDecksForUser().subscribe({
       next: (decks) => {
         this.decks.set(decks);
       },

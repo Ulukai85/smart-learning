@@ -40,6 +40,7 @@ public class DeckRepository(AppDbContext dbContext) : IDeckRepository
     public async Task<ICollection<Deck>> GetPublishedDecksAsync()
     {
         return await dbContext.Decks
+            .Include(d => d.Cards)
             .Where(d => d.IsPublished)
             .ToListAsync();
     }
@@ -69,7 +70,7 @@ public class DeckRepository(AppDbContext dbContext) : IDeckRepository
             {
                 Id = deck.Id,
                 Name = deck.Name,
-                TotalCards = deck.Cards.Count,
+                IsPublished = deck.IsPublished,
                 NewCards = deck.Cards
                     .Count(card => !dbContext.UserCardProgresses
                         .Any(progress => progress.CardId == card.Id
