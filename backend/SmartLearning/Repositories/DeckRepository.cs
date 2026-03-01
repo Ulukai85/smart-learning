@@ -14,6 +14,8 @@ public interface IDeckRepository
     Task SaveChangesAsync();
     Task DeleteDeckAsync(Deck deck);
     Task<ICollection<DeckSummaryDto>> GetDeckSummariesByUserIdAsync(string userId);
+    Task<ForkDeckDto> GetForkingDataByDeckId(Guid deckId);
+    Task AddDeckWithCardsAsync(Deck deck, List<Card> cards);
 }
 
 public class DeckRepository(AppDbContext dbContext) : IDeckRepository
@@ -82,5 +84,28 @@ public class DeckRepository(AppDbContext dbContext) : IDeckRepository
                                          && progress.NextReviewAt <= now))
             })
             .ToListAsync();
+    }
+
+    public async Task<ForkDeckDto> GetForkingDataByDeckId(Guid deckId)
+    {
+        return await dbContext.Decks
+            .Where(d => d.Id == deckId)
+            .Select(d => new ForkDeckDto
+            {
+                Name = d.Name,
+                Description = d.Description,
+                Cards = d.Cards.Select(c => new ForkCardDto
+                {
+                    Front = c.Front,
+                    Back = c.Back
+                }).ToList()
+            })
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task AddDeckWithCardsAsync(Deck deck, List<Card> cards)
+    {
+        await dbContext.Decks.AddAsync(deck);
+        await dbContext.Cards.AddRangeAsync(cards);
     }
 }

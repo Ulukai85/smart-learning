@@ -42,4 +42,8 @@ export class DeckService {
     }
     return this.http.patch<void>(`${this.apiUrl}/${dto.id}/unpublish`, null);
   }
+
+  public forkDeck(id: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/fork`, null);
+  }
 }

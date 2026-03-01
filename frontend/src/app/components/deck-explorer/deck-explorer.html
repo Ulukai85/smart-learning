@@ -1,12 +1,10 @@
-<p-table
-  [value]="decks()"
-  dataKey="id"
->
+<p-table [value]="decks()" dataKey="id">
   <ng-template pTemplate="header">
     <tr>
       <th>Name</th>
       <th>Cards</th>
       <th>Description</th>
+      <th>Fork</th>
     </tr>
   </ng-template>
 
@@ -15,6 +13,9 @@
       <td>{{ deck.name }}</td>
       <td>{{ deck.totalCards }}</td>
       <td>{{ deck.description }}</td>
+      <td>
+        <p-button icon="pi pi-share-alt" (click)="onFork(deck.id)" />
+      </td>
     </tr>
   </ng-template>
 </p-table>

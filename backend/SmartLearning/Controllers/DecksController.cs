@@ -121,5 +121,20 @@ public class DecksController(IDeckService deckService) : ControllerBase
             return BadRequest(new {message = ex.Message });
         }
     }
+
+    [HttpPost("{id:guid}/fork")]
+    public async Task<IActionResult> ForkDeck([FromRoute] Guid id)
+    {
+        try
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await deckService.ForkDeckAsync(id, userId!);
+            return Ok();
+        }
+        catch  (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 }
 

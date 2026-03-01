@@ -32,3 +32,10 @@ public class DeckToReviewDto
     public int DueCards { get; set; }
     public List<CardToReviewDto> Cards { get; set; } = [];
 }
+
+public class ForkDeckDto
+{
+    public required string Name { get; set; }
+    public required string Description { get; set; }
+    public List<ForkCardDto> Cards { get; set; } = [];
+}

@@ -14,7 +14,7 @@ public interface IDeckService
     Task<ICollection<DeckSummaryDto>> GetDeckSummariesByUserIdAsync(string userId);
     Task SetIsPublishedAsync(bool isPublished, string userId, Guid deckId);
     Task DeleteDeckAsync(Guid id, string userId);
-
+    Task<Guid> ForkDeckAsync(Guid deckId, string userId);
 }
 
 public class DeckService(IDeckRepository deckRepo): IDeckService
@@ -107,5 +107,41 @@ public class DeckService(IDeckRepository deckRepo): IDeckService
             throw new KeyNotFoundException("Deck not found");
         
         await deckRepo.DeleteDeckAsync(deck);
+    }
+
+    public async Task<Guid> ForkDeckAsync(Guid deckId, string userId)
+    {
+        var forkData = await deckRepo.GetForkingDataByDeckId(deckId);
+        
+        if  (forkData == null)
+            throw new KeyNotFoundException("Deck not found");
+
+        var newDeck = new Deck
+        {
+            Id = Guid.NewGuid(),
+            Name = forkData.Name,
+            Description = forkData.Description,
+            OwnerUserId = userId,
+            SourceDeckId = deckId,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+        
+        var newCards = forkData.Cards
+            .Select(c => new Card
+            {
+                Id = Guid.NewGuid(),
+                DeckId = newDeck.Id,
+                Front = c.Front,
+                Back = c.Back,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            })
+            .ToList();
+        
+        await deckRepo.AddDeckWithCardsAsync(newDeck, newCards);
+        await deckRepo.SaveChangesAsync();
+        
+        return  newDeck.Id;
     }
 }

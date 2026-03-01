@@ -11,12 +11,12 @@ import { DeckDto } from '../../models/deck.model';
   styles: ``,
 })
 export class DeckExplorer implements OnInit {
-  private deckService = inject(DeckService)
+  private deckService = inject(DeckService);
 
   decks = signal<DeckDto[]>([]);
 
   ngOnInit(): void {
-    this.loadDecks()
+    this.loadDecks();
   }
 
   loadDecks(): void {
@@ -25,9 +25,14 @@ export class DeckExplorer implements OnInit {
     });
   }
 
-  onRowSelect() {
-
+  onFork(id: string) {
+    this.deckService.forkDeck(id).subscribe({
+      next: (data) => {
+        console.log(data);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 }
-
-
