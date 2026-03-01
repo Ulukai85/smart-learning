@@ -1,4 +1,5 @@
 using System.Security.Authentication;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartLearning.DTOs;
@@ -25,18 +26,28 @@ public class CardsController(ICardService cardService) : ControllerBase
         }
     }
     
-    [HttpGet]
+    // Debug
+    [HttpGet("all")]
     public async Task<IActionResult> GetAllCards()
     {
         return Ok(await cardService.GetAllCardsAsync());
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAllCardsForUser()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return Ok(await cardService.GetCardsByUserIdAsync(userId!));
+    }
+
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateCard([FromRoute] Guid id, [FromBody] UpsertCardDto dto)
     {
         try
         {
-            await cardService.UpdateCardAsync(id, dto);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await cardService.UpdateCardAsync(id, dto, userId!);
             return Ok();
         }
         catch  (Exception ex)
@@ -50,9 +61,11 @@ public class CardsController(ICardService cardService) : ControllerBase
     {
         try
         {
-            await cardService.DeleteCardAsync(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await cardService.DeleteCardAsync(id, userId!);
             return Ok();
-        } catch (Exception ex)
+        } 
+        catch (Exception ex)
         {
             return BadRequest( new { message = ex.Message });
         }

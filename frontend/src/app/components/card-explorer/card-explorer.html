@@ -24,7 +24,13 @@
     </div>
   </p-dialog>
 
-  <p-table [value]="cards()" dataKey="id">
+  <p-table
+    [value]="cards()"
+    dataKey="id"
+    [paginator]="true"
+    [rows]="20"
+    [rowsPerPageOptions]="[10, 20, 50]"
+  >
     <ng-template pTemplate="header">
       <tr>
         <th>Deck</th>

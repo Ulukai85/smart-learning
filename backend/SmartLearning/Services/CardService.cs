@@ -8,8 +8,9 @@ public interface ICardService
 {
     Task<Card> CreateCardAsync(UpsertCardDto dto);
     Task<ICollection<CardDto>> GetAllCardsAsync();
-    Task UpdateCardAsync(Guid id, UpsertCardDto dto);
-    Task DeleteCardAsync(Guid id);
+    Task<ICollection<CardDto>> GetCardsByUserIdAsync(string userId);
+    Task UpdateCardAsync(Guid id, UpsertCardDto dto, string userId);
+    Task DeleteCardAsync(Guid id, string userId);
 }
 
 public class CardService(ICardRepository cardRepo): ICardService
@@ -36,9 +37,22 @@ public class CardService(ICardRepository cardRepo): ICardService
         return cards.Select(d => d.MapToDto()).ToList();
     }
 
-    public async Task UpdateCardAsync(Guid id, UpsertCardDto dto)
+    public async Task<ICollection<CardDto>> GetCardsByUserIdAsync(string userId)
+    {
+        var cards = await cardRepo.GetCardsByUserIdAsync(userId);
+        
+        return cards.Select(d => d.MapToDto()).ToList();
+    }
+
+    public async Task UpdateCardAsync(Guid id, UpsertCardDto dto, string userId)
     {
         var card = await cardRepo.GetCardByIdAsync(id) ?? throw new KeyNotFoundException("Card not found");
+        
+        if (card?.Deck.OwnerUserId != userId)
+            throw new UnauthorizedAccessException("Not accessible");
+        
+        if (card == null)
+            throw new KeyNotFoundException("Card not found");
         
         card.DeckId = dto.DeckId;
         card.Front = dto.Front;
@@ -49,9 +63,15 @@ public class CardService(ICardRepository cardRepo): ICardService
         await cardRepo.SaveChangesAsync();
     }
 
-    public async Task DeleteCardAsync(Guid id)
+    public async Task DeleteCardAsync(Guid id, string userId)
     {
-        var card = await cardRepo.GetCardByIdAsync(id) ?? throw new KeyNotFoundException("Card not found");
+        var card = await cardRepo.GetCardByIdAsync(id);
+
+        if (card?.Deck.OwnerUserId != userId)
+            throw new UnauthorizedAccessException("Not accessible");
+        
+        if (card == null)
+            throw new KeyNotFoundException("Card not found");
         
         await cardRepo.DeleteCardAsync(card);
     }

@@ -8,6 +8,7 @@ public interface ICardRepository
 {
     Task<Card> CreateCardAsync(Card card);
     Task<ICollection<Card>> GetAllCardsAsync();
+    Task<ICollection<Card>> GetCardsByUserIdAsync(string userId);
     Task<Card?> GetCardByIdAsync(Guid id);
     Task SaveChangesAsync();
     Task DeleteCardAsync(Card card);
@@ -49,6 +50,14 @@ public class CardRepository(AppDbContext dbContext) : ICardRepository
     {
         return await dbContext.Cards
             .Include(c => c.Deck)
+            .ToListAsync();
+    }
+    
+    public async Task<ICollection<Card>> GetCardsByUserIdAsync(string userId)
+    {
+        return await dbContext.Cards
+            .Include(c => c.Deck)
+            .Where(c => c.Deck.OwnerUserId == userId)
             .ToListAsync();
     }
 

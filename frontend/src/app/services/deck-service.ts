@@ -28,6 +28,10 @@ export class DeckService {
     return this.http.put<void>(`${this.apiUrl}/${id}`, dto);
   }
 
+  public deleteDeck(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
   public getDeckSummary(): Observable<DeckSummaryDto[]> {
     return this.http.get<DeckSummaryDto[]>(`${this.apiUrl}/summary`);
   }

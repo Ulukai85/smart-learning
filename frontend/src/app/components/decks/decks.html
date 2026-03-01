@@ -1,5 +1,12 @@
-<p-table [value]="deckSummaries()" dataKey="id" selectionMode="single" [(selection)]="selectedDeck"
-  (onRowSelect)="onRowSelect()">
+<p-confirmpopup />
+
+<p-table
+  [value]="deckSummaries()"
+  dataKey="id"
+  selectionMode="single"
+  [(selection)]="selectedDeck"
+  (onRowSelect)="onRowSelect()"
+>
   <ng-template pTemplate="header">
     <tr>
       <th>Name</th>
@@ -21,9 +28,8 @@
         <p-toggleswitch [(ngModel)]="deck.isPublished" (onChange)="onTogglePublished(deck)" />
       </td>
       <td>
-        <p-button icon="pi pi-trash" />
+        <p-button icon="pi pi-trash" (click)="confirmDelete($event, deck)" severity="danger" />
       </td>
-  
     </tr>
   </ng-template>
 </p-table>

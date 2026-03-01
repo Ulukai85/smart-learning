@@ -10,9 +10,10 @@ public interface IDeckService
     Task<ICollection<DeckDto>> GetAllDecksAsync();
     Task<ICollection<DeckDto>> GetPublishedDecksAsync();
     Task<ICollection<DeckDto>> GetDecksByUserIdAsync(string userId);
-    Task UpdateDeckAsync(Guid id, UpsertDeckDto dto);
+    Task UpdateDeckAsync(Guid id, UpsertDeckDto dto, string userId);
     Task<ICollection<DeckSummaryDto>> GetDeckSummariesByUserIdAsync(string userId);
     Task SetIsPublishedAsync(bool isPublished, string userId, Guid deckId);
+    Task DeleteDeckAsync(Guid id, string userId);
 
 }
 
@@ -56,9 +57,16 @@ public class DeckService(IDeckRepository deckRepo): IDeckService
         return decks.Select(d => d.MapToDto()).ToList();
     }
     
-    public async Task UpdateDeckAsync(Guid id, UpsertDeckDto dto)
+    public async Task UpdateDeckAsync(Guid id, UpsertDeckDto dto, string userId)
     {
-        var deck = await deckRepo.GetDeckByIdAsync(id) ?? throw new KeyNotFoundException("Deck not found");
+        var deck = await deckRepo.GetDeckByIdAsync(id);
+        
+        if (deck?.OwnerUserId != userId)
+            throw new UnauthorizedAccessException("Not accessible");
+        
+        if  (deck == null)
+            throw new KeyNotFoundException("Deck not found");
+
         
         deck.Name = dto.Name;
         deck.Description = dto.Description;
@@ -86,5 +94,18 @@ public class DeckService(IDeckRepository deckRepo): IDeckService
 
         deck.IsPublished = isPublished;
         await deckRepo.SaveChangesAsync();
+    }
+    
+    public async Task DeleteDeckAsync(Guid id, string userId)
+    {
+        var deck = await deckRepo.GetDeckByIdAsync(id);
+        
+        if (deck?.OwnerUserId != userId)
+            throw new UnauthorizedAccessException("Not accessible");
+        
+        if  (deck == null)
+            throw new KeyNotFoundException("Deck not found");
+        
+        await deckRepo.DeleteDeckAsync(deck);
     }
 }

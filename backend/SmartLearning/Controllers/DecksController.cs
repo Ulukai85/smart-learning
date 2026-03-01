@@ -52,7 +52,8 @@ public class DecksController(IDeckService deckService) : ControllerBase
     {
         try
         {
-            await deckService.UpdateDeckAsync(id, dto);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await deckService.UpdateDeckAsync(id, dto, userId!);
             return Ok();
         }
         catch  (Exception ex)
@@ -103,6 +104,21 @@ public class DecksController(IDeckService deckService) : ControllerBase
         catch (Exception ex)
         {
             return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteDeck([FromRoute] Guid id)
+    {
+        try
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await deckService.DeleteDeckAsync(id, userId!);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {message = ex.Message });
         }
     }
 }
