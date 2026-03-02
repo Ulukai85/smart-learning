@@ -9,7 +9,7 @@ public interface IDeckRepository
     Task CreateDeckAsync(Deck deck);
     Task<ICollection<Deck>> GetAllDecksAsync();
     Task<ICollection<Deck>> GetDecksByUserIdAsync(string userId);
-    Task<ICollection<Deck>> GetPublishedDecksAsync();
+    Task<ICollection<Deck>> GetPublishedDecksAsync(string userId);
     Task<Deck?> GetDeckByIdAsync(Guid id);
     Task SaveChangesAsync();
     Task DeleteDeckAsync(Deck deck);
@@ -39,11 +39,16 @@ public class DeckRepository(AppDbContext dbContext) : IDeckRepository
             .ToListAsync();
     }
     
-    public async Task<ICollection<Deck>> GetPublishedDecksAsync()
+    public async Task<ICollection<Deck>> GetPublishedDecksAsync(string userId)
     {
         return await dbContext.Decks
             .Include(d => d.Cards)
-            .Where(d => d.IsPublished)
+            .Where(d => 
+                d.IsPublished && 
+                d.OwnerUserId != userId &&
+                d.SourceDeckId == null &&
+                !dbContext.Decks.Any(b => b.SourceDeckId == d.Id)
+            )
             .ToListAsync();
     }
 
@@ -73,6 +78,7 @@ public class DeckRepository(AppDbContext dbContext) : IDeckRepository
                 Id = deck.Id,
                 Name = deck.Name,
                 IsPublished = deck.IsPublished,
+                IsForked = deck.SourceDeckId != null,
                 NewCards = deck.Cards
                     .Count(card => !dbContext.UserCardProgresses
                         .Any(progress => progress.CardId == card.Id

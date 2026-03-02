@@ -43,7 +43,8 @@ public class DecksController(IDeckService deckService) : ControllerBase
     [HttpGet("public")]
     public async Task<IActionResult> GetPublishedDecks()
     {
-        return Ok(await deckService.GetPublishedDecksAsync());
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return Ok(await deckService.GetPublishedDecksAsync(userId!));
     }
     
     

@@ -3,12 +3,10 @@
 <p-table
   [value]="deckSummaries()"
   dataKey="id"
-  selectionMode="single"
-  [(selection)]="selectedDeck"
-  (onRowSelect)="onRowSelect()"
 >
   <ng-template pTemplate="header">
     <tr>
+      <th></th>
       <th>Name</th>
       <th>Total Cards</th>
       <th>New Cards</th>
@@ -19,16 +17,22 @@
   </ng-template>
 
   <ng-template pTemplate="body" let-deck>
-    <tr [pSelectableRow]="deck">
+    <tr>
+      <td>
+        <p-button label="Learn!" (click)="reviewDeck(deck.id)"/>
+      </td>
       <td>{{ deck.name }}</td>
       <td>{{ deck.totalCards }}</td>
       <td>{{ deck.newCards }}</td>
       <td>{{ deck.dueCards }}</td>
       <td>
-        <p-toggleswitch [(ngModel)]="deck.isPublished" (onChange)="onTogglePublished(deck)" />
+        @if (!deck.isForked) {
+          <p-toggleswitch [(ngModel)]="deck.isPublished" (onChange)="onTogglePublished(deck)" pTooltip="Click to publish/unpublish deck" />
+        }
+        
       </td>
       <td>
-        <p-button icon="pi pi-trash" (click)="confirmDelete($event, deck)" severity="danger" />
+        <p-button icon="pi pi-trash" (click)="confirmDelete($event, deck)" severity="danger" pTooltip="Click to delete deck with all cards"/>
       </td>
     </tr>
   </ng-template>

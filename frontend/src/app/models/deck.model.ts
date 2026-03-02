@@ -18,6 +18,7 @@ export interface DeckSummaryDto {
   name: string;
   totalCards: number;
   isPublished: boolean;
+  isForked: boolean;
   newCards: number;
   dueCards: number;
 }

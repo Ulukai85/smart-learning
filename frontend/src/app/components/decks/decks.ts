@@ -9,10 +9,11 @@ import { FormsModule } from '@angular/forms';
 import { ToastService } from '../../services/toast-service';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-decks',
-  imports: [TableModule, ButtonModule, ToggleSwitchModule, FormsModule, ConfirmPopupModule],
+  imports: [TableModule, ButtonModule, ToggleSwitchModule, FormsModule, ConfirmPopupModule, TooltipModule],
   providers: [ConfirmationService],
   templateUrl: './decks.html',
   styles: ``,
@@ -24,7 +25,6 @@ export class Decks implements OnInit {
   private confirmService = inject(ConfirmationService);
 
   deckSummaries = signal<DeckSummaryDto[]>([]);
-  selectedDeck: DeckSummaryDto | null = null;
 
   ngOnInit(): void {
     this.loadDeckSummary();
@@ -32,19 +32,15 @@ export class Decks implements OnInit {
 
   loadDeckSummary(): void {
     this.deckService.getDeckSummary().subscribe({
-      next: (data) => this.deckSummaries.set(data),
+      next: (data) => {
+        this.deckSummaries.set(data);
+        console.log(data)
+      }
     });
   }
 
   reviewDeck(deckId: string): void {
     this.router.navigate(['/review/deck', deckId]);
-  }
-
-  onRowSelect() {
-    const selectedId = this.selectedDeck?.id;
-    if (selectedId != null) {
-      this.reviewDeck(selectedId);
-    }
   }
 
   onTogglePublished(dto: DeckSummaryDto) {

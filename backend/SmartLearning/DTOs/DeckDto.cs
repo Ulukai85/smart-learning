@@ -20,6 +20,7 @@ public class DeckSummaryDto
     public Guid Id { get; set; }
     public required string Name { get; set; }
     public bool IsPublished { get; set; }
+    public bool IsForked { get; set; }
     public int NewCards { get; set; }
     public int DueCards { get; set; }
 }

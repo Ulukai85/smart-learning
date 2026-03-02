@@ -8,7 +8,7 @@ public interface IDeckService
 {
     Task<DeckDto> CreateDeckAsync(UpsertDeckDto dto, string userId);
     Task<ICollection<DeckDto>> GetAllDecksAsync();
-    Task<ICollection<DeckDto>> GetPublishedDecksAsync();
+    Task<ICollection<DeckDto>> GetPublishedDecksAsync(string userId);
     Task<ICollection<DeckDto>> GetDecksByUserIdAsync(string userId);
     Task UpdateDeckAsync(Guid id, UpsertDeckDto dto, string userId);
     Task<ICollection<DeckSummaryDto>> GetDeckSummariesByUserIdAsync(string userId);
@@ -43,9 +43,9 @@ public class DeckService(IDeckRepository deckRepo): IDeckService
         return decks.Select(d => d.MapToDto()).ToList();
     }
     
-    public async Task<ICollection<DeckDto>> GetPublishedDecksAsync()
+    public async Task<ICollection<DeckDto>> GetPublishedDecksAsync(string userId)
     {
-        var decks = await deckRepo.GetPublishedDecksAsync();
+        var decks = await deckRepo.GetPublishedDecksAsync(userId);
         
         return decks.Select(d => d.MapToDto()).ToList();
     }
@@ -66,7 +66,6 @@ public class DeckService(IDeckRepository deckRepo): IDeckService
         
         if  (deck == null)
             throw new KeyNotFoundException("Deck not found");
-
         
         deck.Name = dto.Name;
         deck.Description = dto.Description;
@@ -119,7 +118,7 @@ public class DeckService(IDeckRepository deckRepo): IDeckService
         var newDeck = new Deck
         {
             Id = Guid.NewGuid(),
-            Name = forkData.Name,
+            Name = forkData.Name + " (forked)",
             Description = forkData.Description,
             OwnerUserId = userId,
             SourceDeckId = deckId,
