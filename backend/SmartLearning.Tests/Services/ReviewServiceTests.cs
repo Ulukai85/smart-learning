@@ -14,7 +14,8 @@ public class ReviewServiceTests
     private readonly Mock<IReviewRepository> reviewRepo = new();
     private readonly Mock<ITransactionRepository> transactionRepo = new();
     private readonly Mock<IProgressRepository> progressRepo = new();
-    private readonly Mock<ISpacedRepetition> spacedRepetition = new();
+    private readonly Mock<ISpacedRepetitionFactory> spacedRepetitionFactory = new();
+    private readonly Mock<ISpacedRepetitionStrategy> spacedRepetitionStrategy = new();
     private readonly Mock<ITimeProvider> timeProvider = new();
     
     private readonly DateTime fixedNow = new(2025, 1, 1);
@@ -46,12 +47,15 @@ public class ReviewServiceTests
         timeProvider.Setup(t => t.UtcNow)
             .Returns(fixedNow);
 
-        spacedRepetition.Setup(s => s.CalculateNextReview(It.IsAny<int>(), fixedNow))
+        spacedRepetitionStrategy.Setup(s => s.CalculateNextReview(It.IsAny<int>(), fixedNow, It.IsAny<string>()))
             .Returns(fixedNow.AddDays(4));
 
-        spacedRepetition.Setup(s => s.ShouldReinsert(It.IsAny<int>()))
+        spacedRepetitionStrategy.Setup(s => s.ShouldReinsert(It.IsAny<int>(), It.IsAny<string>()))
             .Returns(false);
 
+        spacedRepetitionFactory.Setup(f => f.GetStrategy(It.IsAny<string>()))
+            .Returns(spacedRepetitionStrategy.Object);
+        
         cardRepo.Setup(r => r.CountDueCardsAsync(It.IsAny<Guid>(), defaultUserId, fixedNow))
             .ReturnsAsync(5);
 
@@ -67,7 +71,7 @@ public class ReviewServiceTests
             reviewRepo.Object,
             transactionRepo.Object,
             progressRepo.Object,
-            spacedRepetition.Object,
+            spacedRepetitionFactory.Object,
             timeProvider.Object);
     }
 

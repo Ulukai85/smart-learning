@@ -22,7 +22,7 @@ public class ReviewService(
     IReviewRepository reviewRepo,
     ITransactionRepository transactionRepo,
     IProgressRepository progressRepo,
-    ISpacedRepetition spacedRepetition,
+    ISpacedRepetitionFactory spacedRepetitionFactory,
     ITimeProvider timeProvider
     ) : IReviewService
 {
@@ -68,7 +68,6 @@ public class ReviewService(
     public async Task<ReviewResultDto> HandleReviewTransactionAsync(string userId, CreateReviewTransactionDto dto)
     {
         var card = await LoadAndValidateCardAsync(userId, dto.CardId);
-        
         var progress = await progressRepo.GetProgressAsync(userId, card.Id);
         var wasNew = progress == null;
 
@@ -78,7 +77,8 @@ public class ReviewService(
             await progressRepo.AddProgressAsync(progress);
         }
         
-        UpdateProgressDates(progress, dto.Grade, timeProvider.UtcNow);
+        var strategy = spacedRepetitionFactory.GetStrategy(progress.StrategyType);
+        UpdateProgressDates(progress, dto.Grade, timeProvider.UtcNow, strategy);
         
         var xpTransaction =  BuildXpTransaction(userId, timeProvider.UtcNow);
         await transactionRepo.AddXpTransactionAsync(xpTransaction);
@@ -94,7 +94,7 @@ public class ReviewService(
         var result = new ReviewResultDto
         {
             ReviewedCardId = dto.CardId,
-            ReinsertCard = spacedRepetition.ShouldReinsert(dto.Grade),
+            ReinsertCard = strategy.ShouldReinsert(dto.Grade, progress.StrategyDataJson),
             WasNew = wasNew,
             XpAmount = xpTransaction.Amount,
             XpReason = xpTransaction.Reason,
@@ -157,9 +157,13 @@ public class ReviewService(
         };
     }
 
-    private void UpdateProgressDates(UserCardProgress progress, int grade, DateTime utcNow)
+    private void UpdateProgressDates(
+        UserCardProgress progress,
+        int grade,
+        DateTime utcNow,
+        ISpacedRepetitionStrategy strategy)
     {
-        progress.NextReviewAt = spacedRepetition.CalculateNextReview(grade, utcNow);
+        progress.NextReviewAt = strategy.CalculateNextReview(grade, utcNow, progress.StrategyDataJson);
         progress.LastReviewedAt = utcNow;
         progress.UpdatedAt = utcNow;
     }

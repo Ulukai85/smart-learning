@@ -11,7 +11,8 @@ public static class ServiceExtensions
         services.AddScoped<IDeckService, DeckService>();
         services.AddScoped<ICardService, CardService>();
         services.AddScoped<IReviewService, ReviewService>();
-        services.AddScoped<ISpacedRepetition, SpacedRepetition>();
+        services.AddScoped<ISpacedRepetitionStrategy, AnkiSpacedRepetition>();
+        services.AddScoped<ISpacedRepetitionFactory, SpacedRepetitionFactory>();
 
         services.AddScoped<ICardRepository, CardRepository>();
         services.AddScoped<IDeckRepository, DeckRepository>();
