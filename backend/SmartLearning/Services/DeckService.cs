@@ -45,9 +45,7 @@ public class DeckService(IDeckRepository deckRepo): IDeckService
     
     public async Task<ICollection<DeckDto>> GetPublishedDecksAsync(string userId)
     {
-        var decks = await deckRepo.GetPublishedDecksAsync(userId);
-        
-        return decks.Select(d => d.MapToDto()).ToList();
+        return await deckRepo.GetPublishedDecksAsync(userId);
     }
     
     public async Task<ICollection<DeckDto>> GetDecksByUserIdAsync(string userId)

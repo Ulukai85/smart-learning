@@ -1,9 +1,6 @@
 <p-confirmpopup />
 
-<p-table
-  [value]="deckSummaries()"
-  dataKey="id"
->
+<p-table [value]="deckSummaries()" dataKey="id">
   <ng-template pTemplate="header">
     <tr>
       <th></th>
@@ -19,7 +16,7 @@
   <ng-template pTemplate="body" let-deck>
     <tr>
       <td>
-        <p-button label="Learn!" (click)="reviewDeck(deck.id)"/>
+        <p-button icon="pi pi-lightbulb" label="Learn" (click)="reviewDeck(deck.id)" />
       </td>
       <td>{{ deck.name }}</td>
       <td>{{ deck.totalCards }}</td>
@@ -27,12 +24,20 @@
       <td>{{ deck.dueCards }}</td>
       <td>
         @if (!deck.isForked) {
-          <p-toggleswitch [(ngModel)]="deck.isPublished" (onChange)="onTogglePublished(deck)" pTooltip="Click to publish/unpublish deck" />
+          <p-toggleswitch
+            [(ngModel)]="deck.isPublished"
+            (onChange)="onTogglePublished(deck)"
+            pTooltip="Click to publish/unpublish deck"
+          />
         }
-        
       </td>
       <td>
-        <p-button icon="pi pi-trash" (click)="confirmDelete($event, deck)" severity="danger" pTooltip="Click to delete deck with all cards"/>
+        <p-button
+          icon="pi pi-trash"
+          (click)="confirmDelete($event, deck)"
+          severity="danger"
+          pTooltip="Click to delete deck with all cards"
+        />
       </td>
     </tr>
   </ng-template>

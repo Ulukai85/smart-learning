@@ -2,17 +2,39 @@
   <ng-template pTemplate="header">
     <tr>
       <th>Name</th>
-      <th>Cards</th>
       <th>Description</th>
+      <th>Cards</th>
       <th>Fork</th>
+    </tr>
+    <tr>
+      <th>
+        <p-columnFilter
+          type="text"
+          field="name"
+          placeholder="Filter..."
+          matchMode="contains"
+          filterOn="input"
+        />
+      </th>
+      <th>
+        <p-columnFilter
+          type="text"
+          field="description"
+          placeholder="Filter..."
+          matchMode="contains"
+          filterOn="input"
+        />
+      </th>
+      <th></th>
+      <th></th>
     </tr>
   </ng-template>
 
   <ng-template pTemplate="body" let-deck>
     <tr>
       <td>{{ deck.name }}</td>
-      <td>{{ deck.totalCards }}</td>
       <td>{{ deck.description }}</td>
+      <td>{{ deck.totalCards }}</td>
       <td>
         <p-button icon="pi pi-share-alt" (click)="onFork(deck)" />
       </td>
