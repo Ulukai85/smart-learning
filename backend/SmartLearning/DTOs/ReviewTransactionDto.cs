@@ -27,3 +27,10 @@ public class ReviewResultDto
     public DateTime? NextReviewAt { get; set; }
     
 }
+
+public class StreakDto 
+{
+    public int LongestStreak { get; set; }
+    public int CurrentStreak { get; set; }
+    public List<DateOnly> ReviewDates { get; set; }
+}

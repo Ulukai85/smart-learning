@@ -21,3 +21,9 @@ export interface ReviewResultDto {
   updatedDueCount: number;
   updatedNewCount: number;
 }
+
+export interface StreakDto {
+  longestStreak: number;
+  currentStreak: number;
+  reviewDates: string[];
+}
