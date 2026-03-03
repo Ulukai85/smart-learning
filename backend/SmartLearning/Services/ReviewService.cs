@@ -38,6 +38,15 @@ public class ReviewService(
             throw new KeyNotFoundException("User not found");
         
         var dates = await reviewRepo.GetDistinctReviewDatesAsync(userId);
+        
+        var (longest, current) = CalculateStreaks(dates);
+
+        return new StreakDto
+        {
+            CurrentStreak = current,
+            LongestStreak = longest,
+            ReviewDates = dates.ToList(),
+        };
     }
 
     private (int Longest, int Current) CalculateStreaks(HashSet<DateOnly> dates)
@@ -47,24 +56,22 @@ public class ReviewService(
         
         var longestStreak = 0;
         
-        foreach (var date in dates) 
+        foreach (var date in dates)
         {
-            if (!dates.Contains(date.AddDays(-1)))
+            if (dates.Contains(date.AddDays(-1))) continue;
+            var length = 1;
+            var current = date;
+
+            while (dates.Contains(current.AddDays(1)))
             {
-                int length = 1;
-                var current = date;
-
-                while (dates.Contains(current.AddDays(1)))
-                {
-                    current = current.AddDays(1);
-                    length++;
-                }
-
-                longestStreak = Math.Max(longestStreak, length);
+                current = current.AddDays(1);
+                length++;
             }
+
+            longestStreak = Math.Max(longestStreak, length);
         }
 
-        int currentStreak = 0;
+        var currentStreak = 0;
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
         var startDate = dates.Contains(today)

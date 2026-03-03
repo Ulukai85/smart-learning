@@ -29,10 +29,8 @@ public class ReviewRepository(AppDbContext dbContext) : IReviewRepository
             .Where(r => r.UserId == userId)
             .Select(r => r.ReviewedAt)
             .Distinct()
-            .OrderBy(d => d)
             .ToListAsync();
 
         return reviewDates.Select(DateOnly.FromDateTime).ToHashSet();
-
     }
 }
