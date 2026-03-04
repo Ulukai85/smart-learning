@@ -1,0 +1,19 @@
+<p-card header="Top Learners">
+  <p-table [value]="entries()" [tableStyle]="{ 'min-width': '100%' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>#</th>
+        <th>User</th>
+        <th>XP</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.rank }}</td>
+        <td>{{ row.username }}</td>
+        <td>{{ row.totalXp }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

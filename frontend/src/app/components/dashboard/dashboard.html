@@ -1,1 +1,5 @@
-<p>Dashboard works</p>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+    @if (statistics(); as data) {
+        <app-leaderboard-panel [data]="data.xpData"></app-leaderboard-panel>
+    }
+</div>
