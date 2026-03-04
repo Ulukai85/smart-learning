@@ -18,11 +18,13 @@ public class StatisticService(
     {
         var streak = await GetStreakDataAsync(userId);
         var xp = await transactionRepo.GetXpStatistics(userId);
+        var dailyReviews = await reviewRepo.GetDailyReviewDataAsync(userId, 30);
 
         return new StatisticDto
         {
             StreakData = streak,
-            XpData = xp
+            XpData = xp,
+            DailyReviewData = dailyReviews
         };
     }
     public async Task<StreakData> GetStreakDataAsync(string userId)

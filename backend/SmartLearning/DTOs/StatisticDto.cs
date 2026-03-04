@@ -4,6 +4,7 @@ public class StatisticDto
 {
     public StreakData StreakData { get; set; }
     public XpData XpData { get; set; }
+    public List<DailyReviewDto> DailyReviewData { get; set; }
 }
 
 public class StreakData 
@@ -27,8 +28,8 @@ public class LeaderboardEntryData
     public int TotalXp { get; set; }
 }
 
-public class DailyXpData
+public class DailyReviewDto
 {
     public DateOnly Date { get; set; }
-    public int Xp { get; set; }
+    public int CardsReviewed { get; set; }
 }

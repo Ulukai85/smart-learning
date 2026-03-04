@@ -3,10 +3,12 @@ import { StatisticDto } from '../../models/statistic.model';
 import { StatisticService } from '../../services/statistic-service';
 import { LeaderboardPanel } from '../leaderboard-panel/leaderboard-panel';
 import { StreakPanel } from '../streak-panel/streak-panel';
+import { CardChartPanel } from '../card-chart-panel/card-chart-panel';
+import { ImageModule } from 'primeng/image';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [LeaderboardPanel, StreakPanel],
+  imports: [LeaderboardPanel, StreakPanel, CardChartPanel, ImageModule],
   templateUrl: './dashboard.html',
   styles: ``,
 })

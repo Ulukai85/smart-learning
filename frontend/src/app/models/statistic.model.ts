@@ -1,6 +1,7 @@
 export interface StatisticDto {
-    streakData: StreakData;
-    xpData: XpData
+  streakData: StreakData;
+  xpData: XpData;
+  dailyReviewData: DailyReviewDto[];
 }
 
 export interface StreakData {
@@ -12,11 +13,16 @@ export interface StreakData {
 export interface XpData {
   currentUserXp: number;
   currentUserRank: number;
-  topUsers: LeaderboardEntryData[]
+  topUsers: LeaderboardEntryData[];
 }
 
 export interface LeaderboardEntryData {
   userId: string;
   username: string;
-  totalXp: number
+  totalXp: number;
+}
+
+export interface DailyReviewDto {
+  date: string;
+  cardsReviewed: number;
 }
