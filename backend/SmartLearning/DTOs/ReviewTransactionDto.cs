@@ -25,12 +25,4 @@ public class ReviewResultDto
     public int UpdatedDueCount  { get; set; }
     public int UpdatedNewCount  { get; set; }
     public DateTime? NextReviewAt { get; set; }
-    
-}
-
-public class StreakDto 
-{
-    public int LongestStreak { get; set; }
-    public int CurrentStreak { get; set; }
-    public List<DateOnly> ReviewDates { get; set; }
 }

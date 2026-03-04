@@ -1,6 +1,6 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { ReviewService } from '../../services/review-service';
-import { StreakDto } from '../../models/xpTransaction.model';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { StatisticService } from '../../services/statistic-service';
+import { StatisticDto } from '../../models/statistic.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,18 +9,22 @@ import { StreakDto } from '../../models/xpTransaction.model';
   styles: ``,
 })
 export class Dashboard implements OnInit {
-  private reviewService = inject(ReviewService);
-  streakData = signal<StreakDto | null>(null)
+  private statisticService = inject(StatisticService);
+  statistics = signal<StatisticDto | null>(null)
+  streak = computed(() => this.statistics()?.streakData)
+  xp = computed(() => this.statistics()?.xpData)
 
   ngOnInit(): void {
-    this.loadStreakData()
+    this.loadStatistics()
   }
 
-  loadStreakData() {
-    this.reviewService.fetchStreakData().subscribe({
+  loadStatistics() {
+    this.statisticService.fetchStatistics().subscribe({
       next: data => {
-        this.streakData.set(data);
-        console.log('data:', data)
+        this.statistics.set(data);
+        console.log('statistic:', this.statistics())
+        console.log('streak:', this.streak())
+        console.log('xp:', this.xp())
       },
       error: err => console.log('Err: ', err)
     })

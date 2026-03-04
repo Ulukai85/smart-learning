@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { DeckToReviewDto } from '../models/deck.model';
-import { CreateReviewTransactionDto, ReviewResultDto, StreakDto } from '../models/xpTransaction.model';
+import { CreateReviewTransactionDto, ReviewResultDto } from '../models/xpTransaction.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,9 +20,5 @@ export class ReviewService {
 
   saveCardReview(dto: CreateReviewTransactionDto): Observable<ReviewResultDto> {
     return this.http.post<ReviewResultDto>(`${this.apiUrl}`, dto);
-  }
-
-  fetchStreakData(): Observable<StreakDto> {
-    return this.http.get<StreakDto>(`${this.apiUrl}/streak`)
   }
 }

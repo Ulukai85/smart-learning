@@ -49,21 +49,4 @@ public class ReviewController(
             return BadRequest(new {message = ex.Message});
         }
     }
-
-    [HttpGet("streak")]
-    public async Task<IActionResult> GetStreakData()
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (userId is null) return Unauthorized();
-
-        try
-        {
-            return Ok(await reviewService.GetStreakDataAsync(userId));
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new {message = ex.Message});
-        } 
-    }
 }
