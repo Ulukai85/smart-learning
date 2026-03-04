@@ -1,32 +1,44 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { XpData } from '../../models/statistic.model';
+import { AuthService } from '../../services/auth-service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-leaderboard-panel',
-  imports: [CardModule, TableModule],
+  imports: [CardModule, TableModule, CommonModule],
   templateUrl: './leaderboard-panel.html',
   styles: ``,
 })
 export class LeaderboardPanel {
-  data = input.required<XpData>();
+  private auth = inject(AuthService);
 
-  isCurrentUserInList = computed(() => this.data().currentUserRank <= 5)
+  data = input.required<XpData>();
 
   displayedEntries = computed(() => {
     const data = this.data();
+    const currentUserId = this.auth.userId();
+    const currentUsername = this.auth.username();
 
     const entries = data.topUsers.map((u, index) => ({
       ...u,
       rank: index + 1,
-      isCurrentUser: this.data().currentUserRank === index + 1
-    }))
+      isCurrentUser: currentUserId === u.userId,
+    }));
 
-    if (!this.isCurrentUserInList()) {
+    const isInTop = entries.some((e) => e.isCurrentUser);
+
+    if (!isInTop && currentUserId) {
       entries.push({
-        username: data.
-      })
+        userId: currentUserId,
+        username: currentUsername ?? currentUserId,
+        totalXp: data.currentUserXp,
+        rank: data.currentUserRank,
+        isCurrentUser: true,
+      });
     }
-  })
+
+    return entries;
+  });
 }
