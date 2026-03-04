@@ -26,3 +26,9 @@ public class LeaderboardEntryData
     public string Username { get; set; }
     public int TotalXp { get; set; }
 }
+
+public class DailyXpData
+{
+    public DateOnly Date { get; set; }
+    public int Xp { get; set; }
+}

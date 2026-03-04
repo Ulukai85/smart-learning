@@ -1,5 +1,6 @@
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-    @if (statistics(); as data) {
-        <app-leaderboard-panel [data]="data.xpData"></app-leaderboard-panel>
-    }
+  @if (statistics(); as data) {
+    <app-leaderboard-panel [data]="data.xpData" class="xl:col-span-1" />
+    <app-streak-panel [data]="data.streakData" class="xl:col-span-1" />
+  }
 </div>
