@@ -82,15 +82,18 @@
 
 ### Backend
 - Endpunkte, Service- und Repomethoden für Abrufen öffentlicher Decks und togglen von public Status
+- Forking von öffentlichen Decks
 - Löschen von Decks (mitsamt Karten)
 
 ### Frontend
 - Deckübersicht erweitert mit Toggle-Button für public Status und Button für Löschen
 - Neue Komponente für Ansicht aller öffentlichen Decks
+- Dashboard zeigt Statistiken zu Streaks und XP
+- Generieren und Einbinden von Logo
 
 ---
 
 ## TODO NEXT
 
-- Logik für Kartenreview und Lernsession vorerst abschließen
-- Neues Feature: Decks können veröffentlicht werden; _öffentliche Decks_ können durchsucht und geforkt werden
+- UML-Diagramme und Doku
+- Bisherige App konsolidieren (Layout, Tests, Fehler, Rückmeldungen)

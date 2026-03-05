@@ -34,6 +34,8 @@
           formControlName="password"
           [feedback]="false"
           [toggleMask]="true"
+          class="w-full"
+          inputStyleClass="w-full"
         />
         @if (hasDisplayableError('password')) {
           @switch (form.controls['password'].errors | firstKey) {
@@ -61,6 +63,8 @@
           formControlName="confirmPassword"
           [feedback]="false"
           [toggleMask]="true"
+          class="w-full"
+          inputStyleClass="w-full"
         />
         @if (
           hasDisplayableError('confirmPassword') &&
