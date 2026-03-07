@@ -12,6 +12,41 @@ services:
       - "${MYSQL_PORT}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - smartlearning
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smart-learning-backend
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DevDB=Server=mysql;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
+    ports:
+      - "5260:8080"
+    depends_on:
+      - mysql
+    networks:
+      - smartlearning
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: smart-learning-frontend
+    restart: always
+    ports:
+      - "4200:8080"
+    depends_on:
+      - backend
+    networks:
+      - smartlearning
 
 volumes:
   mysql_data:
+
+networks:
+  smartlearning:
+    driver: bridge
