@@ -80,6 +80,10 @@ public class ReviewService(
         var strategy = spacedRepetitionFactory.GetStrategy(progress.StrategyType);
         UpdateProgressDates(progress, dto.Grade, timeProvider.UtcNow, strategy);
         
+        var reinsertCard = strategy.ShouldReinsert(dto.Grade, progress.StrategyDataJson);
+        
+        // TODO: Should not give VP if user fails to review a card (grade 0)
+        
         var xpTransaction =  BuildXpTransaction(userId, timeProvider.UtcNow);
         await transactionRepo.AddXpTransactionAsync(xpTransaction);
         
@@ -94,7 +98,7 @@ public class ReviewService(
         var result = new ReviewResultDto
         {
             ReviewedCardId = dto.CardId,
-            ReinsertCard = strategy.ShouldReinsert(dto.Grade, progress.StrategyDataJson),
+            ReinsertCard = reinsertCard,
             WasNew = wasNew,
             XpAmount = xpTransaction.Amount,
             XpReason = xpTransaction.Reason,
