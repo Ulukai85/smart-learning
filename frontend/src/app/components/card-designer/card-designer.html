@@ -81,7 +81,14 @@
 
     <div class="space-y-2">
       <p-floatlabel variant="on">
-        <p-editor inputId="front" formControlName="front" class="w-full" />
+        <textarea
+          pTextarea
+          inputId="front"
+          formControlName="front"
+          class="w-full"
+          [autoResize]="true"
+          rows="4"
+        ></textarea>
         <label for="front">Front</label>
       </p-floatlabel>
 

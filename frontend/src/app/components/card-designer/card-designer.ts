@@ -25,7 +25,6 @@ import { CardService } from '../../services/card-service';
 import { DeckService } from '../../services/deck-service';
 import { ToastService } from '../../services/toast-service';
 import { TooltipModule } from 'primeng/tooltip';
-import { EditorModule } from 'primeng/editor';
 
 export type UpsertMode = 'create' | 'edit';
 
@@ -41,7 +40,6 @@ export type UpsertMode = 'create' | 'edit';
     PopoverModule,
     InputTextModule,
     TooltipModule,
-    EditorModule,
   ],
   templateUrl: './card-designer.html',
   styles: ``,
