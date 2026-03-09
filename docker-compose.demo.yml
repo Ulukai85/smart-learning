@@ -1,0 +1,51 @@
+services:
+  mysql:
+    image: mysql:9.6
+    container_name: smart-learning-mysql-prod
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - mysql_data_prod:/var/lib/mysql
+    networks:
+      - smartlearning
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smart-learning-backend
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=mysql;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_ROOT_PASSWORD};
+    ports:
+      - "5000:8080"
+    depends_on:
+      - mysql
+    networks:
+      - smartlearning
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: smart-learning-frontend
+    restart: always
+    ports:
+      - "4000:8080"
+    depends_on:
+      - backend
+    networks:
+      - smartlearning
+
+volumes:
+  mysql_data_prod:
+
+networks:
+  smartlearning:
+    driver: bridge
