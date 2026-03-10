@@ -91,6 +91,14 @@ public class ReviewService(
         
         var dueCount = await cardRepo.CountDueCardsAsync(card.DeckId, userId, timeProvider.UtcNow);
         var newCount = await cardRepo.CountNewCardsAsync(card.DeckId, userId);
+        if (dueCount == 0 && newCount == 0)
+        {
+            xpRewards.Add(new XpTransactionDto
+            {
+                Amount = 20,
+                Reason = "DeckCompleted"
+            });
+        }
 
         var result = new ReviewResultDto
         {
