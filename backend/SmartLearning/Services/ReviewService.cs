@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using SmartLearning.DTOs;
 using SmartLearning.Models;
 using SmartLearning.Repositories;
@@ -78,18 +77,16 @@ public class ReviewService(
         }
         
         var strategy = spacedRepetitionFactory.GetStrategy(progress.StrategyType);
+        
         UpdateProgressDates(progress, dto.Grade, timeProvider.UtcNow, strategy);
         
         var reinsertCard = strategy.ShouldReinsert(dto.Grade, progress.StrategyDataJson);
         
-        // TODO: Should not give VP if user fails to review a card (grade 0)
-        
-        var xpTransaction =  BuildXpTransaction(userId, timeProvider.UtcNow);
-        await transactionRepo.AddXpTransactionAsync(xpTransaction);
+        var (xpAmount, xpReason) = await HandleXpReward(userId, timeProvider.UtcNow, reinsertCard);
         
         var reviewLog = BuildReviewLog(userId, dto, timeProvider.UtcNow);
         await reviewRepo.AddReviewLogAsync(reviewLog);
-
+        
         await reviewRepo.SaveChangesAsync();
         
         var dueCount = await cardRepo.CountDueCardsAsync(card.DeckId, userId, timeProvider.UtcNow);
@@ -100,14 +97,25 @@ public class ReviewService(
             ReviewedCardId = dto.CardId,
             ReinsertCard = reinsertCard,
             WasNew = wasNew,
-            XpAmount = xpTransaction.Amount,
-            XpReason = xpTransaction.Reason,
+            XpAmount = xpAmount,
+            XpReason = xpReason,
             UpdatedDueCount = dueCount,
             UpdatedNewCount = newCount,
             NextReviewAt = progress.NextReviewAt
         };
         
         return result;
+    }
+    
+    private async Task<(int xpAmount, string reason)> HandleXpReward(string userId, DateTime utcNow, bool reinsertCard)
+    {
+        if (reinsertCard)
+            return (0, "NoXpReward");
+        
+        var xpTransaction =  BuildXpTransaction(userId, utcNow);
+        await transactionRepo.AddXpTransactionAsync(xpTransaction);
+
+        return (xpTransaction.Amount, xpTransaction.Reason);
     }
 
     private async Task<Card> LoadAndValidateCardAsync(string userId, Guid cardId)
