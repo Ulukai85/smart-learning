@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using SmartLearning.Extensions;
 using SmartLearning.Models;
+using SmartLearning.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,18 @@ builder.Services
     .AddIdentityAuth(builder.Configuration);
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope()) 
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await db.Database.MigrateAsync();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await DbSeeder.SeedAsync(services);
+}
 
 app.ConfigureEndpointExplorer();
 app.ConfigureCors(builder.Configuration);

@@ -16,7 +16,7 @@ public class StreakData
 
 public class XpData
 {
-    public int CurrentUserXP { get; set; }
+    public int CurrentUserXp { get; set; }
     public int CurrentUserRank { get; set; }
     public List<LeaderboardEntryData> TopUsers { get; set; }
 }

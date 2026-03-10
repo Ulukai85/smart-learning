@@ -1,7 +1,7 @@
 services:
-  mysql:
+  mysql-dev:
     image: mysql:9.6
-    container_name: smart-learning-mysql
+    container_name: smart-learning-mysql-dev
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -12,6 +12,12 @@ services:
       - "${MYSQL_PORT}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - smartlearning-dev
 
 volumes:
   mysql_data:
+    
+networks:
+  smartlearning-dev:
+    driver: bridge

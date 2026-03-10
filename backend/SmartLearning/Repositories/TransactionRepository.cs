@@ -51,7 +51,7 @@ public class TransactionRepository(AppDbContext dbContext) : ITransactionReposit
 
         return new XpData
         {
-            CurrentUserXP = currentUserXp,
+            CurrentUserXp = currentUserXp,
             CurrentUserRank = currentUserRank,
             TopUsers = topFive
         };
