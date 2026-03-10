@@ -22,7 +22,6 @@ public class XpTransaction
     {
         return new XpTransactionDto
         {
-            Id = Id,
             Amount = Amount,
             Reason = Reason
         };

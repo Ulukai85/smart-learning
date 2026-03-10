@@ -59,7 +59,9 @@ export class CardReview implements OnInit {
       next: (result) => {
         this.applyReviewResult(result);
         this.showSolution.set(false);
-        this.toast.success(`${result.xpAmount} XP gained!`, `Reason: ${result.xpReason}`)
+        result.xpTransactions.forEach((reward) => {
+          this.toast.success(`${reward.amount} XP gained!`, `Reason: ${reward.reason}`);
+        });
         console.log('result:', result);
       },
       error: (err) => console.log('Error:', err),

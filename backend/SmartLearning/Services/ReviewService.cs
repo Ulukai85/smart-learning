@@ -82,7 +82,7 @@ public class ReviewService(
         
         var reinsertCard = strategy.ShouldReinsert(dto.Grade, progress.StrategyDataJson);
         
-        var (xpAmount, xpReason) = await HandleXpReward(userId, timeProvider.UtcNow, reinsertCard);
+        var xpRewards = await HandleXpReward(userId, timeProvider.UtcNow, reinsertCard);
         
         var reviewLog = BuildReviewLog(userId, dto, timeProvider.UtcNow);
         await reviewRepo.AddReviewLogAsync(reviewLog);
@@ -97,8 +97,7 @@ public class ReviewService(
             ReviewedCardId = dto.CardId,
             ReinsertCard = reinsertCard,
             WasNew = wasNew,
-            XpAmount = xpAmount,
-            XpReason = xpReason,
+            XpTransactions = xpRewards,
             UpdatedDueCount = dueCount,
             UpdatedNewCount = newCount,
             NextReviewAt = progress.NextReviewAt
@@ -107,15 +106,18 @@ public class ReviewService(
         return result;
     }
     
-    private async Task<(int xpAmount, string reason)> HandleXpReward(string userId, DateTime utcNow, bool reinsertCard)
+    private async Task<List<XpTransactionDto>> HandleXpReward(string userId, DateTime utcNow, bool reinsertCard)
     {
-        if (reinsertCard)
-            return (0, "NoXpReward");
-        
-        var xpTransaction =  BuildXpTransaction(userId, utcNow);
-        await transactionRepo.AddXpTransactionAsync(xpTransaction);
+        var rewards = new List<XpTransactionDto>();
 
-        return (xpTransaction.Amount, xpTransaction.Reason);
+        if (!reinsertCard)
+        {
+            var xpTransaction =  BuildXpTransaction(userId, utcNow);
+            await transactionRepo.AddXpTransactionAsync(xpTransaction);
+            rewards.Add(xpTransaction.MapToDto());
+        }
+
+        return rewards;
     }
 
     private async Task<Card> LoadAndValidateCardAsync(string userId, Guid cardId)

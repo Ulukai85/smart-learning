@@ -152,7 +152,6 @@ public class ReviewServiceTests
         result.WasNew.Should().BeTrue();
         result.ReinsertCard.Should().BeFalse();
         result.NextReviewAt.Should().Be(fixedNow.AddDays(4));
-        result.XpAmount.Should().Be(5);
 
         progressRepo.Verify(r => r.AddProgressAsync(It.IsAny<UserCardProgress>()), Times.Once);
         transactionRepo.Verify(r => r.AddXpTransactionAsync(It.IsAny<XpTransaction>()), Times.Once);

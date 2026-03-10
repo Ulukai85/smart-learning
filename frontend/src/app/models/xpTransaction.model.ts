@@ -6,7 +6,6 @@ export interface CreateReviewTransactionDto {
 }
 
 export interface XpTransactionDto {
-  id: string;
   amount: number;
   reason: string;
 }
@@ -15,8 +14,7 @@ export interface ReviewResultDto {
   reviewedCardId: string;
   reinsertCard: boolean;
   wasNew: boolean;
-  xpAmount: number;
-  xpReason: string;
+  xpTransactions: XpTransactionDto[];
   nextReviewAt: string;
   updatedDueCount: number;
   updatedNewCount: number;

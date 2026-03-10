@@ -10,7 +10,6 @@ public class CreateReviewTransactionDto
 
 public class XpTransactionDto
 {
-    public Guid Id { get; set; }
     public int Amount { get; set; }
     public string Reason { get; set; }
 }
@@ -20,8 +19,7 @@ public class ReviewResultDto
     public Guid ReviewedCardId { get; set; }
     public bool ReinsertCard { get; set; }
     public bool WasNew { get; set; }
-    public int XpAmount { get; set; }
-    public string? XpReason { get; set; }
+    public List<XpTransactionDto> XpTransactions { get; set; }
     public int UpdatedDueCount  { get; set; }
     public int UpdatedNewCount  { get; set; }
     public DateTime? NextReviewAt { get; set; }
