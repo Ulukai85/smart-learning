@@ -1,0 +1,56 @@
+Table User {
+  Id varchar [primary key]
+  Username varchar
+  Email varchar
+  Password varchar
+  CreatedAt datetime
+}
+
+Table Card {
+  Id Guid [primary key]
+  DeckId Guid [ref: > Deck.Id]
+  Front varchar
+  Back varchar
+  CreatedAt datetime
+  UpdatedAt datetime
+}
+
+Table Deck {
+  Id Guid [primary key]
+  OwnerUserId varchar [ref: > User.Id]
+  SourceDeckId Guid [ref: > Deck.Id]
+  Name varchar
+  Description varchar
+  IsPublished bool
+  CreatedAt datetime
+  UpdatedAt datetime
+}
+
+Table UserCardProgress {
+  Id Guid [primary key]
+  UserId varchar [ref: > User.Id]
+  CardId Guid [ref: > Card.Id]
+  StrategyType varchar
+  StrategyDataJson json
+  LastReviewedAt datetime
+  NextReviewAt datetime
+  CreatedAt datetime
+  UpdatedAt datetime
+}
+
+Table XpTransaction {
+  Id Guid [primary key]
+  UserId varchar [ref: > User.Id]
+  Amount int
+  Reason varchar
+  CreatedAt datetime
+}
+
+Table ReviewLog {
+  Id Guid [primary key]
+  UserId varchar [ref: > User.Id]
+  CardId Guid [ref: > Card.Id]
+  ReviewedAt datetime
+  StrategyType varchar
+  Grade int
+}
