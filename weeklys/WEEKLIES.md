@@ -81,12 +81,14 @@
 ## Woche 3 (02.03. - 06.03.2026)
 
 ### Backend
+
 - Endpunkte, Service- und Repomethoden für Abrufen öffentlicher Decks und togglen von public Status
 - Forking von öffentlichen Decks
 - Löschen von Decks (mitsamt Karten)
 - Service für Statistiken
 
 ### Frontend
+
 - Deckübersicht erweitert mit Funktionen zum Löschen/Publishen/Unpublishen
 - Neue Komponente für Ansicht aller öffentlichen Decks (und Forkmöglichkeit)
 - Dashboard zeigt Statistiken zu Streaks und XP
@@ -94,8 +96,26 @@
 
 ---
 
+## Woche 4 (09.03. - 13.03.2026)
+
+### Dokumentation
+
+- UML-Diagramme: Sequenz-, Aktivität-, Klassen- und Zustandsdiagramme fertiggestellt
+- Planung und Beginn der Präsentation
+- Benutzerdokumentation: Installation und Wartung
+
+### Backend
+
+- Automatische Migration bei Start der App
+- Seeding mit Startwerten für Demo
+
+### Deployment
+
+- Komplette Dockerization mit Docker Compose
+
+---
+
 ## TODO NEXT
 
-- UML-Diagramme und Doku
 - Dashboard ausarbeiten
 - Bisherige App konsolidieren (Layout, Tests, Fehler, Rückmeldungen)
