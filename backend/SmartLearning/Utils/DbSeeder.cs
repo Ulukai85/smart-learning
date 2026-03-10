@@ -3,10 +3,11 @@ using SmartLearning.Models;
 
 namespace SmartLearning.Utils;
 
-public class DbSeeder
+public static class DbSeeder
 {
     public static async Task SeedAsync(IServiceProvider services)
     {
+        Console.WriteLine("Seeding database...");
         var userManager = services.GetRequiredService<UserManager<AppUser>>();
         var context = services.GetRequiredService<AppDbContext>();
 
@@ -27,8 +28,20 @@ public class DbSeeder
             var demoDeck = BuildDeck(demoUser.Id);
             context.Decks.Add(demoDeck);
             context.Cards.AddRange(BuildAlgorithmCards(demoDeck.Id));
+            context.XpTransactions.Add(BuildXpTransaction(demoUser.Id));
             await context.SaveChangesAsync();
         }
+    }
+
+    private static XpTransaction BuildXpTransaction(string userId)
+    {
+        return new XpTransaction
+        {
+            Amount = 100,
+            Reason = "Demo",
+            UserId = userId,
+            CreatedAt = DateTime.UtcNow
+        };
     }
 
     private static Deck BuildDeck(string ownerId)
