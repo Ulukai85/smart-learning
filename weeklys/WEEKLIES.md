@@ -100,14 +100,16 @@
 
 ### Dokumentation
 
-- UML-Diagramme: Sequenz-, Aktivität-, Klassen- und Zustandsdiagramme fertiggestellt
-- Planung und Beginn der Präsentation
-- Benutzerdokumentation: Installation und Wartung
+- UML-Diagramme: Sequenz-, Aktivität-, Klassen- und Zustandsdiagramme
+- Projekt-Präsentation
+- Benutzerdokumentation: Installation, Nutzung und Wartung
 
 ### Backend
 
 - Automatische Migration bei Start der App
-- Seeding mit Startwerten für Demo
+- Datenbank-Seeding mit Demo-Startwerten für Präsentation
+- Weitere Tests für Review- und Statistik-Service
+- Erweiterung der XP-Belohnungslogik
 
 ### Deployment
 
@@ -117,5 +119,7 @@
 
 ## TODO NEXT
 
-- Dashboard ausarbeiten
-- Bisherige App konsolidieren (Layout, Tests, Fehler, Rückmeldungen)
+- Testprotokoll erstellen
+- Präsentation fertigstellen
+- Feinschliff, Testen, Bugfixing, Code-Refactoring
+- KI-Integration (KI-generierte Fragen)
