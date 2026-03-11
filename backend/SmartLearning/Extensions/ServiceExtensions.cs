@@ -23,6 +23,8 @@ public static class ServiceExtensions
         
         services.AddSingleton<ITimeProvider, SystemTimeProvider>();
         
+        services.AddScoped<IAiService, OpenAiService>();
+        
         return services;
     }
 }

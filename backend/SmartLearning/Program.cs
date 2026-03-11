@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("AppSettings:Jwt"));
+builder.Services.Configure<OpenAiSettings>(builder.Configuration.GetSection("AppSettings:OpenAi"));
 
 builder.Services
     .InjectServices()
