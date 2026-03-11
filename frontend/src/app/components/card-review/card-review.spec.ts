@@ -33,8 +33,7 @@ describe('CardReview', () => {
         { provide: ReviewService, useValue: mockReviewService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ],
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CardReview);
     component = fixture.componentInstance;
@@ -45,28 +44,28 @@ describe('CardReview', () => {
   });
 
   it('should fetch deck on init when deckId exists', () => {
-    mockReviewService.fetchDeckToReview.mockReturnValue(of(createMockDeck()))
+    mockReviewService.fetchDeckToReview.mockReturnValue(of(createMockDeck()));
 
-    fixture.detectChanges()
-    expect(mockReviewService.fetchDeckToReview).toHaveBeenCalledWith('123')
-  })
+    fixture.detectChanges();
+    expect(mockReviewService.fetchDeckToReview).toHaveBeenCalledWith('123');
+  });
 
   it('should return first card as current', () => {
-    const mockDeck = createMockDeck()
+    const mockDeck = createMockDeck();
     component.deckToReview.set(mockDeck);
 
-    expect(component.current()).toEqual(mockDeck.cards[0])
-  })
+    expect(component.current()).toEqual(mockDeck.cards[0]);
+  });
 
   it('should reinsert card when result.reinsertCard is true', () => {
-    const mockDeck = createMockDeck()
+    const mockDeck = createMockDeck();
     component.deckToReview.set(mockDeck);
 
-    component.applyReviewResult(createMockReviewResult())
+    component.applyReviewResult(createMockReviewResult());
 
     const updated = component.deckToReview();
-    expect(updated?.cards.length).toBe(mockDeck.cards.length)
-  })
+    expect(updated?.cards.length).toBe(mockDeck.cards.length);
+  });
 });
 
 function createMockDeck(): DeckToReviewDto {
@@ -75,7 +74,7 @@ function createMockDeck(): DeckToReviewDto {
     name: 'Testdeck',
     newCards: 2,
     dueCards: 3,
-    cards: [createMockCard()]
+    cards: [createMockCard()],
   };
 }
 
@@ -87,8 +86,8 @@ function createMockCard(): CardToReviewDto {
     nextReviewAt: '2026-04-01',
     isNew: true,
     strategyType: 'Anki',
-    strategyData: '{}' 
-  }
+    strategyData: '{}',
+  };
 }
 
 function createMockReviewResult(): ReviewResultDto {
@@ -96,10 +95,9 @@ function createMockReviewResult(): ReviewResultDto {
     reviewedCardId: '456',
     reinsertCard: true,
     wasNew: true,
-    xpAmount: 5,
-    xpReason: 'CardReview',
+    xpTransactions: [],
     nextReviewAt: '2026-04-01',
     updatedDueCount: 3,
     updatedNewCount: 3,
-  }
+  };
 }

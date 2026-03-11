@@ -1,9 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 import { MenubarModule } from 'primeng/menubar';
 import { AuthService } from '../../services/auth-service';
-import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-navbar',
@@ -13,7 +13,8 @@ import { ButtonModule } from 'primeng/button';
 })
 export class Navbar implements OnInit {
   private router = inject(Router);
-  private authService = inject(AuthService);
+  private auth = inject(AuthService);
+  username = this.auth.username;
 
   items: MenuItem[] = [];
 
@@ -37,13 +38,13 @@ export class Navbar implements OnInit {
       {
         label: 'Explore',
         icon: 'pi pi-search',
-        routerLink: ['/explorer']
-      }
+        routerLink: ['/explorer'],
+      },
     ];
   }
 
   logout() {
-    this.authService.deleteToken();
+    this.auth.deleteToken();
     this.router.navigateByUrl('/login');
   }
 }

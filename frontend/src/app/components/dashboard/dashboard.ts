@@ -1,10 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { StatisticDto } from '../../models/statistic.model';
 import { StatisticService } from '../../services/statistic-service';
-import { LeaderboardPanel } from '../leaderboard-panel/leaderboard-panel';
-import { StreakPanel } from '../streak-panel/streak-panel';
-import { CardChartPanel } from '../card-chart-panel/card-chart-panel';
+
 import { ImageModule } from 'primeng/image';
+import { CardChartPanel } from './card-chart-panel/card-chart-panel';
+import { LeaderboardPanel } from './leaderboard-panel/leaderboard-panel';
+import { StreakPanel } from './streak-panel/streak-panel';
 
 @Component({
   selector: 'app-dashboard',
