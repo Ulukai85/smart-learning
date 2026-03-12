@@ -8,10 +8,16 @@ namespace SmartLearning.Controllers;
 [Route("api/[controller]")]
 public class AiController(IAiService aiService) : ControllerBase
 {
-    [HttpPost]
+    [HttpPost("test")]
     public async Task<IActionResult> SignUp([FromBody] AiRequestDto dto)
     {
-        var response = await aiService.GetResponseAsync(dto.prompt);
+        var response = await aiService.GetResponseAsync(dto.Prompt);
         return Ok( new { response });
     }
+
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateCards([FromBody] AiCreateCardsDto dto)
+    {
+        
+    } 
 }
