@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Extensions.Options;
 using OpenAI.Chat;
 using SmartLearning.DTOs;
@@ -5,15 +6,28 @@ using SmartLearning.Models;
 
 namespace SmartLearning.Services;
 
+public class AICardResponse
+{
+    public List<AiCard> Cards { get; set; } = [];
+}
+
+public class AiCard
+{
+    public string Front { get; set; } = string.Empty;
+    public string Back { get; set; } = string.Empty;
+}
+
 public interface IAiService
 {
     Task<string> GetResponseAsync(string prompt);
+    Task<AICardResponse> GenerateCardsAsync(AiCreateCardsDto dto);
 }
 
 public class OpenAiService : IAiService
 {
     private readonly ChatClient client;
     private const string model = "gpt-4.1-mini";
+    private const int maxCards = 20;
 
     public OpenAiService(IOptions<OpenAiSettings> openAiOptions)
     {
@@ -29,9 +43,11 @@ public class OpenAiService : IAiService
         return completion.Value.Content[0].Text;
     }
     
-    public async Task<string> GenerateCardsAsync(AiCreateCardsDto dto)
+    public async Task<AICardResponse> GenerateCardsAsync(AiCreateCardsDto dto)
     {
-        ChatCompletionOptions options = new()
+        var count = Math.Clamp(dto.Count, 1, maxCards);
+        
+        var options = new ChatCompletionOptions
         {
             ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
                 jsonSchemaFormatName: "list_of_cards",
@@ -39,42 +55,48 @@ public class OpenAiService : IAiService
                  {
                      "type": "object",
                      "properties": {
-                         "steps": {
+                         "Cards": {
                              "type": "array",
                              "items": {
                                  "type": "object",
                                  "properties": {
-                                     "explanation": { "type": "string" },
-                                     "output": { "type": "string" }
+                                     "Front": { "type": "string" },
+                                     "Back": { "type": "string" }
                                  },
-                                 "required": ["explanation", "output"],
+                                 "required": ["Front", "Back"],
                                  "additionalProperties": false
                              }
-                         },
-                         "final_answer": { "type": "string" }
+                         }
                      },
-                     "required": ["steps", "final_answer"],
+                     "required": ["Cards"],
                      "additionalProperties": false
                  }
                  """u8.ToArray()),
                 jsonSchemaIsStrict: true)
         };
 
+        var messages = new List<ChatMessage>
+        {
+            ChatMessage.CreateSystemMessage("""
+                You generate high-quality learning flashcards adhering to the provided format.
+                Each card should contain:
+                - a clear question on the front
+                - a concise answer on the back
+                Answers should be 1-2 sentences.
+                """),
+            ChatMessage.CreateUserMessage(
+                $"Create {count} flashcards about: {dto.Topic}")
+        };
             
-        
-        var prompt = $"""
-            Create {dto.Count} flashcards for studying the topic: "{dto.Topic}".
-            Return ONLY valid JSON in the provided format:
+        var completion = await client.CompleteChatAsync(messages, options);
+        var json = completion.Value.Content[0].Text;
+        var result = JsonSerializer.Deserialize<AICardResponse>(json);
 
-            Guidelines:
-            - Clean and concise
-            - Suitable for learning
-            - No explanations outside JSON
-            - Just 1 or 2 sentences per answer
-            """;
-            
-        var completion = await client.CompleteChatAsync(prompt);
-        
-        return completion.Value.Content[0].Text;
+        if (result?.Cards is null || result.Cards.Count == 0)
+        {
+            throw new Exception("AI returned no cards");
+        }
+
+        return result;
     }
 }
