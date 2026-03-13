@@ -1,6 +1,10 @@
 <div class="flex flex-col gap-2">
   <p-toolbar>
-    <p-button icon="pi pi-plus-circle" (click)="showDialog(null)" label="Create Card" />
+    <ng-template pTemplate="start" class="flex items-center gap-2">
+      <div class="flex items-center gap-2">
+      <p-button icon="pi pi-plus-circle" (click)="showCardDialog(null)" label="Create Card" />
+</div>
+    </ng-template>
   </p-toolbar>
 
   <p-confirmpopup />
@@ -83,7 +87,7 @@
         <td>{{ card.back }}</td>
         <td>
           <div class="flex gap-1">
-            <p-button icon="pi pi-pencil" (click)="showDialog(card)" />
+            <p-button icon="pi pi-pencil" (click)="showCardDialog(card)" />
             <p-button icon="pi pi-trash" (click)="confirmDelete($event, card)" severity="danger" />
           </div>
         </td>

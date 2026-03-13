@@ -40,6 +40,11 @@ export class Navbar implements OnInit {
         icon: 'pi pi-search',
         routerLink: ['/explorer'],
       },
+      {
+        label: 'Card Wizard',
+        icon: 'pi pi-sparkles',
+        routerLink: ['/wizard']
+      }
     ];
   }
 

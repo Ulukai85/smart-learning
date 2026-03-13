@@ -21,3 +21,18 @@ export interface CardToReviewDto {
   strategyType: string;
   strategyData: string;
 }
+
+export interface AiCreateCardsDto {
+  count: number;
+  topic: string;
+  description: string;
+}
+
+export interface AiCard {
+  front: string;
+  back: string;
+}
+
+export interface AiCardResponse {
+  cards: AiCard[];
+}

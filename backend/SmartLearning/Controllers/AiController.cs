@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using SmartLearning.DTOs;
 using SmartLearning.Services;
@@ -20,7 +21,8 @@ public class AiController(IAiService aiService) : ControllerBase
     {
         try
         {
-            var response = await aiService.GenerateCardsAsync(dto);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var response = await aiService.GenerateCardsAsync(dto, userId);
             return Ok(response);
         } 
         catch (Exception ex)

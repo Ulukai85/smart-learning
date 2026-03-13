@@ -9,4 +9,16 @@ public class AiCreateCardsDto
 {
     public int Count { get; set; }
     public string Topic { get; set; }
+    public string Description { get; set; }
+}
+
+public class AICardResponse
+{
+    public List<AiCard> Cards { get; set; } = [];
+}
+
+public class AiCard
+{
+    public string Front { get; set; } = string.Empty;
+    public string Back { get; set; } = string.Empty;
 }

@@ -77,7 +77,7 @@ export class CardExplorer implements OnInit {
     });
   }
 
-  showDialog(card: CardDto | null): void {
+  showCardDialog(card: CardDto | null): void {
     this.selectedCard.set(card);
     this.dialogVisible = true;
   }

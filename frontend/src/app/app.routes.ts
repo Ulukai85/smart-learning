@@ -9,6 +9,7 @@ import { authGuard } from './guards/auth-guard';
 import { Decks } from './components/decks/decks';
 import { CardReview } from './components/card-review/card-review';
 import { DeckExplorer } from './components/deck-explorer/deck-explorer';
+import { CardWizard } from './components/card-wizard/card-wizard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -41,6 +42,10 @@ export const routes: Routes = [
       {
         path: 'explorer',
         component: DeckExplorer
+      },
+      {
+        path: 'wizard',
+        component: CardWizard
       },
       {
         path: 'review/deck/:deckId',

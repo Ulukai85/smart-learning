@@ -1,0 +1,33 @@
+<div>
+    <form [formGroup]="form" (ngSubmit)="aiCardCreation()" class="space-y-6">
+        <div class="flex flex-col gap-4">
+            <p-floatlabel variant="on">
+              <input pInputText inputId="topic" formControlName="topic" class="w-full" />
+              <label for="name">Topic</label>
+            </p-floatlabel>
+            
+            <p-floatlabel variant="on">
+              <textarea
+                pTextarea
+                inputId="description"
+                formControlName="description"
+                class="w-full"
+                [autoResize]="true"
+              ></textarea>
+              <label for="description">Description</label>
+            </p-floatlabel>
+
+            <p-floatlabel variant="on">
+                <p-inputnumber inputId="count"  [min]="1" [max]="20" formControlName="count" />
+            </p-floatlabel>
+
+            <div class="flex justify-end">
+              <p-button
+                type="submit"
+                icon="pi pi-sparkles"
+                label="Create cards"
+              />
+            </div>
+          </div>
+    </form>
+</div>

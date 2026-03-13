@@ -3,49 +3,41 @@ using Microsoft.Extensions.Options;
 using OpenAI.Chat;
 using SmartLearning.DTOs;
 using SmartLearning.Models;
+using SmartLearning.Repositories;
 
 namespace SmartLearning.Services;
-
-public class AICardResponse
-{
-    public List<AiCard> Cards { get; set; } = [];
-}
-
-public class AiCard
-{
-    public string Front { get; set; } = string.Empty;
-    public string Back { get; set; } = string.Empty;
-}
 
 public interface IAiService
 {
     Task<string> GetResponseAsync(string prompt);
-    Task<AICardResponse> GenerateCardsAsync(AiCreateCardsDto dto);
+    Task<AICardResponse> GenerateCardsAsync(AiCreateCardsDto dto, string userId);
 }
 
 public class OpenAiService : IAiService
 {
-    private readonly ChatClient client;
-    private const string model = "gpt-4.1-mini";
-    private const int maxCards = 20;
+    private readonly IDeckRepository _deckRepo;
+    private readonly ChatClient _client;
+    private const string Model = "gpt-4.1-mini";
+    private const int MaxCards = 20;
 
-    public OpenAiService(IOptions<OpenAiSettings> openAiOptions)
+    public OpenAiService(IOptions<OpenAiSettings> openAiOptions, IDeckRepository deckRepo)
     {
         var openAiSettings = openAiOptions.Value;
+        this._deckRepo = deckRepo;
         
-        client = new ChatClient(model, openAiSettings.ApiKey);
+        _client = new ChatClient(Model, openAiSettings.ApiKey);
     }
 
     public async Task<string> GetResponseAsync(string prompt)
     {
-        var completion = await client.CompleteChatAsync(prompt);
+        var completion = await _client.CompleteChatAsync(prompt);
         
         return completion.Value.Content[0].Text;
     }
     
-    public async Task<AICardResponse> GenerateCardsAsync(AiCreateCardsDto dto)
+    public async Task<AICardResponse> GenerateCardsAsync(AiCreateCardsDto dto, string userId)
     {
-        var count = Math.Clamp(dto.Count, 1, maxCards);
+        var count = Math.Clamp(dto.Count, 1, MaxCards);
         
         var options = new ChatCompletionOptions
         {
@@ -85,10 +77,10 @@ public class OpenAiService : IAiService
                 Answers should be 1-2 sentences.
                 """),
             ChatMessage.CreateUserMessage(
-                $"Create {count} flashcards about: {dto.Topic}")
+                $"Create {count} flashcards about '{dto.Topic} with the following description in mind: {dto.Description}")
         };
             
-        var completion = await client.CompleteChatAsync(messages, options);
+        var completion = await _client.CompleteChatAsync(messages, options);
         var json = completion.Value.Content[0].Text;
         var result = JsonSerializer.Deserialize<AICardResponse>(json);
 
@@ -97,6 +89,36 @@ public class OpenAiService : IAiService
             throw new Exception("AI returned no cards");
         }
 
+        await SaveGeneratedDeckWithCards(userId, dto, result.Cards);
+
         return result;
+    }
+    
+    private async Task SaveGeneratedDeckWithCards(string userId, AiCreateCardsDto dto, List<AiCard> cards) 
+    {
+        var newDeck = new Deck
+        {
+            Id = Guid.NewGuid(),
+            Name = dto.Topic,
+            Description = dto.Description,
+            OwnerUserId = userId,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+        
+        var newCards = cards
+            .Select(c => new Card
+            {
+                Id = Guid.NewGuid(),
+                DeckId = newDeck.Id,
+                Front = c.Front,
+                Back = c.Back,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            })
+            .ToList();
+        
+        await _deckRepo.AddDeckWithCardsAsync(newDeck, newCards);
+        await _deckRepo.SaveChangesAsync();
     }
 }
