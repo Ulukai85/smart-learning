@@ -9,10 +9,10 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { CardToReviewDto } from '../../models/card.model';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { ToastService } from '../../services/toast-service';
-
+import { BadgeModule } from 'primeng/badge';
 @Component({
   selector: 'app-card-review',
-  imports: [CardModule, ButtonModule, SkeletonModule, OverlayBadgeModule],
+  imports: [CardModule, ButtonModule, SkeletonModule, OverlayBadgeModule, BadgeModule],
   templateUrl: './card-review.html',
   styles: ``,
 })

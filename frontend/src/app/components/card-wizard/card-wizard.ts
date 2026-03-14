@@ -1,12 +1,17 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
-import { AiService } from '../../services/ai-service';
 import { AiCreateCardsDto } from '../../models/card.model';
-import { InputNumberModule } from 'primeng/inputnumber';
+import { AiService } from '../../services/ai-service';
+import { ToastService } from '../../services/toast-service';
+import { SelectModule } from 'primeng/select';
+import { DeckDto } from '../../models/deck.model';
+import { DeckService } from '../../services/deck-service';
+import { ImageModule } from 'primeng/image';
 
 @Component({
   selector: 'app-card-wizard',
@@ -16,30 +21,57 @@ import { InputNumberModule } from 'primeng/inputnumber';
     TextareaModule,
     FloatLabelModule,
     InputTextModule,
-    InputNumberModule
+    InputNumberModule,
+    SelectModule,
+    ImageModule,
   ],
   templateUrl: './card-wizard.html',
   styles: ``,
 })
-export class CardWizard {
-  private aiService = inject(AiService)
+export class CardWizard implements OnInit {
+  private aiService = inject(AiService);
+  private deckService = inject(DeckService);
   private fb = inject(FormBuilder);
+  private toast = inject(ToastService);
 
+  decks = signal<DeckDto[]>([]);
   form: FormGroup;
-  isSubmitted = false;
-  isEditDeck = false;
+  isLoading = false;
 
   constructor() {
     this.form = this.fb.group({
       count: [10, Validators.required],
       topic: ['', Validators.required],
       description: ['', Validators.required],
+      deckId: [null],
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadDecks();
+  }
+
+  loadDecks(): void {
+    this.deckService.getDecksForUser().subscribe({
+      next: (data) => this.decks.set(data),
     });
   }
 
   aiCardCreation(): void {
-    this.aiService.createCards(this.form.value as AiCreateCardsDto).subscribe({
-      next: data => console.log("Data", data)
-    })
+    const dto: AiCreateCardsDto = this.form.value;
+
+    this.isLoading = true;
+    this.aiService.createCards(dto).subscribe({
+      next: (data) => {
+        console.log('Data', data);
+        this.toast.success('Cards created!', `Created ${dto.count} cards about '${dto.topic}'`);
+        this.form.reset();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.log('Error:', err);
+        this.isLoading = false;
+      },
+    });
   }
 }

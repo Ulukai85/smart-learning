@@ -10,10 +10,19 @@ import { ToastService } from '../../services/toast-service';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { TooltipModule } from 'primeng/tooltip';
+import { BadgeModule } from 'primeng/badge';
 
 @Component({
   selector: 'app-decks',
-  imports: [TableModule, ButtonModule, ToggleSwitchModule, FormsModule, ConfirmPopupModule, TooltipModule],
+  imports: [
+    TableModule,
+    ButtonModule,
+    ToggleSwitchModule,
+    FormsModule,
+    ConfirmPopupModule,
+    TooltipModule,
+    BadgeModule,
+  ],
   providers: [ConfirmationService],
   templateUrl: './decks.html',
   styles: ``,
@@ -34,8 +43,8 @@ export class Decks implements OnInit {
     this.deckService.getDeckSummary().subscribe({
       next: (data) => {
         this.deckSummaries.set(data);
-        console.log(data)
-      }
+        console.log(data);
+      },
     });
   }
 

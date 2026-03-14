@@ -1,33 +1,59 @@
-<div>
+<div class="flex flex-col gap-3">
+  <h1>Card Wizard</h1>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
     <form [formGroup]="form" (ngSubmit)="aiCardCreation()" class="space-y-6">
-        <div class="flex flex-col gap-4">
-            <p-floatlabel variant="on">
-              <input pInputText inputId="topic" formControlName="topic" class="w-full" />
-              <label for="name">Topic</label>
-            </p-floatlabel>
-            
-            <p-floatlabel variant="on">
-              <textarea
-                pTextarea
-                inputId="description"
-                formControlName="description"
-                class="w-full"
-                [autoResize]="true"
-              ></textarea>
-              <label for="description">Description</label>
-            </p-floatlabel>
+      <div class="flex flex-col gap-4">
+        <p>The Card Wizard will create cards regarding the given topic and description</p>
+        <p-floatlabel variant="on">
+          <input pInputText inputId="topic" formControlName="topic" class="w-full" />
+          <label for="name">Topic</label>
+        </p-floatlabel>
 
-            <p-floatlabel variant="on">
-                <p-inputnumber inputId="count"  [min]="1" [max]="20" formControlName="count" />
-            </p-floatlabel>
+        <p-floatlabel variant="on">
+          <textarea
+            pTextarea
+            inputId="description"
+            formControlName="description"
+            class="w-full"
+            [autoResize]="true"
+          ></textarea>
+          <label for="description">Description</label>
+        </p-floatlabel>
 
-            <div class="flex justify-end">
-              <p-button
-                type="submit"
-                icon="pi pi-sparkles"
-                label="Create cards"
-              />
-            </div>
-          </div>
+        <p-floatlabel variant="on">
+          <p-inputnumber inputId="count" [min]="1" [max]="20" formControlName="count" />
+          <label for="count">Number of cards</label>
+        </p-floatlabel>
+
+        <p>
+          Select an existing deck to add the cards to. If no Deck is selected, a new deck with the
+          topic as it's name will be created.
+        </p>
+
+        <p-floatlabel variant="on">
+          <p-select
+            formControlName="deckId"
+            [options]="decks()"
+            inputId="deckId"
+            optionLabel="name"
+            optionValue="id"
+            fluid
+            scrollHeight="500px"
+            [showClear]="true"
+          />
+          <label for="deckId">Deck</label>
+        </p-floatlabel>
+
+        <div class="flex justify-end">
+          <p-button
+            type="submit"
+            icon="pi pi-sparkles"
+            label="Create cards"
+            [loading]="isLoading"
+          />
+        </div>
+      </div>
     </form>
+    <img src="wizard.png" alt="wizard" class="rounded-2xl" />
+  </div>
 </div>

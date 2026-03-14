@@ -9,6 +9,7 @@ public class AiCreateCardsDto
 {
     public int Count { get; set; }
     public string Topic { get; set; }
+    public Guid? DeckId { get; set; }
     public string Description { get; set; }
 }
 

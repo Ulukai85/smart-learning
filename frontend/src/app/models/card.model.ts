@@ -26,6 +26,7 @@ export interface AiCreateCardsDto {
   count: number;
   topic: string;
   description: string;
+  deckId?: string;
 }
 
 export interface AiCard {

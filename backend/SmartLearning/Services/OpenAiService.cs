@@ -89,36 +89,54 @@ public class OpenAiService : IAiService
             throw new Exception("AI returned no cards");
         }
 
-        await SaveGeneratedDeckWithCards(userId, dto, result.Cards);
+        await SaveGeneratedCards(userId, dto, result.Cards);
 
         return result;
     }
     
-    private async Task SaveGeneratedDeckWithCards(string userId, AiCreateCardsDto dto, List<AiCard> cards) 
+    private async Task SaveGeneratedCards(string userId, AiCreateCardsDto dto, List<AiCard> cards)
     {
-        var newDeck = new Deck
+        if (dto.DeckId.HasValue)
         {
-            Id = Guid.NewGuid(),
-            Name = dto.Topic,
-            Description = dto.Description,
-            OwnerUserId = userId,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-        
-        var newCards = cards
-            .Select(c => new Card
+            var deck = await _deckRepo.GetDeckByIdAsync(dto.DeckId.Value);
+            
+            if (deck?.OwnerUserId != userId)
+                throw new UnauthorizedAccessException("Not accessible");
+            
+            if  (deck == null)
+                throw new KeyNotFoundException("Deck not found");
+
+            await _deckRepo.AddCardsAsync(MapAiCardsToCards(cards, deck.Id));
+        }
+        else
+        {
+            var newDeck = new Deck
             {
                 Id = Guid.NewGuid(),
-                DeckId = newDeck.Id,
-                Front = c.Front,
-                Back = c.Back,
+                Name = dto.Topic,
+                Description = dto.Description,
+                OwnerUserId = userId,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
-            })
-            .ToList();
+            };
+            
+            await _deckRepo.AddDeckWithCardsAsync(newDeck, MapAiCardsToCards(cards, newDeck.Id));
+            
+        }
         
-        await _deckRepo.AddDeckWithCardsAsync(newDeck, newCards);
         await _deckRepo.SaveChangesAsync();
+    }
+    
+    private List<Card> MapAiCardsToCards(List<AiCard> aiCards, Guid deckId)
+    {
+        return aiCards.Select(c => new Card
+        {
+            Id = Guid.NewGuid(),
+            DeckId = deckId,
+            Front = c.Front,
+            Back = c.Back,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        }).ToList();
     }
 }

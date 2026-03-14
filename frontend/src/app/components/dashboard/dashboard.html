@@ -2,12 +2,15 @@
   @if (statistics(); as data) {
     <app-leaderboard-panel [data]="data.xpData" class="xl:col-span-1 h-full" />
     <div class="flex items-center justify-center h-full">
-      <img src="logo_small.png" alt="Logo" class="max-h-32 object-contain rounded-2xl" />
+      <img src="logo_small.png" alt="Logo" class="object-contain rounded-2xl" />
     </div>
     <app-streak-panel [data]="data.streakData" class="xl:col-span-1 h-full" />
     <app-card-chart-panel
       [data]="data.dailyReviewData"
       class="md:col-span-2 xl:col-span-3 h-full"
     />
+    <div class="flex items-center justify-center h-full col-span-full">
+      <img src="logo_1.png" alt="Logo" class="object-contain rounded-2xl" />
+    </div>
   }
 </div>

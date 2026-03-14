@@ -1,44 +1,48 @@
 <p-confirmpopup />
 
-<p-table [value]="deckSummaries()" dataKey="id">
-  <ng-template pTemplate="header">
-    <tr>
-      <th></th>
-      <th>Name</th>
-      <th>Total Cards</th>
-      <th>New Cards</th>
-      <th>Due Cards</th>
-      <th>Public?</th>
-      <th>Delete</th>
-    </tr>
-  </ng-template>
+<div>
+  <h1>Learning Hub</h1>
 
-  <ng-template pTemplate="body" let-deck>
-    <tr>
-      <td>
-        <p-button icon="pi pi-lightbulb" label="Learn" (click)="reviewDeck(deck.id)" />
-      </td>
-      <td>{{ deck.name }}</td>
-      <td>{{ deck.totalCards }}</td>
-      <td>{{ deck.newCards }}</td>
-      <td>{{ deck.dueCards }}</td>
-      <td>
-        @if (!deck.isForked) {
-          <p-toggleswitch
-            [(ngModel)]="deck.isPublished"
-            (onChange)="onTogglePublished(deck)"
-            pTooltip="Click to publish/unpublish deck"
+  <p-table [value]="deckSummaries()" dataKey="id">
+    <ng-template pTemplate="header">
+      <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Total Cards</th>
+        <th>New Cards</th>
+        <th>Due Cards</th>
+        <th>Public?</th>
+        <th>Delete</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-deck>
+      <tr>
+        <td>
+          <p-button icon="pi pi-lightbulb" label="Learn" (click)="reviewDeck(deck.id)" />
+        </td>
+        <td>{{ deck.name }}</td>
+        <td>{{ deck.totalCards }}</td>
+        <td><p-badge [value]="deck.newCards" badgeSize="xlarge" severity="success" /></td>
+        <td><p-badge [value]="deck.dueCards" badgeSize="xlarge" severity="warn" /></td>
+        <td>
+          @if (!deck.isForked) {
+            <p-toggleswitch
+              [(ngModel)]="deck.isPublished"
+              (onChange)="onTogglePublished(deck)"
+              pTooltip="Click to publish/unpublish deck"
+            />
+          }
+        </td>
+        <td>
+          <p-button
+            icon="pi pi-trash"
+            (click)="confirmDelete($event, deck)"
+            severity="danger"
+            pTooltip="Click to delete deck with all cards"
           />
-        }
-      </td>
-      <td>
-        <p-button
-          icon="pi pi-trash"
-          (click)="confirmDelete($event, deck)"
-          severity="danger"
-          pTooltip="Click to delete deck with all cards"
-        />
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
