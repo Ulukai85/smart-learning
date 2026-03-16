@@ -38,13 +38,13 @@ public class TransactionRepository(AppDbContext dbContext) : ITransactionReposit
         var topFive = await grouped
             .OrderByDescending(x => x.TotalXp)
             .Take(5)
-            .Join(dbContext.Users,
+            .Join(dbContext.AppUsers,
                 xp => xp.UserId,
                 user => user.Id,
                 (xp, user) => new LeaderboardEntryData
                 {
                     UserId = xp.UserId,
-                    Username = user.UserName,
+                    Username = user.Handle,
                     TotalXp = xp.TotalXp,
                 })
             .ToListAsync();

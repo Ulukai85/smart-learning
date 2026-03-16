@@ -2,8 +2,15 @@
   <p-menubar [model]="items">
     <ng-template pTemplate="end">
       <div class="flex flex-row gap-3">
-        <span class="m-auto">Hello, {{ username() }}</span>
-        <p-button (onClick)="logout()" icon="pi pi-sign-out" label="Logout" />
+        <p-button
+          (onClick)="toggleDarkMode()"
+          [icon]="isDark() ? 'pi pi-sun' : 'pi pi-moon'"
+          severity="secondary"
+          [pTooltip]="isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+          tooltipPosition="left"
+        />
+        <p-chip [label]="username()!" image="avatar.png" alt="avatar" />
+        <p-button (onClick)="logout()" icon="pi pi-sign-out" label="Logout" severity="secondary" />
       </div>
     </ng-template>
   </p-menubar>
