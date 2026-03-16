@@ -27,6 +27,7 @@ export interface AiCreateCardsDto {
   topic: string;
   description: string;
   deckId?: string;
+  sourceText?: string;
 }
 
 export interface AiCard {

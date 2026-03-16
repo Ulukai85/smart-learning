@@ -66,7 +66,7 @@ public class OpenAiService : IAiService
                  """u8.ToArray()),
                 jsonSchemaIsStrict: true)
         };
-
+        
         var messages = new List<ChatMessage>
         {
             ChatMessage.CreateSystemMessage("""
@@ -75,10 +75,19 @@ public class OpenAiService : IAiService
                 - a clear question on the front
                 - a concise answer on the back
                 Answers should be 1-2 sentences.
-                """),
-            ChatMessage.CreateUserMessage(
-                $"Create {count} flashcards about '{dto.Topic} with the following description in mind: {dto.Description}")
+                """)
         };
+        
+        if (dto.SourceText is null)
+        {
+            messages.Add(ChatMessage.CreateUserMessage(
+                $"Create {count} flashcards about '{dto.Topic} with the following description in mind: {dto.Description}"));
+        }
+        else
+        {
+            messages.Add(ChatMessage.CreateUserMessage(
+                $"Create up to {count} flashcards from the following text: {dto.SourceText}"));
+        }
             
         var completion = await _client.CompleteChatAsync(messages, options);
         var json = completion.Value.Content[0].Text;

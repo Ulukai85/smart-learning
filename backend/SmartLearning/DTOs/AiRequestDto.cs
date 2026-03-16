@@ -11,6 +11,7 @@ public class AiCreateCardsDto
     public string Topic { get; set; }
     public Guid? DeckId { get; set; }
     public string Description { get; set; }
+    public string? SourceText { get; set; }
 }
 
 public class AICardResponse

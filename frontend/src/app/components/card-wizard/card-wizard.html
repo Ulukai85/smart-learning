@@ -1,11 +1,38 @@
 <div class="flex flex-col gap-3">
   <h1>Card Wizard</h1>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <form [formGroup]="form" (ngSubmit)="aiCardCreation()" class="space-y-6">
+      <p-selectButton
+        formControlName="mode"
+        [options]="modeOptions"
+        optionLabel="label"
+        optionValue="value"
+        fluid
+        allowEmpty="false"
+      />
       <div class="flex flex-col gap-4">
-        <p>The Card Wizard will create cards regarding the given topic and description</p>
+        @if (useSource) {
+          <p>
+            Copypaste a text to the <strong>Source Text</strong> field and cards will be created
+            from this text. <strong>Topic</strong> and <strong>Description</strong> are used for new
+            deck creation, if no Deck is selected.
+          </p>
+        } @else {
+          <p>
+            The Card Wizard will create cards regarding the given <strong>Topic</strong> and
+            <strong>Description</strong>. Select an existing deck to add the cards to.
+            <strong>Topic</strong> and <strong>Description</strong> are used for new deck creation,
+            if no Deck is selected.
+          </p>
+        }
         <p-floatlabel variant="on">
-          <input pInputText inputId="topic" formControlName="topic" class="w-full" />
+          <input
+            pInputText
+            inputId="topic"
+            formControlName="topic"
+            fluid
+            [invalid]="isInvalid('topic')"
+          />
           <label for="name">Topic</label>
         </p-floatlabel>
 
@@ -14,21 +41,17 @@
             pTextarea
             inputId="description"
             formControlName="description"
-            class="w-full"
+            fluid
             [autoResize]="true"
+            [invalid]="isInvalid('description')"
           ></textarea>
           <label for="description">Description</label>
         </p-floatlabel>
 
         <p-floatlabel variant="on">
-          <p-inputnumber inputId="count" [min]="1" [max]="20" formControlName="count" />
+          <p-inputnumber inputId="count" [min]="1" [max]="20" formControlName="count" fluid />
           <label for="count">Number of cards</label>
         </p-floatlabel>
-
-        <p>
-          Select an existing deck to add the cards to. If no Deck is selected, a new deck with the
-          topic as it's name will be created.
-        </p>
 
         <p-floatlabel variant="on">
           <p-select
@@ -44,6 +67,20 @@
           <label for="deckId">Deck</label>
         </p-floatlabel>
 
+        @if (useSource) {
+          <p-floatlabel variant="on">
+            <textarea
+              pTextarea
+              inputId="sourceText"
+              formControlName="sourceText"
+              fluid
+              [autoResize]="true"
+              [invalid]="isInvalid('sourceText')"
+            ></textarea>
+            <label for="sourceText">Source Text</label>
+          </p-floatlabel>
+        }
+
         <div class="flex justify-end">
           <p-button
             type="submit"
@@ -54,6 +91,7 @@
         </div>
       </div>
     </form>
+
     <img src="wizard.png" alt="wizard" class="rounded-2xl" />
   </div>
 </div>
