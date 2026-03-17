@@ -6,7 +6,7 @@
 
 ## Übersicht
 
-Diese Applikation besteht aus einem Frontend, das mit Angular 21 entwickelt wurde, und einem Backend, das auf ASP.NET Core v.10 basiert. Die Anwendung ermöglicht es Benutzern, Flashcards zu erstellen und zu lernen, wobei ein Spaced Repetition Algorithmus verwendet wird, um die Lernzeit zu optimieren. Zusätzlich bietet die App Gamification-Elemente, um die Motivation der Benutzer zu steigern. Kartenstapel können veröffentlicht und dann geforkt werden.
+Diese Applikation besteht aus einem Frontend, das mit `Angular v21` entwickelt wurde, und einem Backend, das auf `ASP.NET Core v10` basiert. Die Anwendung ermöglicht es Benutzern, Flashcards zu erstellen und zu lernen, wobei ein Spaced Repetition Algorithmus verwendet wird, um die Lernzeit zu optimieren. Zusätzlich bietet die App Gamification-Elemente, um die Motivation der Benutzer zu steigern. Kartenstapel können veröffentlicht und dann geforkt werden. Außerdem kann ein KI-Agent genuzt werden, der automatisch Lernkarten zu einem Thema generiert.
 
 ---
 
@@ -17,11 +17,12 @@ Diese Applikation besteht aus einem Frontend, das mit Angular 21 entwickelt wurd
    git clone https://github.com/Ulukai85/smart-learning
    cd smart-learning
    ```
-2. Für die Demo-Applikation können Sie die Docker-Container verwenden. Stellen Sie sicher, dass Docker auf Ihrem System installiert ist, und führen Sie dann den folgenden Befehl aus:
+2. Um die KI-Features nutzen zu können, muss in der Datei `appsettings.json` ein gültiger OpenAI API Token hinterlegt werden.
+3. Für die Demo-Applikation können Sie die Docker-Container verwenden. Stellen Sie sicher, dass Docker auf Ihrem System installiert ist, und führen Sie dann den folgenden Befehl aus:
    ```bash
    docker compose -f docker-compose.demo.yml --env-file .env.demo up --build
    ```
-3. Wird die Anwendung zum ersten Mal gestartet, werden die Tabellen durch die automatische Migration erstellt und mit Testdaten gefüllt, damit Sie die Funktionen der App sofort ausprobieren können.
+4. Wird die Anwendung zum ersten Mal gestartet, werden die Tabellen durch die automatische Migration erstellt und mit Testdaten gefüllt, damit Sie die Funktionen der App sofort ausprobieren können.
 
 ---
 
@@ -30,7 +31,7 @@ Diese Applikation besteht aus einem Frontend, das mit Angular 21 entwickelt wurd
 ### Registrierung/Anmeldung
 
 Öffnen Sie Ihren Webbrowser und navigieren Sie zu `http://localhost:3000`, um die Anwendung zu nutzen. Die Backend-API ist unter `http://localhost:5000` erreichbar.
-Am besten registrieren Sie sich mit einem eigenen Konto und melden sich dann mit diesem an. Oder nutzen Sie den Testaccount:
+**Am besten registrieren Sie sich mit einem eigenen Konto** und melden sich dann mit diesem an. Oder nutzen Sie den Testaccount:
 
 - Benutzername: `demo`
 - Passwort: `Password1!`
@@ -53,7 +54,7 @@ Hier sehen Sie **Statistiken** zu Ihrem aktuellen "Lernlauf" (Streak) und ihrer 
 ### Decks veröffentlichen und löschen
 
 - Der Menüpunkt **Learn** öffnet eine Ansicht der eigenen Kartenstapel.
-- Rechts kann hier in der Spalte **Public?** der öffentlicheStatus des Decks getoggelt werden. Öffentliche Decks sind für ander User sichtbar und können geforkt werden.
+- Rechts kann hier in der Spalte **Public?** der öffentliche Status des Decks getoggelt werden. Öffentliche Decks sind für ander User sichtbar und können geforkt werden.
 - Ganz rechts kann ein Stapel mitsamt Karten gelöscht werden.
 
 ### Lernen
@@ -71,6 +72,11 @@ Hier sehen Sie **Statistiken** zu Ihrem aktuellen "Lernlauf" (Streak) und ihrer 
 - Es kann nach Name und Beschreibung gefiltert werden und es wird angezeigt, wie viele Karten dieses Deck enthält.
 - Über die rechte Spalte **Fork** kann das Deck geforkt werden, d.h. der Stapel wird mitsamt Karten kopiert und fortan unter den eigenen Karten angezeigt.
 
+### KI Feature
+
+- Der Menüpunkt **Card Wizard** navigiert zu einem Formular, über das mithilfe eines KI-Agenten automatisch Karten erstellt werden können.
+- Durch den **Select Button** kann gewählt werden, ob entweder Karten zu einem bestimmten Thema erstellt werden, oder ob aus einem eingefügten Text Informationen für die Lernkarten genutzt werden.
+
 ---
 
 ## Wartung
@@ -79,7 +85,7 @@ Hier sehen Sie **Statistiken** zu Ihrem aktuellen "Lernlauf" (Streak) und ihrer 
 
 #### Übersicht
 
-Das Frontend ist mit Angular 21 und PrimeNG 21 entwickelt und bietet eine benutzerfreundliche Oberfläche für die Interaktion mit der Flashcard-Anwendung. Es kommuniziert mit dem Backend über RESTful API-End
+Das Frontend ist mit `Angular 21` und `PrimeNG 21` entwickelt und bietet eine benutzerfreundliche Oberfläche für die Interaktion mit der Flashcard-Anwendung. Es kommuniziert mit dem Backend über RESTful API-Endpunkte.
 
 #### Architektur
 
@@ -112,7 +118,7 @@ npm run test
 
 #### Übersicht
 
-Das Backend ist in ASP.NET Core v.10 und C# entwickelt und bietet eine RESTful API. Es verwendet Entity Framework Core für die Datenbankinteraktion und Identity Core und JWT für die Authentifizierung. Die API ermöglicht es, Flashcards und Stapel zu erstellen, zu verwalten und zu lernen, sowie Benutzerdaten zu speichern.
+Das Backend ist in `ASP.NET Core v10` und `C#` entwickelt und bietet eine RESTful API. Es verwendet `Entity Framework Core` für die Datenbankinteraktion und `Identity Core` und JWT für die Authentifizierung. Die API ermöglicht es, Flashcards und Stapel zu erstellen, zu verwalten und zu lernen, sowie Benutzerdaten zu speichern. Um die KI-Features nutzen zu können, muss in der Datei `appsettings.json` ein gültiger OpenAI API Token hinterlegt werden.
 
 #### Architektur
 

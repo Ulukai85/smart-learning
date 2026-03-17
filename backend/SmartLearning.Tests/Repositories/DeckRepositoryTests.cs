@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartLearning.Models;
 using SmartLearning.Repositories;
 
-namespace SmartLearning.Tests.Services;
+namespace SmartLearning.Tests.Repositories;
 
 public class DeckRepositoryTests
 {

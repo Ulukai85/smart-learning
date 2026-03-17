@@ -117,9 +117,24 @@
 
 ---
 
-## TODO NEXT
+## Woche 5 (16.03. - 20.03.2026)
 
-- Testprotokoll erstellen
-- Präsentation fertigstellen
-- Feinschliff, Testen, Bugfixing, Code-Refactoring
-- KI-Integration (KI-generierte Fragen)
+### Dokumentation
+
+- Erstellen der Testprotokolle
+- Fertigstellen der Projekt-Präsentation
+- Fertigstellen der Benutzerdokumentation
+
+### Frontend
+
+- Erstellen einer Komponente für die AI-Features (Card Wizard)
+- Implementierung eines Toggle Buttons für Light/Dark Mode
+- Anpassen des PrimeNG Themes und Layout-Verbesserungen
+
+### Backend
+
+- Einbinden der OpenAI-SDK, Bereitstellen eines AI-Agents mit API-Token
+- Erstellen eines AI-Services mit Verbindung zur DB für das persistente Generieren von Karten
+- Dazu wird **Structured Output** (JSON) genutzt
+
+---
