@@ -134,7 +134,8 @@
 ### Backend
 
 - Einbinden der OpenAI-SDK, Bereitstellen eines AI-Agents mit API-Token
-- Erstellen eines AI-Services mit Verbindung zur DB für das persistente Generieren von Karten
-- Dazu wird **Structured Output** (JSON) genutzt
+- Erstellen eines AI-Services mit Verbindung zur DB für das persistente Generieren von Karten (**Structured Output** (JSON) wird genutzt)
+- Refaktorisieren der Verzeichnisstruktur und der Interfaces
+- Erstellen einer weiteren Spaced Repetition Strategy (AnkiV2)
 
 ---
