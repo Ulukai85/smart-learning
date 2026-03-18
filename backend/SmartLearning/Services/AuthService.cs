@@ -16,16 +16,11 @@ public interface IAuthService
     Task<string> SignInAsync(UserLoginDto dto);
 }
 
-public class AuthService : IAuthService
+public class AuthService(UserManager<AppUser> userManager, IOptions<JwtSettings> jwtOptions)
+    : IAuthService
 {
-    private readonly UserManager<AppUser> _userManager;
-    private readonly JwtSettings _jwtSettings;
-    public AuthService(UserManager<AppUser> userManager, IOptions<JwtSettings> jwtOptions)
-    {
-        _userManager = userManager;
-        _jwtSettings = jwtOptions.Value;
-    }
-    
+    private readonly JwtSettings _jwtSettings = jwtOptions.Value;
+
     public async Task<IdentityResult> SignUpAsync(UserRegistrationDto dto)
     {
         var user = new AppUser
@@ -34,7 +29,7 @@ public class AuthService : IAuthService
             UserName = dto.Email,
             Handle = dto.Handle
         };
-        return await _userManager.CreateAsync(user, dto.Password);
+        return await userManager.CreateAsync(user, dto.Password);
     }
 
     public async Task<string> SignInAsync(UserLoginDto dto)
@@ -42,9 +37,9 @@ public class AuthService : IAuthService
         var key = _jwtSettings.Key;
         var expiresMinutes = _jwtSettings.ExpiresMinutes;
         
-        var user = await _userManager.FindByEmailAsync(dto.Email);
+        var user = await userManager.FindByEmailAsync(dto.Email);
 
-        if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
+        if (user == null || !await userManager.CheckPasswordAsync(user, dto.Password))
             throw new AuthenticationException("Invalid username or password");
 
         var signInKey = new SymmetricSecurityKey(

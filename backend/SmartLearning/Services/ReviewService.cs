@@ -118,12 +118,11 @@ public class ReviewService(
     {
         var rewards = new List<XpTransactionDto>();
 
-        if (!reinsertCard)
-        {
-            var xpTransaction =  BuildXpTransaction(userId, utcNow);
-            await transactionRepo.AddXpTransactionAsync(xpTransaction);
-            rewards.Add(xpTransaction.MapToDto());
-        }
+        if (reinsertCard) return rewards;
+        
+        var xpTransaction =  BuildXpTransaction(userId, utcNow);
+        await transactionRepo.AddXpTransactionAsync(xpTransaction);
+        rewards.Add(xpTransaction.MapToDto());
 
         return rewards;
     }
