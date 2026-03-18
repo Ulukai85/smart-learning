@@ -5,6 +5,7 @@ using SmartLearning.Models;
 using SmartLearning.Repositories;
 using SmartLearning.Services;
 using SmartLearning.SpacedRepetition;
+using SmartLearning.Utils;
 
 namespace SmartLearning.Tests.Services;
 

@@ -4,12 +4,6 @@ using SmartLearning.Models;
 
 namespace SmartLearning.Repositories;
 
-public interface ITransactionRepository
-{
-    Task AddXpTransactionAsync(XpTransaction transaction);
-    Task<XpData> GetXpStatistics(string userId);
-}
-
 public class TransactionRepository(AppDbContext dbContext) : ITransactionRepository
 {
     public async Task AddXpTransactionAsync(XpTransaction transaction)

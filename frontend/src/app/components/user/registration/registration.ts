@@ -11,10 +11,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
-import { FirstKeyPipe } from '../../pipes/first-key-pipe';
-import { AuthService } from '../../services/auth-service';
-import { ToastService } from '../../services/toast-service';
-import { CreateUserDto } from '../../models/user.model';
+import { FirstKeyPipe } from '../../../pipes/first-key-pipe';
+import { AuthService } from '../../../services/auth-service';
+import { ToastService } from '../../../services/toast-service';
+import { CreateUserDto } from '../../../models/user.model';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
@@ -36,11 +36,10 @@ export class Registration {
   isLoading = signal(false);
   form: FormGroup;
 
-
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private toast = inject(ToastService);
-  private router = inject(Router)
+  private router = inject(Router);
 
   constructor() {
     this.form = this.fb.group(
@@ -89,8 +88,7 @@ export class Registration {
           this.form.reset();
           this.isSubmitted.set(false);
           this.isLoading.set(false);
-          this.router.navigateByUrl('/login')
-          
+          this.router.navigateByUrl('/login');
         },
         error: (err) => {
           if (err.error.errors) {
@@ -98,12 +96,12 @@ export class Registration {
               this.toast.error('Error', x.code);
             });
             console.log('Error:', err);
-            this.isLoading.set(false)
+            this.isLoading.set(false);
           }
         },
       });
     } else {
-      this.isLoading.set(false)
+      this.isLoading.set(false);
     }
   }
 

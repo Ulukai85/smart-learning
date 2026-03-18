@@ -11,20 +11,13 @@ namespace SmartLearning.Controllers;
 [Route("api/[controller]")]
 public class AiController(IAiService aiService) : ControllerBase
 {
-    [HttpPost("test")]
-    public async Task<IActionResult> SignUp([FromBody] AiRequestDto dto)
-    {
-        var response = await aiService.GetResponseAsync(dto.Prompt);
-        return Ok( new { response });
-    }
-
     [HttpPost("create")]
-    public async Task<IActionResult> CreateCards([FromBody] AiCreateCardsDto dto)
+    public async Task<IActionResult> CreateCards([FromBody] AiCreateCardDto dtos)
     {
         try
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var response = await aiService.GenerateCardsAsync(dto, userId);
+            var response = await aiService.GenerateCardsAsync(dtos, userId!);
             return Ok(response);
         } 
         catch (Exception ex)

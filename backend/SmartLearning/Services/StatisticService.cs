@@ -3,12 +3,6 @@ using SmartLearning.Repositories;
 
 namespace SmartLearning.Services;
 
-public interface IStatisticService
-{
-    Task<StatisticDto> GetStatisticsAsync(string userId);
-    Task<StreakData> GetStreakDataAsync(string userId);
-}
-
 public class StatisticService(
     IReviewRepository reviewRepo,
     ITransactionRepository transactionRepo

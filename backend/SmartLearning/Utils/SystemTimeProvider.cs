@@ -1,9 +1,6 @@
-namespace SmartLearning.Services;
+using SmartLearning.Services;
 
-public interface ITimeProvider
-{
-    DateTime UtcNow { get; }
-}
+namespace SmartLearning.Utils;
 
 public class SystemTimeProvider : ITimeProvider
 {

@@ -10,12 +10,6 @@ using SmartLearning.Models;
 
 namespace SmartLearning.Services;
 
-public interface IAuthService
-{
-    Task<IdentityResult> SignUpAsync(UserRegistrationDto dto);
-    Task<string> SignInAsync(UserLoginDto dto);
-}
-
 public class AuthService(UserManager<AppUser> userManager, IOptions<JwtSettings> jwtOptions)
     : IAuthService
 {

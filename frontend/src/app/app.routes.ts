@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { User } from './components/user/user';
-import { Registration } from './components/registration/registration';
-import { Login } from './components/login/login';
+import { Registration } from './components/user/registration/registration';
+import { Login } from './components/user/login/login';
 import { Dashboard } from './components/dashboard/dashboard';
 import { Layout } from './components/layout/layout';
 import { CardExplorer } from './components/card-explorer/card-explorer';
@@ -41,11 +41,11 @@ export const routes: Routes = [
       },
       {
         path: 'explorer',
-        component: DeckExplorer
+        component: DeckExplorer,
       },
       {
         path: 'wizard',
-        component: CardWizard
+        component: CardWizard,
       },
       {
         path: 'review/deck/:deckId',

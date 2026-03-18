@@ -1,11 +1,6 @@
 namespace SmartLearning.DTOs;
 
-public class AiRequestDto
-{
-    public string Prompt { get; set; }
-}
-
-public class AiCreateCardsDto 
+public class AiCreateCardDto 
 {
     public int Count { get; set; }
     public string Topic { get; set; }
@@ -14,12 +9,12 @@ public class AiCreateCardsDto
     public string? SourceText { get; set; }
 }
 
-public class AICardResponse
+public class AICardResponseDto
 {
-    public List<AiCard> Cards { get; set; } = [];
+    public List<AiCardDto> Cards { get; set; } = [];
 }
 
-public class AiCard
+public class AiCardDto
 {
     public string Front { get; set; } = string.Empty;
     public string Back { get; set; } = string.Empty;

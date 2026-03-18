@@ -7,12 +7,6 @@ using SmartLearning.Repositories;
 
 namespace SmartLearning.Services;
 
-public interface IAiService
-{
-    Task<string> GetResponseAsync(string prompt);
-    Task<AICardResponse> GenerateCardsAsync(AiCreateCardsDto dto, string userId);
-}
-
 public class OpenAiService : IAiService
 {
     private readonly IDeckRepository _deckRepo;
@@ -35,9 +29,9 @@ public class OpenAiService : IAiService
         return completion.Value.Content[0].Text;
     }
     
-    public async Task<AICardResponse> GenerateCardsAsync(AiCreateCardsDto dto, string userId)
+    public async Task<AICardResponseDto> GenerateCardsAsync(AiCreateCardDto dtos, string userId)
     {
-        var count = Math.Clamp(dto.Count, 1, MaxCards);
+        var count = Math.Clamp(dtos.Count, 1, MaxCards);
         
         var options = new ChatCompletionOptions
         {
@@ -78,36 +72,36 @@ public class OpenAiService : IAiService
                 """)
         };
         
-        if (dto.SourceText is null)
+        if (dtos.SourceText is null)
         {
             messages.Add(ChatMessage.CreateUserMessage(
-                $"Create {count} flashcards about '{dto.Topic} with the following description in mind: {dto.Description}"));
+                $"Create {count} flashcards about '{dtos.Topic} with the following description in mind: {dtos.Description}"));
         }
         else
         {
             messages.Add(ChatMessage.CreateUserMessage(
-                $"Create up to {count} flashcards from the following text: {dto.SourceText}"));
+                $"Create up to {count} flashcards from the following text: {dtos.SourceText}"));
         }
             
         var completion = await _client.CompleteChatAsync(messages, options);
         var json = completion.Value.Content[0].Text;
-        var result = JsonSerializer.Deserialize<AICardResponse>(json);
+        var result = JsonSerializer.Deserialize<AICardResponseDto>(json);
 
         if (result?.Cards is null || result.Cards.Count == 0)
         {
             throw new Exception("AI returned no cards");
         }
 
-        await SaveGeneratedCards(userId, dto, result.Cards);
+        await SaveGeneratedCards(userId, dtos, result.Cards);
 
         return result;
     }
     
-    private async Task SaveGeneratedCards(string userId, AiCreateCardsDto dto, List<AiCard> cards)
+    private async Task SaveGeneratedCards(string userId, AiCreateCardDto dtos, List<AiCardDto> cards)
     {
-        if (dto.DeckId.HasValue)
+        if (dtos.DeckId.HasValue)
         {
-            var deck = await _deckRepo.GetDeckByIdAsync(dto.DeckId.Value);
+            var deck = await _deckRepo.GetDeckByIdAsync(dtos.DeckId.Value);
             
             if (deck?.OwnerUserId != userId)
                 throw new UnauthorizedAccessException("Not accessible");
@@ -122,8 +116,8 @@ public class OpenAiService : IAiService
             var newDeck = new Deck
             {
                 Id = Guid.NewGuid(),
-                Name = dto.Topic,
-                Description = dto.Description,
+                Name = dtos.Topic,
+                Description = dtos.Description,
                 OwnerUserId = userId,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
@@ -136,7 +130,7 @@ public class OpenAiService : IAiService
         await _deckRepo.SaveChangesAsync();
     }
     
-    private List<Card> MapAiCardsToCards(List<AiCard> aiCards, Guid deckId)
+    private List<Card> MapAiCardsToCards(List<AiCardDto> aiCards, Guid deckId)
     {
         return aiCards.Select(c => new Card
         {

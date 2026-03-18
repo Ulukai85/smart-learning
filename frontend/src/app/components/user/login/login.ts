@@ -5,9 +5,9 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
-import { ToastService } from '../../services/toast-service';
-import { LoginUserDto } from '../../models/user.model';
-import { AuthService } from '../../services/auth-service';
+import { LoginUserDto } from '../../../models/user.model';
+import { AuthService } from '../../../services/auth-service';
+import { ToastService } from '../../../services/toast-service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +24,7 @@ import { AuthService } from '../../services/auth-service';
 })
 export class Login {
   isSubmitted = signal(false);
-  isLoading = signal(false)
+  isLoading = signal(false);
   form: FormGroup;
 
   private fb = inject(FormBuilder);
@@ -55,13 +55,13 @@ export class Login {
         error: (err) => {
           if (err.status == 400) {
             this.toast.error('Login fail', 'Incorrect email or password!');
-            this.isLoading.set(false)
+            this.isLoading.set(false);
           }
           console.log('Error:', err);
         },
       });
     } else {
-      this.isLoading.set(false)
+      this.isLoading.set(false);
     }
   }
 

@@ -2,19 +2,9 @@ using SmartLearning.DTOs;
 using SmartLearning.Models;
 using SmartLearning.Repositories;
 using SmartLearning.SpacedRepetition;
+using SmartLearning.Utils;
 
 namespace SmartLearning.Services;
-
-public interface IReviewService
-{
-    Task<DeckToReviewDto> GetDeckToReviewAsync(
-        Guid deckId,
-        string userId,
-        int dueLimit,
-        int newLimit);
-
-    Task<ReviewResultDto> HandleReviewTransactionAsync(string userId, CreateReviewTransactionDto dto);
-}
 
 public class ReviewService(
     ICardRepository cardRepo,

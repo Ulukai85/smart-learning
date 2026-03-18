@@ -1,6 +1,7 @@
 using SmartLearning.Repositories;
 using SmartLearning.Services;
 using SmartLearning.SpacedRepetition;
+using SmartLearning.Utils;
 
 namespace SmartLearning.Extensions;
 
@@ -13,7 +14,7 @@ public static class ServiceExtensions
         services.AddScoped<ICardService, CardService>();
         services.AddScoped<IReviewService, ReviewService>();
         services.AddScoped<IStatisticService, StatisticService>();
-        services.AddScoped<ISpacedRepetitionStrategy, AnkiSpacedRepetition>();
+        services.AddScoped<ISpacedRepetitionStrategy, AnkiStrategy>();
         services.AddScoped<ISpacedRepetitionFactory, SpacedRepetitionFactory>();
 
         services.AddScoped<ICardRepository, CardRepository>();
