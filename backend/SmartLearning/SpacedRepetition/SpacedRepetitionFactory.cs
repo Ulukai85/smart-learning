@@ -1,4 +1,4 @@
-namespace SmartLearning.Services;
+namespace SmartLearning.SpacedRepetition;
 
 public interface ISpacedRepetitionFactory
 {
@@ -12,6 +12,7 @@ public class SpacedRepetitionFactory : ISpacedRepetitionFactory
         return strategyType switch
         {
             "Anki" => new AnkiSpacedRepetition(),
+            "AnkiV2" => new AnkiV2(),
             _ => throw new ArgumentException($"Unknown strategy type: {strategyType}")
         };
     }

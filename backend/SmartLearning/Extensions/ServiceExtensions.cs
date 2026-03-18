@@ -1,5 +1,6 @@
 using SmartLearning.Repositories;
 using SmartLearning.Services;
+using SmartLearning.SpacedRepetition;
 
 namespace SmartLearning.Extensions;
 

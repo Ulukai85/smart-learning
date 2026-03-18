@@ -25,6 +25,7 @@ export class CardReview implements OnInit {
 
   current = computed(() => this.deckToReview()?.cards[0] ?? null);
   showSolution = signal<boolean>(false);
+  isFetchingResult = signal<boolean>(false);
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -55,16 +56,23 @@ export class CardReview implements OnInit {
       strategyType: card.strategyType,
       strategyData: card.strategyData,
     };
+
+    this.isFetchingResult.set(true);
+
     this.reviewService.saveCardReview(cardReview).subscribe({
       next: (result) => {
-        this.applyReviewResult(result);
         this.showSolution.set(false);
+        this.applyReviewResult(result);
+        this.isFetchingResult.set(false);
         result.xpTransactions.forEach((reward) => {
           this.toast.success(`${reward.amount} XP gained!`, `Reason: ${reward.reason}`);
         });
         console.log('result:', result);
       },
-      error: (err) => console.log('Error:', err),
+      error: (err) => {
+        console.log('Error:', err);
+        this.isFetchingResult.set(false);
+      },
     });
   }
 

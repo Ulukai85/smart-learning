@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace SmartLearning.Services;
+namespace SmartLearning.SpacedRepetition;
 
 public interface ISpacedRepetitionStrategy
 {
@@ -63,6 +63,18 @@ public class AnkiV2 : ISpacedRepetitionStrategy
     
     public string UpdateStrategyData(int grade, string strategyDataJson)
     {
+        var strategyData = JsonSerializer.Deserialize<AnkiStrategyData>(strategyDataJson)
+                           ?? new AnkiStrategyData { Interval = 0 };
+
+        if (grade == 0)
+        {
+            strategyData.Interval = 1;
+        }
+        else
+        {
+            strategyData.Interval += 1;
+        }
         
+        return JsonSerializer.Serialize(strategyData);
     }
 }

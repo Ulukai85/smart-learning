@@ -4,6 +4,7 @@ using SmartLearning.DTOs;
 using SmartLearning.Models;
 using SmartLearning.Repositories;
 using SmartLearning.Services;
+using SmartLearning.SpacedRepetition;
 
 namespace SmartLearning.Tests.Services;
 

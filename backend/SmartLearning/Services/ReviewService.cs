@@ -1,6 +1,7 @@
 using SmartLearning.DTOs;
 using SmartLearning.Models;
 using SmartLearning.Repositories;
+using SmartLearning.SpacedRepetition;
 
 namespace SmartLearning.Services;
 
@@ -185,6 +186,7 @@ public class ReviewService(
         ISpacedRepetitionStrategy strategy)
     {
         progress.NextReviewAt = strategy.CalculateNextReview(grade, utcNow, progress.StrategyDataJson);
+        progress.StrategyDataJson = strategy.UpdateStrategyData(grade, progress.StrategyDataJson);
         progress.LastReviewedAt = utcNow;
         progress.UpdatedAt = utcNow;
     }
