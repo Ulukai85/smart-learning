@@ -33,7 +33,7 @@ Diese Applikation besteht aus einem Frontend, das mit `Angular v21` entwickelt w
 Öffnen Sie Ihren Webbrowser und navigieren Sie zu `http://localhost:3000`, um die Anwendung zu nutzen. Die Backend-API ist unter `http://localhost:5000` erreichbar.
 **Am besten registrieren Sie sich mit einem eigenen Konto** und melden sich dann mit diesem an. Oder nutzen Sie den Testaccount:
 
-- Benutzername: `demo`
+- Email: `demo@mail.de`
 - Passwort: `Password1!`
 
 ### Dashboard
