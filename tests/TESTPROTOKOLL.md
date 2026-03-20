@@ -7,6 +7,7 @@ Tests wurden hauptsächlich für das Backend geschrieben, da dort der Großteil 
 ## Frontend Tests
 
 Für die Tests wird die Bibliothek `vitest`genutzt. Beispielhaft sind die Tests de `CardReview`-Komponente in der Datei [card-review.spec.ts](../frontend/src/app/components/card-review/card-review.spec.ts) zu finden. Hier der Output eines Test Runs:
+
 ![Frontend Tests](frontend_test_overview.png 'Frontend Tests')
 
 ## Backend Tests

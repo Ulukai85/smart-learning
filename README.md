@@ -15,6 +15,16 @@ Die Anwendung wurde im Rahmen der Berufsschule in der Ausbildung für Fachinform
 
 ---
 
+## 🧪 Tests
+
+[Hier geht es zum erstellten **Testprotokoll**](/tests/TESTPROTOKOLL.md)
+
+---
+
+## 🧾 UML-Diagramme
+
+[Hier geht es zu einer Übersicht der erstellten **UML-Diagramme**](/uml/UML.md)
+
 ## 🚀 Features
 
 - Benutzerregistrierung und Authentifizierung (ASP.NET Identity)
@@ -91,20 +101,7 @@ Das Lernen basiert auf einem **Spaced-Repetition-System**, bei dem:
 - Modellierung mit EF Core (Code-First)
 - Migrationen zur Versionierung des Schemas
 
-![UML Klassendiagramm](/db/datenbankmodell.png)
-
----
-
-## 🧪 Tests
-
-Das Projekt enthält Tests für das Backend:
-
-```text
-backend/SmartLearning.Tests/
-```
-
-- Fokus auf Service-Logik (z. B. Review-Prozess, Forking)
-- Nutzung von isolierten Testdatenbanken
+![Datenbankmodell](/db/datenbankmodell.png)
 
 ---
 
