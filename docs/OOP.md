@@ -6,7 +6,7 @@ Daten und Verhalten werden in einer Klasse gebündelt, und der Zugriff wird kont
 
 ## Beispiel
 
-```
+```c#
 public class UserCardProgress
 {
     public Guid CardId { get; set; }
@@ -25,7 +25,7 @@ Diese Klasse kapselt:
 - den Zustand des Lernfortschritts
 - alle relevanten Daten für Spaced Repetition
 
-## Noch wichtiger: Verhalten im Service
+## Verhalten im Service
 
 Die Logik liegt nicht im Controller, sondern im Service:
 
@@ -68,7 +68,7 @@ Implementierungen:
 
 Verwendung:
 
-```
+```c#
 var strategy = factory.Create(type);
 strategy.CalculateNextReview(...);
 ```
@@ -85,8 +85,6 @@ Polymorphie wird durch das Strategy Pattern umgesetzt. Über das Interface ISpac
 ## Definition
 
 Komplexität wird reduziert, indem nur relevante Eigenschaften sichtbar gemacht werden.
-
-🔎 In deinem Projekt
 
 ## Beispiele
 

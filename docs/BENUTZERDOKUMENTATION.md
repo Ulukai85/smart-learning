@@ -1,4 +1,4 @@
-# Smart Learning Web App "Cache 'Em All"
+# Smart Learning Web App "Cache'Em All"
 
 ## Flashcards mit Spaced Repetition und Gamification
 
@@ -6,7 +6,11 @@
 
 ## Übersicht
 
-Diese Applikation besteht aus einem Frontend, das mit `Angular v21` entwickelt wurde, und einem Backend, das auf `ASP.NET Core v10` basiert. Die Anwendung ermöglicht es Benutzern, Flashcards zu erstellen und zu lernen, wobei ein Spaced Repetition Algorithmus verwendet wird, um die Lernzeit zu optimieren. Zusätzlich bietet die App Gamification-Elemente, um die Motivation der Benutzer zu steigern. Kartenstapel können veröffentlicht und dann geforkt werden. Außerdem kann ein KI-Agent genuzt werden, der automatisch Lernkarten zu einem Thema generiert.
+- Diese Applikation besteht aus einem Frontend, das mit `Angular v21` entwickelt wurde, und einem Backend, das auf `ASP.NET Core v10` basiert.
+- Die Anwendung ermöglicht es Benutzern, Flashcards zu erstellen und zu lernen, wobei ein Spaced Repetition Algorithmus verwendet wird, um die Lernzeit zu optimieren.
+- Zusätzlich bietet die App Gamification-Elemente, um die Motivation der Benutzer durch Statistiken und XP zu steigern.
+- Kartenstapel können veröffentlicht und dann geforkt (kopiert) werden.
+- Außerdem kann ein KI-Agent genutzt werden, der automatisch Lernkarten zu einem Thema generiert.
 
 ---
 
@@ -38,44 +42,52 @@ Diese Applikation besteht aus einem Frontend, das mit `Angular v21` entwickelt w
 
 ### Dashboard
 
-Hier sehen Sie **Statistiken** zu Ihrem aktuellen "Lernlauf" (Streak) und ihrer Aktivität, sowie ein globales Leaderboard.
+- Hier sehen Sie `Statistiken` zu Ihrem aktuellen **Lernlauf** (Streak) und ihrer **Aktivität**, sowie ein globales **Leaderboard**.
+- Über die **Navigationsleiste** kann rechts das `Theme` (Dark/Light) geändert, sowie ein `Ausloggen` veranlasst werden
 
 ### Karten verwalten
 
-- Der Menüpunkt **Cards** öffnet eine Ansicht aller eigenen Karten.
+- Der Menüpunkt `Cards` öffnet eine Ansicht aller eigenen Karten.
 - Durchsuchen Sie hier Ihre Lernkarten, filtern Sie nach Kartenstapel, dem Fragen- oder Antworttext.
-- Nutzen Sie die Buttons in der rechten Spalte zum Bearbeiten oder Löschen einer Karte.
-- Über den Button **Create Card** können Sie schnell neue Karte erstellen und einem Deck zuordnen.
+- Nutzen Sie die Buttons in der rechten Spalte zum **Bearbeiten** oder **Löschen** einer Karte.
+- Über den Button `Create Card` können Sie schnell neue Karte erstellen und einem Deck zuordnen.
 
 ### Decks erstellen und bearbeiten
 
 - Das **Dialogfenster** zum Erstellen und Bearbeiten von Karten, ermöglicht es auch schnell mit den beiden Buttons oben rechts ein neues Deck zu erstellen oder ein bestehendes zu bearbeiten.
+- Tooltips helfen mit weiteren Erklärungen.
 
 ### Decks veröffentlichen und löschen
 
-- Der Menüpunkt **Learn** öffnet eine Ansicht der eigenen Kartenstapel.
-- Rechts kann hier in der Spalte **Public?** der öffentliche Status des Decks getoggelt werden. Öffentliche Decks sind für ander User sichtbar und können geforkt werden.
-- Ganz rechts kann ein Stapel mitsamt Karten gelöscht werden.
+- Der Menüpunkt `Learn` öffnet eine Ansicht der eigenen Kartenstapel.
+- Rechts kann hier in der Spalte `Public?` der öffentliche Status des Decks getoggelt werden. Öffentliche Decks sind für andere User sichtbar und können geforkt (kopiert) werden.
+- Über das Trash-Icon rechts kann ein Stapel mitsamt Karten gelöscht werden. Diese Entscheidung muss in einem **Confirm-Dialog** bestätigt werden.
 
 ### Lernen
 
-- Der Menüpunkt **Learn** bietet außerdem eine Übersicht über den Lernstatus eines Decks.
-- Die Spalten **New Cards** und **Due Cards** geben an, wie viele noch komplett ungelernte Karten bzw. wie viele zu wiederholen sind ("Review").
-- Links kann ein Stapel über den Button **Learn** gelernt werden.
+- Der Menüpunkt `Learn` bietet außerdem eine Übersicht über den Lernstatus eines Decks.
+- Die Spalten `New Cards` und `Due Cards` geben an, wie viele noch komplett ungelernte Karten vorhanden sind bzw. wie viele zu wiederholen sind ("Review").
+- Links kann ein Stapel über den Button `Learn` gelernt werden.
 - Über diesen Button öffnet sich sofort die erste anstehende Karte dieses Stapels.
-- Der Button **Show Answer** zeigt die Antwort und ermöglicht eine Eigenbewertung des Lernstands dieser Karte. Wird **Again** gewählt wird die Karte noch einmal in die aktuelle Warteschlange eingereiht.
-- Oben rechts befinden sich zwei Counter, die die neuen (**New**) und zu wiederholenden (**Due**) Karten dynamisch anzeigen.
+- Der Button `Show Answer` zeigt die Antwort und ermöglicht eine Eigenbewertung des Lernstands dieser Karte.
+- Wird `Again` gewählt wird die Karte noch einmal in die aktuelle Warteschlange eingereiht.
+- Eine andere Wahl berechnet das nächste Lerndatum aufgrund des eingestellten Algorithmus (Bisher _Anki_)
+- Oben rechts befinden sich zwei Counter, die die neuen (`New`) und zu wiederholenden (`Due`) Karten dynamisch anzeigen.
+- Ein **Toast-Popup** zeigt bei Bewertung die erhaltenen XP.
 
 ### Forking
 
-- Der Menüpunkt **Explore** zeigt eine Ansicht der globalen öffentlichen Kartenstapel.
+- Der Menüpunkt `Explore` zeigt eine Ansicht der globalen öffentlichen Kartenstapel.
 - Es kann nach Name und Beschreibung gefiltert werden und es wird angezeigt, wie viele Karten dieses Deck enthält.
-- Über die rechte Spalte **Fork** kann das Deck geforkt werden, d.h. der Stapel wird mitsamt Karten kopiert und fortan unter den eigenen Karten angezeigt.
+- Über die rechte Spalte `Fork` kann das Deck geforkt werden, d.h. der Stapel wird mitsamt Karten kopiert und fortan unter den eigenen Karten angezeigt.
 
 ### KI Feature
 
-- Der Menüpunkt **Card Wizard** navigiert zu einem Formular, über das mithilfe eines KI-Agenten automatisch Karten erstellt werden können.
-- Durch den **Select Button** kann gewählt werden, ob entweder Karten zu einem bestimmten Thema erstellt werden, oder ob aus einem eingefügten Text Informationen für die Lernkarten genutzt werden.
+- Der Menüpunkt `Card Wizard` navigiert zu einem Formular, über das mithilfe eines KI-Agenten automatisch Karten erstellt werden können.
+- Durch den `Select Button` kann gewählt werden, ob entweder Karten zu einem bestimmten Thema erstellt werden, oder ob aus einem eingefügten Text Informationen für die Lernkarten genutzt werden.
+- Wird ein Deck ausgewählt, werden **Topic** und **Description** nur für die Generierung der Karten genutzt und diese werden dem vorhandenen Deck hinzugefügt.
+- Wird **kein** Deck ausgewählt, wird zusätzlich ein neues Deck namens `Topic` mit dieser `Description` erstellt.
+- Werden die Karten aus einem eingefügten Text erstellt, werden **Topic** und **Description** nicht für die Generierung genutzt, sondern nur für die Namensgebung, falls ein neues Deck erstellt werden soll.
 
 ---
 
