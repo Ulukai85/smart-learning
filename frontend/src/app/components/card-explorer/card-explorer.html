@@ -88,8 +88,13 @@
         <td>{{ card.back }}</td>
         <td>
           <div class="flex gap-1">
-            <p-button icon="pi pi-pencil" (click)="showCardDialog(card)" />
-            <p-button icon="pi pi-trash" (click)="confirmDelete($event, card)" severity="danger" />
+            <p-button icon="pi pi-pencil" (click)="showCardDialog(card)" pTooltip="Edit card" />
+            <p-button
+              icon="pi pi-trash"
+              (click)="confirmDelete($event, card)"
+              severity="danger"
+              pTooltip="Delete Card"
+            />
           </div>
         </td>
       </tr>

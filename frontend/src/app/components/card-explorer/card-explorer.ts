@@ -12,6 +12,7 @@ import { CardService } from '../../services/card-service';
 import { DeckService } from '../../services/deck-service';
 import { ToastService } from '../../services/toast-service';
 import { CardDesigner, UpsertMode } from '../card-designer/card-designer';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-card-explorer',
@@ -23,6 +24,7 @@ import { CardDesigner, UpsertMode } from '../card-designer/card-designer';
     ButtonModule,
     SelectModule,
     ConfirmPopupModule,
+    TooltipModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './card-explorer.html',

@@ -34,6 +34,8 @@
 
 ### Registrierung/Anmeldung
 
+![Login](/docs/screenshots/Screenshot-login.png)
+
 Öffnen Sie Ihren Webbrowser und navigieren Sie zu `http://localhost:3000`, um die Anwendung zu nutzen. Die Backend-API ist unter `http://localhost:5000` erreichbar.
 **Am besten registrieren Sie sich mit einem eigenen Konto** und melden sich dann mit diesem an. Oder nutzen Sie den Testaccount:
 
@@ -45,7 +47,11 @@
 - Hier sehen Sie `Statistiken` zu Ihrem aktuellen **Lernlauf** (Streak) und ihrer **Aktivität**, sowie ein globales **Leaderboard**.
 - Über die **Navigationsleiste** kann rechts das `Theme` (Dark/Light) geändert, sowie ein `Ausloggen` veranlasst werden
 
+![Navbar](/docs/screenshots/Screenshot-navbar.png)
+
 ### Karten verwalten
+
+![Cards](/docs/screenshots/Screenshot-manager.png)
 
 - Der Menüpunkt `Cards` öffnet eine Ansicht aller eigenen Karten.
 - Durchsuchen Sie hier Ihre Lernkarten, filtern Sie nach Kartenstapel, dem Fragen- oder Antworttext.
@@ -54,10 +60,14 @@
 
 ### Decks erstellen und bearbeiten
 
+![Decks](/docs/screenshots/Screenshot-edit.png)
+
 - Das **Dialogfenster** zum Erstellen und Bearbeiten von Karten, ermöglicht es auch schnell mit den beiden Buttons oben rechts ein neues Deck zu erstellen oder ein bestehendes zu bearbeiten.
 - Tooltips helfen mit weiteren Erklärungen.
 
 ### Decks veröffentlichen und löschen
+
+![Hub](/docs/screenshots/Screenshot-hub.png)
 
 - Der Menüpunkt `Learn` öffnet eine Ansicht der eigenen Kartenstapel.
 - Rechts kann hier in der Spalte `Public?` der öffentliche Status des Decks getoggelt werden. Öffentliche Decks sind für andere User sichtbar und können geforkt (kopiert) werden.
@@ -70,6 +80,9 @@
 - Links kann ein Stapel über den Button `Learn` gelernt werden.
 - Über diesen Button öffnet sich sofort die erste anstehende Karte dieses Stapels.
 - Der Button `Show Answer` zeigt die Antwort und ermöglicht eine Eigenbewertung des Lernstands dieser Karte.
+
+![Learn](/docs/screenshots/Screenshot-review.png)
+
 - Wird `Again` gewählt wird die Karte noch einmal in die aktuelle Warteschlange eingereiht.
 - Eine andere Wahl berechnet das nächste Lerndatum aufgrund des eingestellten Algorithmus (Bisher _Anki_)
 - Oben rechts befinden sich zwei Counter, die die neuen (`New`) und zu wiederholenden (`Due`) Karten dynamisch anzeigen.
@@ -77,11 +90,15 @@
 
 ### Forking
 
+![Fork](/docs/screenshots/Screenshot-fork.png)
+
 - Der Menüpunkt `Explore` zeigt eine Ansicht der globalen öffentlichen Kartenstapel.
 - Es kann nach Name und Beschreibung gefiltert werden und es wird angezeigt, wie viele Karten dieses Deck enthält.
 - Über die rechte Spalte `Fork` kann das Deck geforkt werden, d.h. der Stapel wird mitsamt Karten kopiert und fortan unter den eigenen Karten angezeigt.
 
 ### KI Feature
+
+![Wizard](/docs/screenshots/Screenshot-wizard.png)
 
 - Der Menüpunkt `Card Wizard` navigiert zu einem Formular, über das mithilfe eines KI-Agenten automatisch Karten erstellt werden können.
 - Durch den `Select Button` kann gewählt werden, ob entweder Karten zu einem bestimmten Thema erstellt werden, oder ob aus einem eingefügten Text Informationen für die Lernkarten genutzt werden.

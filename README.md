@@ -1,6 +1,6 @@
 # Smart Learning mit "Cache'Em All"
 
-![Logo](/frontend/public/logo_1.png)
+![Login](/docs/screenshots/Screenshot-login.png)
 
 Cache'Em All ist eine Webanwendung zum Lernen mit digitalen Karteikarten.
 Sie kombiniert ein **Spaced-Repetition-System** mit **Gamification-Elementen** wie XP und Streaks, um den Lernprozess effizienter und motivierender zu gestalten. Außerdem kann eine **KI** genutzt werden, um automatisch Lernkarten zu erstellen.
